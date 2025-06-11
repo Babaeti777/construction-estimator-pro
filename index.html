@@ -1,982 +1,1531 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Construction Estimator Pro - Redesigned</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* Custom CSS for base styles and theming */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        /* Custom scrollbar for better aesthetics */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-        .dark ::-webkit-scrollbar-track {
-            background: #2d3748;
-        }
-        .dark ::-webkit-scrollbar-thumb {
-            background: #718096;
-        }
-        .dark ::-webkit-scrollbar-thumb:hover {
-            background: #a0aec0;
-        }
-
-        /* Animation for custom modal */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .modal-fade-in {
-            animation: fadeIn 0.2s ease-out;
-        }
-        
-        /* Animation for spinner */
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .spinner {
-            animation: spin 1s linear infinite;
-        }
-    </style>
-    <script>
-        // Tailwind CSS dark mode configuration
-        tailwind.config = {
-            darkMode: 'class',
-        }
-    </script>
-</head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
-
-    <!-- Custom Modal for Confirmations -->
-    <div id="customModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-6 w-full max-w-md mx-4 modal-fade-in">
-            <h3 id="modalTitle" class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Confirmation</h3>
-            <p id="modalMessage" class="text-gray-600 dark:text-gray-300 mb-6">Are you sure?</p>
-            <div class="flex justify-end space-x-4">
-                <button id="modalCancel" class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">Cancel</button>
-                <button id="modalConfirm" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">Confirm</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- GitHub Authentication Modal -->
-    <div id="authModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-lg mx-4 modal-fade-in">
-            <h3 class="text-2xl font-bold mb-2 text-center text-gray-900 dark:text-white">🔗 GitHub Integration</h3>
-            <p class="text-gray-600 dark:text-gray-400 mb-6 text-center">To save and sync your projects, please provide your GitHub credentials.</p>
-            
-            <div class="space-y-4">
-                <div class="form-group">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">GitHub Username</label>
-                    <input type="text" id="githubUsername" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="your-username">
-                </div>
-                <div class="form-group">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Personal Access Token</label>
-                    <input type="password" id="githubToken" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="ghp_...">
-                </div>
-                <div class="form-group">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Repository Name</label>
-                    <input type="text" id="githubRepo" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500" value="construction-projects">
-                </div>
-            </div>
-
-            <div class="flex items-center justify-center space-x-4 mt-8">
-                <button id="connectGitHubBtn" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all">
-                    <span>🔗</span>
-                    <span>Connect GitHub</span>
-                </button>
-                <button id="skipGitHubBtn" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white font-semibold hover:bg-gray-300 dark:hover:bg-gray-500 transition-all">
-                    <span>⏭️</span>
-                    <span>Skip</span>
-                </button>
-            </div>
-
-            <div class="mt-6 text-xs text-gray-500 dark:text-gray-400 text-center">
-                Need help? <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens" target="_blank" class="text-blue-500 hover:underline">Learn how to create a token</a> with `repo` scope.
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Main Container -->
-    <div class="container mx-auto p-4 md:p-6 lg:p-8 max-w-7xl">
-        
-        <!-- Header -->
-        <header class="text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white">Construction Estimator Pro</h1>
-            <p class="text-lg text-gray-600 dark:text-gray-400 mt-2">A Modern, Cloud-Synced Cost Estimation Tool</p>
-        </header>
-
-        <main class="space-y-6">
-            <!-- Control Panel Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
-                <div class="p-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        
-                        <!-- Project Management -->
-                        <div class="space-y-4 md:col-span-2 lg:col-span-1">
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">📂 Project Manager</h3>
-                            <div class="flex items-center gap-2">
-                                <select id="projectSelector" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500"></select>
-                                <button id="newProjectBtn" title="New Project" class="flex-shrink-0 p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">➕</button>
-                                <button id="deleteProjectBtn" title="Delete Project" class="flex-shrink-0 p-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition">🗑️</button>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                 <button id="loadProjectFileBtn" class="flex-grow flex items-center justify-center gap-2 w-full px-3 py-2 rounded-md bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white font-semibold hover:bg-gray-300 dark:hover:bg-gray-500 transition text-sm">
-                                    <span>📤</span>
-                                    <span>Load File</span>
-                                </button>
-                                <button id="downloadProjectBtn" class="flex-grow flex items-center justify-center gap-2 w-full px-3 py-2 rounded-md bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white font-semibold hover:bg-gray-300 dark:hover:bg-gray-500 transition text-sm">
-                                    <span>📥</span>
-                                    <span>Download</span>
-                                </button>
-                                <input type="file" id="fileInput" accept=".json" class="hidden">
-                            </div>
-                             <div id="githubStatus" class="p-3 rounded-md text-sm text-center font-medium"></div>
-                        </div>
-
-                        <!-- Project Settings -->
-                        <div class="space-y-4 md:col-span-2">
-                             <h3 class="text-lg font-bold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">⚙️ Project Settings</h3>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                               <div class="form-group">
-                                    <label for="projectName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Project Name</label>
-                                    <input type="text" id="projectName" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="My New Project">
-                                </div>
-                                <div class="form-group">
-                                    <label for="regionFactor" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Region</label>
-                                    <select id="regionFactor" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                                        <option value="1.00">National Average</option>
-                                        <option value="0.80">Southeast (-20%)</option>
-                                        <option value="0.90">Midwest (-10%)</option>
-                                        <option value="1.10">Northeast (+10%)</option>
-                                        <option value="1.25">West Coast (+25%)</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="taxRate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tax Rate (%)</label>
-                                    <input type="number" id="taxRate" value="8.25" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                                </div>
-                                <div class="form-group">
-                                    <label for="contingency" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contingency (%)</label>
-                                    <input type="number" id="contingency" value="10" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                                </div>
-                                <div class="form-group flex flex-col justify-between">
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Theme</label>
-                                    <div class="flex items-center space-x-2 bg-gray-50 dark:bg-gray-700 rounded-md p-2">
-                                        <span>☀️</span>
-                                        <label for="darkModeToggle" class="relative inline-flex items-center cursor-pointer">
-                                            <input type="checkbox" id="darkModeToggle" class="sr-only peer">
-                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-500 peer-checked:bg-blue-600"></div>
-                                        </label>
-                                        <span>🌙</span>
-                                    </div>
-                                </div>
-                                <div class="form-group flex items-end">
-                                    <button id="connectGitHubMainBtn" class="flex items-center justify-center gap-2 w-full px-3 py-2 rounded-md bg-gray-700 text-white font-semibold hover:bg-gray-800 dark:bg-gray-600 dark:hover:bg-gray-500 transition text-sm">
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <!-- Cost Items Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
-                <div class="p-6">
-                    <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4 border-b border-gray-200 dark:border-gray-700 pb-4">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">📋 Cost Items</h3>
-                        <div class="flex items-center gap-2 mt-4 sm:mt-0">
-                           <button id="addItemBtn" class="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition text-sm font-semibold">
-                                <span>➕</span>
-                                <span>Add Item</span>
-                            </button>
-                             <button id="resetEstimateBtn" class="flex items-center gap-2 px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition text-sm font-semibold">
-                                <span>🔄</span>
-                                <span>Reset Items</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <tr>
-                                    <th scope="col" class="px-4 py-3 min-w-[200px]">Item</th>
-                                    <th scope="col" class="px-4 py-3">Category</th>
-                                    <th scope="col" class="px-4 py-3">Qty</th>
-                                    <th scope="col" class="px-4 py-3">Unit</th>
-                                    <th scope="col" class="px-4 py-3">Unit Price</th>
-                                    <th scope="col" class="px-4 py-3">Markup %</th>
-                                    <th scope="col" class="px-4 py-3 text-right">Final Cost</th>
-                                    <th scope="col" class="px-4 py-3 text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody">
-                                <!-- Dynamic rows will be inserted here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Summary & Analysis Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
-                <div class="p-6">
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 border-b border-gray-200 dark:border-gray-700 pb-4">📊 Summary & Analysis</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        
-                        <!-- Cost Breakdown -->
-                        <div class="space-y-4">
-                            <div class="grid grid-cols-2 gap-4 text-center">
-                               <div class="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                                    <div id="itemCount" class="text-2xl font-bold text-gray-900 dark:text-white">0</div>
-                                    <div class="text-sm text-gray-600 dark:text-gray-400">Total Items</div>
-                                </div>
-                                <div class="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                                    <div id="avgLineCost" class="text-2xl font-bold text-gray-900 dark:text-white">$0.00</div>
-                                    <div class="text-sm text-gray-600 dark:text-gray-400">Avg. Item Cost</div>
-                                </div>
-                            </div>
-                             <div class="space-y-2 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                                <div class="flex justify-between font-medium">
-                                    <span>Subtotal</span>
-                                    <span id="subtotal">$0.00</span>
-                                </div>
-                                <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                                    <span>Tax</span>
-                                    <span id="taxAmount">$0.00</span>
-                                </div>
-                                <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                                    <span>Contingency</span>
-                                    <span id="contingencyAmount">$0.00</span>
-                                </div>
-                                <hr class="border-gray-300 dark:border-gray-600 my-2">
-                                <div class="flex justify-between font-bold text-xl text-blue-600 dark:text-blue-400">
-                                    <span>Grand Total</span>
-                                    <span id="grandTotal">$0.00</span>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <button id="saveEstimateBtn" class="flex-grow flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-md bg-blue-600 text-white font-semibold hover:bg-blue-700 transition text-sm">
-                                    <span>💾</span>
-                                    <span>Save Project</span>
-                                </button>
-                                <button id="exportCsvBtn" class="flex-grow flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-md bg-green-600 text-white font-semibold hover:bg-green-700 transition text-sm">
-                                    <span>📈</span>
-                                    <span>Export CSV</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Chart -->
-                        <div class="relative h-64 md:h-auto min-h-[300px] p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                            <canvas id="costChart"></canvas>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-        </main>
-    </div>
-
-    <script>
-    // --- DATABASE --- //
-    // Comprehensive 2024-2025 Construction Cost Database
-    const priceDatabase = [
-        // ... (The database is large, keeping it collapsed for brevity)
-        { category: "Material", item: "Concrete (Ready Mix)", unit: "cubic yard", price: 166 }, { category: "Material", item: "Structural Steel", unit: "ton", price: 1650 }, { category: "Material", item: "Framing Lumber 2x4", unit: "linear foot", price: 1.65 }, { category: "Material", item: "Drywall 1/2\"", unit: "sheet", price: 16.80 }, { category: "Material", item: "Fiberglass Batts R-15", unit: "sq ft", price: 0.95 }, { category: "Material", item: "Asphalt Shingles", unit: "sq ft", price: 3.75 }, { category: "Material", item: "Vinyl Siding", unit: "sq ft", price: 5.25 }, { category: "Material", item: "Windows (Standard)", unit: "each", price: 485 }, { category: "Sustainable", item: "Cross-Laminated Timber (CLT)", unit: "cubic meter", price: 650 }, { category: "Labor", item: "Carpenter (Skilled)", unit: "hour", price: 29.50 }, { category: "Labor", item: "Electrician (Journeyman)", unit: "hour", price: 34.50 }, { category: "Labor", item: "Plumber (Journeyman)", unit: "hour", price: 34.75 }, { category: "Labor", item: "Project Manager", unit: "hour", price: 65.00 }, { category: "Equipment", item: "Excavator (Mini <8k lbs)", unit: "day", price: 285 }, { category: "Tech Equipment", item: "Construction Drone", unit: "day", price: 485 }, { category: "HVAC", item: "Central AC Unit (3-ton)", unit: "each", price: 4850 }, { category: "Solar", item: "Solar Panel Installation", unit: "watt", price: 2.50 }, { category: "Subcontractor", item: "Framing", unit: "sq ft", price: 9.00 }, { category: "Site Work", item: "Excavation", unit: "cubic yard", price: 15.50 }
-    ];
-
-    // --- GITHUB MANAGER --- //
-    class GitHubManager {
-        constructor() {
-            this.username = null; this.token = null; this.repo = null; this.isConnected = false; this.baseUrl = 'https://api.github.com';
-        }
-        async connect(username, token, repo) {
-            this.username = username; this.token = token; this.repo = repo;
-            try {
-                const response = await fetch(`${this.baseUrl}/user`, { headers: { 'Authorization': `token ${token}` } });
-                if (response.ok) {
-                    await this.ensureRepository();
-                    this.isConnected = true; this.saveCredentials(); return true;
-                } else { throw new Error('Invalid credentials'); }
-            } catch (error) { console.error('GitHub connection failed:', error); return false; }
-        }
-        async ensureRepository() {
-            try {
-                const response = await fetch(`${this.baseUrl}/repos/${this.username}/${this.repo}`, { headers: { 'Authorization': `token ${this.token}` } });
-                if (response.status === 404) {
-                    await fetch(`${this.baseUrl}/user/repos`, { method: 'POST', headers: { 'Authorization': `token ${this.token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ name: this.repo, description: 'Construction Estimator Pro Projects', private: true, auto_init: true }) });
-                }
-            } catch (error) { console.error('Error ensuring repository:', error); }
-        }
-        saveCredentials() { localStorage.setItem('github_credentials', JSON.stringify({ username: this.username, token: this.token, repo: this.repo })); }
-        loadCredentials() {
-            const saved = localStorage.getItem('github_credentials');
-            if (saved) {
-                const creds = JSON.parse(saved);
-                this.username = creds.username; this.token = creds.token; this.repo = creds.repo; this.isConnected = true;
-                return true;
-            }
-            return false;
-        }
-        disconnect() { this.username = null; this.token = null; this.repo = null; this.isConnected = false; localStorage.removeItem('github_credentials'); }
-        async saveProject(projectId, projectData) {
-            if (!this.isConnected) return false;
-            try {
-                const fileName = `project_${projectId}.json`;
-                const content = btoa(unescape(encodeURIComponent(JSON.stringify(projectData, null, 2))));
-                let sha = null;
-                try {
-                    const res = await fetch(`${this.baseUrl}/repos/${this.username}/${this.repo}/contents/${fileName}`, { headers: { 'Authorization': `token ${this.token}` } });
-                    if (res.ok) sha = (await res.json()).sha;
-                } catch (e) { /* File doesn't exist */ }
-                const payload = { message: `Update project: ${projectData.name}`, content, sha };
-                const response = await fetch(`${this.baseUrl}/repos/${this.username}/${this.repo}/contents/${fileName}`, { method: 'PUT', headers: { 'Authorization': `token ${this.token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                return response.ok;
-            } catch (error) { console.error('Error saving to GitHub:', error); return false; }
-        }
-        async loadProjects() {
-            if (!this.isConnected) return {};
-            try {
-                const response = await fetch(`${this.baseUrl}/repos/${this.username}/${this.repo}/contents/`, { headers: { 'Authorization': `token ${this.token}` } });
-                if (!response.ok) return {};
-                const files = await response.json();
-                const projects = {};
-                for (const file of files.filter(f => f.name.startsWith('project_') && f.name.endsWith('.json'))) {
-                    try {
-                        const fileRes = await fetch(file.download_url);
-                        const projectData = await fileRes.json();
-                        projects[projectData.id] = projectData;
-                    } catch (e) { console.error(`Error loading project ${file.name}:`, e); }
-                }
-                return projects;
-            } catch (error) { console.error('Error loading projects from GitHub:', error); return {}; }
-        }
-        async deleteProject(projectId) {
-            if (!this.isConnected) return false;
-            try {
-                const fileName = `project_${projectId}.json`;
-                const res = await fetch(`${this.baseUrl}/repos/${this.username}/${this.repo}/contents/${fileName}`, { headers: { 'Authorization': `token ${this.token}` } });
-                if (!res.ok) return false;
-                const file = await res.json();
-                const delRes = await fetch(`${this.baseUrl}/repos/${this.username}/${this.repo}/contents/${fileName}`, { method: 'DELETE', headers: { 'Authorization': `token ${this.token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ message: `Delete project: ${projectId}`, sha: file.sha }) });
-                return delRes.ok;
-            } catch (error) { console.error('Error deleting from GitHub:', error); return false; }
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Construction Estimator Pro</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* CSS Variables */
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --bg: #ffffff;
+      --bg-secondary: #f9fafb;
+      --bg-tertiary: #f3f4f6;
+      --text: #111827;
+      --text-secondary: #6b7280;
+      --border: #e5e7eb;
+      --shadow: rgba(0, 0, 0, 0.1);
+      --radius: 0.5rem;
     }
 
-    // --- GLOBAL STATE & UTILS --- //
-    let costChart = null;
+    [data-theme="dark"] {
+      --bg: #111827;
+      --bg-secondary: #1f2937;
+      --bg-tertiary: #374151;
+      --text: #f9fafb;
+      --text-secondary: #d1d5db;
+      --border: #4b5563;
+      --shadow: rgba(0, 0, 0, 0.3);
+    }
+
+    /* Reset & Base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-secondary);
+      color: var(--text);
+      line-height: 1.6;
+      transition: all 0.3s ease;
+    }
+
+    /* Layout */
+    .app-container {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-header h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .sidebar-header p {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .nav-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .nav-section-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      padding: 0 0.5rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 0.25rem;
+    }
+
+    .nav-item:hover {
+      background: var(--bg-secondary);
+    }
+
+    .nav-item.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .nav-item-icon {
+      font-size: 1.25rem;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Header */
+    .header {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* Content Area */
+    .content {
+      flex: 1;
+      padding: 2rem;
+      overflow-y: auto;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg);
+      border-radius: var(--radius);
+      box-shadow: 0 1px 3px var(--shadow);
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+
+    .card-body {
+      padding: 1.25rem;
+    }
+
+    /* Form Elements */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .form-input,
+    .form-select {
+      padding: 0.625rem 0.875rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 0.625rem 1.25rem;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px var(--shadow);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-icon {
+      padding: 0.625rem;
+    }
+
+    /* Table */
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th {
+      background: var(--bg-tertiary);
+      padding: 0.875rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table td {
+      padding: 0.875rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table tr:hover {
+      background: var(--bg-secondary);
+    }
+
+    .table input,
+    .table select {
+      width: 100%;
+      padding: 0.375rem 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      font-size: 0.875rem;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--bg);
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background: var(--bg);
+      padding: 2rem;
+      border-radius: var(--radius);
+      max-width: 500px;
+      width: 90%;
+      transform: translateY(-20px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal.active .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Toggle Switch */
+    .toggle {
+      position: relative;
+      width: 48px;
+      height: 24px;
+    }
+
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--border);
+      transition: 0.3s;
+      border-radius: 24px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+
+    .toggle input:checked + .toggle-slider {
+      background: var(--primary);
+    }
+
+    .toggle input:checked + .toggle-slider:before {
+      transform: translateX(24px);
+    }
+
+    /* Mobile Menu Toggle */
+    .menu-toggle {
+      display: none;
+      padding: 0.5rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* Loading State */
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .app-container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 999;
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .header {
+        padding: 1rem;
+      }
+
+      .content {
+        padding: 1rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Utilities */
+    .text-success { color: var(--success); }
+    .text-danger { color: var(--danger); }
+    .text-warning { color: var(--warning); }
+    .hidden { display: none; }
+  </style>
+</head>
+<body data-theme="light">
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>Construction Estimator</h1>
+        <p>Professional Edition</p>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Main</div>
+          <div class="nav-item active" data-page="dashboard">
+            <span class="nav-item-icon">📊</span>
+            <span>Dashboard</span>
+          </div>
+          <div class="nav-item" data-page="estimate">
+            <span class="nav-item-icon">📋</span>
+            <span>Estimate</span>
+          </div>
+          <div class="nav-item" data-page="projects">
+            <span class="nav-item-icon">📁</span>
+            <span>Projects</span>
+          </div>
+        </div>
+        
+        <div class="nav-section">
+          <div class="nav-section-title">Tools</div>
+          <div class="nav-item" data-page="settings">
+            <span class="nav-item-icon">⚙️</span>
+            <span>Settings</span>
+          </div>
+          <div class="nav-item" data-page="sync">
+            <span class="nav-item-icon">☁️</span>
+            <span>Cloud Sync</span>
+          </div>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="header">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <h2 class="header-title" id="pageTitle">Dashboard</h2>
+        <div class="header-actions">
+          <label class="toggle">
+            <input type="checkbox" id="darkMode">
+            <span class="toggle-slider"></span>
+          </label>
+          <button class="btn btn-primary" id="saveBtn">
+            💾 Save
+          </button>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <div class="content" id="content">
+        <!-- Dashboard Page -->
+        <div id="dashboardPage" class="page">
+          <div class="quick-actions">
+            <button class="btn btn-success" onclick="switchPage('estimate')">
+              ➕ New Estimate
+            </button>
+            <button class="btn btn-secondary" onclick="exportData()">
+              📊 Export Report
+            </button>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-value" id="totalProjects">0</div>
+              <div class="stat-label">Total Projects</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="totalValue">$0</div>
+              <div class="stat-label">Total Value</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="avgProject">$0</div>
+              <div class="stat-label">Average Project</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="activeItems">0</div>
+              <div class="stat-label">Active Items</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Cost Breakdown</h3>
+            </div>
+            <div class="card-body">
+              <canvas id="chartCanvas" style="max-height: 300px;"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estimate Page -->
+        <div id="estimatePage" class="page hidden">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Project Details</h3>
+            </div>
+            <div class="card-body">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Project Name</label>
+                  <input type="text" class="form-input" id="projectName" placeholder="Enter project name">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Region</label>
+                  <select class="form-select" id="regionFactor">
+                    <option value="1.00">National Average</option>
+                    <option value="0.90">Southeast</option>
+                    <option value="1.10">Northeast</option>
+                    <option value="1.25">West Coast</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Tax Rate (%)</label>
+                  <input type="number" class="form-input" id="taxRate" value="8.25" step="0.01">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Contingency (%)</label>
+                  <input type="number" class="form-input" id="contingency" value="10" step="0.5">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Cost Items</h3>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <span style="font-size: 0.875rem; color: var(--text-secondary);">
+                  ${Object.values(itemsDB).reduce((acc, items) => acc + items.length, 0)} items available
+                </span>
+                <button class="btn btn-success btn-icon" onclick="addRow()">➕</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div style="margin-bottom: 1rem;">
+                <select class="form-select" id="categoryFilter" onchange="filterByCategory()" style="max-width: 250px;">
+                  <option value="">All Categories</option>
+                  ${Object.keys(itemsDB).map(cat => `<option value="${cat}">${cat}</option>`).join('')}
+                </select>
+              </div>
+              <div class="table-wrapper">
+                <table class="table" id="estimateTable">
+                  <thead>
+                    <tr>
+                      <th style="width: 30%;">Item</th>
+                      <th style="width: 15%;">Category</th>
+                      <th style="width: 10%;">Qty</th>
+                      <th style="width: 10%;">Unit</th>
+                      <th style="width: 15%;">Unit Price</th>
+                      <th style="width: 15%;">Total</th>
+                      <th style="width: 5%;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tableBody"></tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="5"><strong>Subtotal</strong></td>
+                      <td><strong id="subtotal">$0.00</strong></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td colspan="5"><strong>Tax</strong></td>
+                      <td><strong id="tax">$0.00</strong></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td colspan="5"><strong>Contingency</strong></td>
+                      <td><strong id="contingencyAmount">$0.00</strong></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td colspan="5"><strong>Grand Total</strong></td>
+                      <td><strong id="grandTotal">$0.00</strong></td>
+                      <td></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Projects Page -->
+        <div id="projectsPage" class="page hidden">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Saved Projects</h3>
+              <button class="btn btn-primary" onclick="loadProject()">📂 Load</button>
+            </div>
+            <div class="card-body">
+              <div id="projectsList">
+                <p class="text-secondary">No saved projects yet.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settingsPage" class="page hidden">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Application Settings</h3>
+            </div>
+            <div class="card-body">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Default Tax Rate (%)</label>
+                  <input type="number" class="form-input" id="defaultTaxRate" value="8.25">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Default Contingency (%)</label>
+                  <input type="number" class="form-input" id="defaultContingency" value="10">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Currency Symbol</label>
+                  <input type="text" class="form-input" id="currencySymbol" value="$">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cloud Sync Page -->
+        <div id="syncPage" class="page hidden">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">GitHub Integration</h3>
+            </div>
+            <div class="card-body">
+              <div id="syncStatus" class="stat-card" style="margin-bottom: 1rem;">
+                <p>Not connected to GitHub</p>
+              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">GitHub Username</label>
+                  <input type="text" class="form-input" id="githubUsername">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Personal Access Token</label>
+                  <input type="password" class="form-input" id="githubToken">
+                </div>
+              </div>
+              <button class="btn btn-primary" onclick="connectGitHub()" style="margin-top: 1rem;">
+                🔗 Connect GitHub
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Modal Title</h3>
+      </div>
+      <div id="modalBody"></div>
+      <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+        <button class="btn btn-primary" id="modalConfirm">Confirm</button>
+        <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Comprehensive Construction Items Database
+    const itemsDB = {
+      "Concrete & Masonry": [
+        { name: "Concrete (Ready Mix)", unit: "cubic yard", price: 166 },
+        { name: "Concrete Installation", unit: "sq ft", price: 10.50 },
+        { name: "Concrete Pump Service", unit: "hour", price: 185 },
+        { name: "Rebar #4", unit: "linear foot", price: 1.32 },
+        { name: "Rebar #5", unit: "linear foot", price: 2.05 },
+        { name: "Rebar #6", unit: "linear foot", price: 2.94 },
+        { name: "Concrete Block 8\"", unit: "each", price: 2.25 },
+        { name: "Mortar Mix", unit: "bag", price: 8.95 },
+        { name: "Brick (Standard)", unit: "1000", price: 485 },
+        { name: "Stone Veneer", unit: "sq ft", price: 18.75 }
+      ],
+      "Structural Steel": [
+        { name: "Structural Steel Beam", unit: "ton", price: 1650 },
+        { name: "Steel Column", unit: "ton", price: 1875 },
+        { name: "Metal Decking", unit: "sq ft", price: 3.85 },
+        { name: "Steel Studs", unit: "linear foot", price: 2.45 },
+        { name: "Welding Labor", unit: "hour", price: 85 }
+      ],
+      "Lumber & Wood": [
+        { name: "Framing Lumber 2x4", unit: "linear foot", price: 1.65 },
+        { name: "Framing Lumber 2x6", unit: "linear foot", price: 2.80 },
+        { name: "Framing Lumber 2x8", unit: "linear foot", price: 4.25 },
+        { name: "Framing Lumber 2x10", unit: "linear foot", price: 6.15 },
+        { name: "Framing Lumber 2x12", unit: "linear foot", price: 8.90 },
+        { name: "Plywood 1/2\"", unit: "sheet", price: 35 },
+        { name: "Plywood 3/4\"", unit: "sheet", price: 52 },
+        { name: "OSB Sheathing 7/16\"", unit: "sheet", price: 28 },
+        { name: "Engineered I-Joist", unit: "linear foot", price: 4.85 },
+        { name: "Glulam Beam", unit: "linear foot", price: 22.50 }
+      ],
+      "Roofing": [
+        { name: "Asphalt Shingles", unit: "sq ft", price: 3.75 },
+        { name: "Metal Roofing", unit: "sq ft", price: 8.50 },
+        { name: "Clay Tiles", unit: "sq ft", price: 12.00 },
+        { name: "EPDM Rubber", unit: "sq ft", price: 5.85 },
+        { name: "TPO Membrane", unit: "sq ft", price: 6.25 },
+        { name: "Roof Underlayment", unit: "sq ft", price: 0.85 },
+        { name: "Ice & Water Shield", unit: "sq ft", price: 1.25 },
+        { name: "Ridge Vents", unit: "linear foot", price: 8.50 },
+        { name: "Gutters (Aluminum)", unit: "linear foot", price: 12.50 },
+        { name: "Downspouts", unit: "each", price: 35 }
+      ],
+      "Insulation": [
+        { name: "Fiberglass Batts R-13", unit: "sq ft", price: 0.85 },
+        { name: "Fiberglass Batts R-15", unit: "sq ft", price: 0.95 },
+        { name: "Fiberglass Batts R-19", unit: "sq ft", price: 1.15 },
+        { name: "Fiberglass Batts R-30", unit: "sq ft", price: 1.45 },
+        { name: "Spray Foam (Closed Cell)", unit: "sq ft", price: 1.50 },
+        { name: "Spray Foam (Open Cell)", unit: "sq ft", price: 0.95 },
+        { name: "Rigid Foam Board 1\"", unit: "sq ft", price: 1.25 },
+        { name: "Rigid Foam Board 2\"", unit: "sq ft", price: 2.15 },
+        { name: "Blown-in Cellulose", unit: "sq ft", price: 0.75 },
+        { name: "Mineral Wool", unit: "sq ft", price: 1.35 }
+      ],
+      "Drywall & Finishes": [
+        { name: "Drywall 1/2\"", unit: "sheet", price: 16.80 },
+        { name: "Drywall 5/8\"", unit: "sheet", price: 19.25 },
+        { name: "Moisture Resistant Drywall", unit: "sheet", price: 24.50 },
+        { name: "Fire-Rated Drywall", unit: "sheet", price: 28.75 },
+        { name: "Drywall Tape & Mud", unit: "sq ft", price: 0.45 },
+        { name: "Interior Paint", unit: "sq ft", price: 0.85 },
+        { name: "Exterior Paint", unit: "sq ft", price: 1.25 },
+        { name: "Primer", unit: "gallon", price: 28 },
+        { name: "Texture Application", unit: "sq ft", price: 0.65 },
+        { name: "Crown Molding", unit: "linear foot", price: 12.50 }
+      ],
+      "Flooring": [
+        { name: "Hardwood Flooring", unit: "sq ft", price: 8.50 },
+        { name: "Engineered Wood", unit: "sq ft", price: 6.75 },
+        { name: "Luxury Vinyl Plank", unit: "sq ft", price: 4.25 },
+        { name: "Ceramic Tile", unit: "sq ft", price: 5.85 },
+        { name: "Porcelain Tile", unit: "sq ft", price: 7.25 },
+        { name: "Natural Stone", unit: "sq ft", price: 15.50 },
+        { name: "Carpet", unit: "sq ft", price: 3.85 },
+        { name: "Carpet Pad", unit: "sq ft", price: 0.65 },
+        { name: "Vinyl Sheet", unit: "sq ft", price: 2.95 },
+        { name: "Polished Concrete", unit: "sq ft", price: 7.50 }
+      ],
+      "Windows & Doors": [
+        { name: "Window (Standard)", unit: "each", price: 485 },
+        { name: "Window (Energy Star)", unit: "each", price: 725 },
+        { name: "Window (Premium)", unit: "each", price: 1250 },
+        { name: "Bay Window", unit: "each", price: 2850 },
+        { name: "Skylight", unit: "each", price: 985 },
+        { name: "Interior Door (Hollow)", unit: "each", price: 185 },
+        { name: "Interior Door (Solid)", unit: "each", price: 325 },
+        { name: "Exterior Door (Steel)", unit: "each", price: 685 },
+        { name: "Exterior Door (Fiberglass)", unit: "each", price: 875 },
+        { name: "French Doors", unit: "pair", price: 2450 },
+        { name: "Sliding Patio Door", unit: "each", price: 1850 },
+        { name: "Garage Door (16x7)", unit: "each", price: 1650 }
+      ],
+      "Siding & Exterior": [
+        { name: "Vinyl Siding", unit: "sq ft", price: 5.25 },
+        { name: "Fiber Cement Siding", unit: "sq ft", price: 8.75 },
+        { name: "Wood Siding", unit: "sq ft", price: 7.85 },
+        { name: "Aluminum Siding", unit: "sq ft", price: 6.25 },
+        { name: "Brick Veneer", unit: "sq ft", price: 15.50 },
+        { name: "Stone Veneer", unit: "sq ft", price: 18.75 },
+        { name: "Stucco System", unit: "sq ft", price: 9.25 },
+        { name: "House Wrap", unit: "sq ft", price: 0.25 },
+        { name: "Soffit & Fascia", unit: "linear foot", price: 12.85 }
+      ],
+      "Plumbing": [
+        { name: "Copper Pipe 1/2\"", unit: "linear foot", price: 4.85 },
+        { name: "Copper Pipe 3/4\"", unit: "linear foot", price: 6.25 },
+        { name: "PEX Pipe", unit: "linear foot", price: 1.85 },
+        { name: "PVC Pipe 2\"", unit: "linear foot", price: 3.25 },
+        { name: "PVC Pipe 4\"", unit: "linear foot", price: 5.85 },
+        { name: "Water Heater (50 gal)", unit: "each", price: 1250 },
+        { name: "Tankless Water Heater", unit: "each", price: 2850 },
+        { name: "Toilet (Standard)", unit: "each", price: 285 },
+        { name: "Toilet (Premium)", unit: "each", price: 585 },
+        { name: "Sink (Kitchen)", unit: "each", price: 425 },
+        { name: "Sink (Bathroom)", unit: "each", price: 225 },
+        { name: "Shower Unit", unit: "each", price: 985 },
+        { name: "Bathtub", unit: "each", price: 785 }
+      ],
+      "Electrical": [
+        { name: "Romex Wire 12/2", unit: "linear foot", price: 0.85 },
+        { name: "Romex Wire 14/2", unit: "linear foot", price: 0.65 },
+        { name: "Conduit 1/2\"", unit: "linear foot", price: 2.15 },
+        { name: "Electrical Panel 200A", unit: "each", price: 1850 },
+        { name: "Circuit Breaker 20A", unit: "each", price: 45 },
+        { name: "Outlet (Standard)", unit: "each", price: 15 },
+        { name: "GFCI Outlet", unit: "each", price: 35 },
+        { name: "Light Switch", unit: "each", price: 12 },
+        { name: "Dimmer Switch", unit: "each", price: 28 },
+        { name: "Ceiling Fan", unit: "each", price: 185 },
+        { name: "Recessed Light", unit: "each", price: 85 },
+        { name: "EV Charger Outlet", unit: "each", price: 850 }
+      ],
+      "HVAC": [
+        { name: "Central AC (3-ton)", unit: "each", price: 4850 },
+        { name: "Central AC (5-ton)", unit: "each", price: 6750 },
+        { name: "Heat Pump (3-ton)", unit: "each", price: 5250 },
+        { name: "Furnace (80% eff)", unit: "each", price: 2850 },
+        { name: "Furnace (95% eff)", unit: "each", price: 4250 },
+        { name: "Ductwork", unit: "sq ft", price: 12.50 },
+        { name: "Mini-Split System", unit: "each", price: 3250 },
+        { name: "Thermostat (Smart)", unit: "each", price: 285 },
+        { name: "Ventilation Fan", unit: "each", price: 185 }
+      ],
+      "Labor": [
+        { name: "General Laborer", unit: "hour", price: 18.25 },
+        { name: "Carpenter (Helper)", unit: "hour", price: 19.75 },
+        { name: "Carpenter (Skilled)", unit: "hour", price: 29.50 },
+        { name: "Carpenter (Master)", unit: "hour", price: 42.00 },
+        { name: "Electrician (Apprentice)", unit: "hour", price: 21.50 },
+        { name: "Electrician (Journeyman)", unit: "hour", price: 34.50 },
+        { name: "Electrician (Master)", unit: "hour", price: 48.75 },
+        { name: "Plumber (Journeyman)", unit: "hour", price: 34.75 },
+        { name: "Plumber (Master)", unit: "hour", price: 52.00 },
+        { name: "HVAC Technician", unit: "hour", price: 38.50 },
+        { name: "Mason", unit: "hour", price: 31.25 },
+        { name: "Roofer", unit: "hour", price: 26.50 },
+        { name: "Painter", unit: "hour", price: 23.75 },
+        { name: "Tile Setter", unit: "hour", price: 28.50 },
+        { name: "Drywall Installer", unit: "hour", price: 24.50 },
+        { name: "Flooring Installer", unit: "hour", price: 25.75 },
+        { name: "Insulation Installer", unit: "hour", price: 22.50 },
+        { name: "Concrete Finisher", unit: "hour", price: 28.75 },
+        { name: "Foreman", unit: "hour", price: 38.50 },
+        { name: "Project Manager", unit: "hour", price: 65.00 }
+      ],
+      "Equipment": [
+        { name: "Excavator (Mini)", unit: "day", price: 285 },
+        { name: "Excavator (Mid)", unit: "day", price: 485 },
+        { name: "Excavator (Large)", unit: "day", price: 825 },
+        { name: "Bulldozer (Small)", unit: "day", price: 465 },
+        { name: "Bulldozer (Large)", unit: "day", price: 785 },
+        { name: "Backhoe Loader", unit: "day", price: 385 },
+        { name: "Skid Steer", unit: "day", price: 245 },
+        { name: "Wheel Loader", unit: "day", price: 485 },
+        { name: "Crane (25-ton)", unit: "day", price: 650 },
+        { name: "Crane (50-ton)", unit: "day", price: 950 },
+        { name: "Scissor Lift", unit: "day", price: 185 },
+        { name: "Boom Lift", unit: "day", price: 325 },
+        { name: "Concrete Mixer", unit: "day", price: 125 },
+        { name: "Concrete Pump", unit: "day", price: 1250 },
+        { name: "Generator (20kW)", unit: "day", price: 125 },
+        { name: "Generator (100kW)", unit: "day", price: 385 },
+        { name: "Air Compressor", unit: "day", price: 95 },
+        { name: "Scaffolding", unit: "day", price: 85 }
+      ],
+      "Site Work": [
+        { name: "Excavation", unit: "cubic yard", price: 15.50 },
+        { name: "Grading", unit: "sq ft", price: 1.25 },
+        { name: "Fill Dirt", unit: "cubic yard", price: 28 },
+        { name: "Topsoil", unit: "cubic yard", price: 45 },
+        { name: "Gravel Base", unit: "ton", price: 38 },
+        { name: "Concrete Driveway", unit: "sq ft", price: 8.50 },
+        { name: "Asphalt Driveway", unit: "sq ft", price: 5.75 },
+        { name: "Retaining Wall", unit: "sq ft", price: 22.50 },
+        { name: "French Drain", unit: "linear foot", price: 18.50 },
+        { name: "Silt Fence", unit: "linear foot", price: 3.25 }
+      ],
+      "Landscaping": [
+        { name: "Sod Installation", unit: "sq ft", price: 0.85 },
+        { name: "Seed & Straw", unit: "sq ft", price: 0.25 },
+        { name: "Mulch", unit: "cubic yard", price: 45 },
+        { name: "Decorative Rock", unit: "ton", price: 125 },
+        { name: "Trees (2\" caliper)", unit: "each", price: 285 },
+        { name: "Shrubs (5 gal)", unit: "each", price: 45 },
+        { name: "Irrigation System", unit: "sq ft", price: 2.85 },
+        { name: "Landscape Lighting", unit: "each", price: 125 },
+        { name: "Edging", unit: "linear foot", price: 4.25 }
+      ],
+      "Kitchen & Bath": [
+        { name: "Kitchen Cabinets", unit: "linear foot", price: 185 },
+        { name: "Countertop (Laminate)", unit: "sq ft", price: 35 },
+        { name: "Countertop (Granite)", unit: "sq ft", price: 85 },
+        { name: "Countertop (Quartz)", unit: "sq ft", price: 95 },
+        { name: "Backsplash Tile", unit: "sq ft", price: 12.50 },
+        { name: "Range Hood", unit: "each", price: 485 },
+        { name: "Dishwasher", unit: "each", price: 685 },
+        { name: "Refrigerator", unit: "each", price: 1850 },
+        { name: "Stove/Range", unit: "each", price: 985 },
+        { name: "Microwave", unit: "each", price: 385 },
+        { name: "Vanity (48\")", unit: "each", price: 785 },
+        { name: "Medicine Cabinet", unit: "each", price: 185 }
+      ],
+      "Specialty": [
+        { name: "Solar Panel", unit: "watt", price: 0.85 },
+        { name: "Solar Inverter", unit: "each", price: 1250 },
+        { name: "Battery Storage", unit: "kWh", price: 850 },
+        { name: "Smart Home Hub", unit: "each", price: 485 },
+        { name: "Security System", unit: "each", price: 1250 },
+        { name: "Fire Sprinkler", unit: "head", price: 85 },
+        { name: "Elevator (Residential)", unit: "each", price: 28500 },
+        { name: "Pool (In-ground)", unit: "each", price: 45000 },
+        { name: "Hot Tub", unit: "each", price: 8500 },
+        { name: "Deck (Composite)", unit: "sq ft", price: 35 },
+        { name: "Pergola", unit: "sq ft", price: 45 },
+        { name: "Fence (Wood)", unit: "linear foot", price: 28 },
+        { name: "Fence (Vinyl)", unit: "linear foot", price: 35 }
+      ]
+    };
+
+    // State Management
+    let currentPage = 'dashboard';
     let projects = {};
-    let currentProjectId = null;
-    const githubManager = new GitHubManager();
+    let currentProject = null;
+    let chart = null;
 
-    const debounce = (func, wait) => {
-        let timeout;
-        return (...args) => {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), wait);
-        };
-    };
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeApp();
+    });
 
-    // --- CUSTOM MODAL --- //
-    const showConfirmation = (title, message) => {
-        document.getElementById('modalTitle').textContent = title;
-        document.getElementById('modalMessage').textContent = message;
-        document.getElementById('customModal').classList.remove('hidden');
-
-        return new Promise((resolve) => {
-            document.getElementById('modalConfirm').onclick = () => {
-                document.getElementById('customModal').classList.add('hidden');
-                resolve(true);
-            };
-            document.getElementById('modalCancel').onclick = () => {
-                document.getElementById('customModal').classList.add('hidden');
-                resolve(false);
-            };
+    function initializeApp() {
+      // Event Listeners
+      document.getElementById('darkMode').addEventListener('change', toggleTheme);
+      document.getElementById('menuToggle').addEventListener('click', toggleSidebar);
+      document.getElementById('saveBtn').addEventListener('click', saveProject);
+      
+      // Navigation
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const page = item.getAttribute('data-page');
+          switchPage(page);
         });
-    };
+      });
 
-    // --- INITIALIZATION & UI --- //
-    const initApp = async () => {
-        setupEventListeners();
-        loadLocalProjects(); // Load local first for speed
-        if (githubManager.loadCredentials()) {
-            await updateGitHubStatus(true); // Attempt auto-connect
-            await syncProjectsFromGitHub();
-        } else {
-            showAuthModal();
-        }
+      // Load saved data
+      loadFromStorage();
+      
+      // Initialize first row
+      if (currentPage === 'estimate') {
+        addRow();
+      }
+      
+      updateDashboard();
+    }
 
-        if (Object.keys(projects).length === 0) {
-            createNewProject('My First Project');
-        } else if (!currentProjectId) {
-            currentProjectId = localStorage.getItem('currentProjectId') || Object.keys(projects)[0];
-            if (!projects[currentProjectId]) {
-                currentProjectId = Object.keys(projects)[0];
-            }
+    // Page Navigation
+    function switchPage(page) {
+      // Update navigation
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('data-page') === page) {
+          item.classList.add('active');
         }
+      });
+
+      // Hide all pages
+      document.querySelectorAll('.page').forEach(p => {
+        p.classList.add('hidden');
+      });
+
+      // Show selected page
+      const pageElement = document.getElementById(page + 'Page');
+      if (pageElement) {
+        pageElement.classList.remove('hidden');
+      }
+
+      // Update header
+      const titles = {
+        dashboard: 'Dashboard',
+        estimate: 'Cost Estimate',
+        projects: 'Projects',
+        settings: 'Settings',
+        sync: 'Cloud Sync'
+      };
+      document.getElementById('pageTitle').textContent = titles[page] || 'Dashboard';
+      
+      currentPage = page;
+
+      // Page-specific actions
+      if (page === 'dashboard') {
+        updateDashboard();
+      } else if (page === 'estimate' && document.getElementById('tableBody').children.length === 0) {
+        addRow();
+      } else if (page === 'projects') {
+        displayProjects();
+      }
+    }
+
+    // Theme Toggle
+    function toggleTheme() {
+      const isDark = document.getElementById('darkMode').checked;
+      document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      saveToStorage();
+    }
+
+    // Sidebar Toggle (Mobile)
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+
+    // Add Row to Estimate Table
+    function addRow(data = {}) {
+      const tbody = document.getElementById('tableBody');
+      const row = document.createElement('tr');
+      const rowId = 'row_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      
+      row.innerHTML = `
+        <td>
+          <div style="position: relative;">
+            <input type="text" 
+                   class="form-input item-search" 
+                   placeholder="Search items..." 
+                   value="${data.item || ''}"
+                   onkeyup="filterItems(this)"
+                   onfocus="showDropdown(this)"
+                   onblur="hideDropdown(this)"
+                   data-row-id="${rowId}">
+            <select class="form-select item-select" 
+                    id="select_${rowId}"
+                    style="position: absolute; top: 100%; left: 0; right: 0; max-height: 300px; overflow-y: auto; display: none; z-index: 100;"
+                    onchange="selectItem(this, '${rowId}')"
+                    size="10">
+              ${generateOptions()}
+            </select>
+          </div>
+        </td>
+        <td class="category">${data.category || ''}</td>
+        <td><input type="number" value="${data.quantity || 1}" min="0" step="0.01" onchange="calculateRow(this)"></td>
+        <td class="unit">${data.unit || ''}</td>
+        <td><input type="number" value="${data.unitPrice || 0}" min="0" step="0.01" onchange="calculateRow(this)"></td>
+        <td class="total">$0.00</td>
+        <td>
+          <button class="btn btn-danger btn-icon" onclick="deleteRow(this)">🗑️</button>
+        </td>
+      `;
+      
+      tbody.appendChild(row);
+      
+      if (data.item) {
+        calculateRow(row.querySelector('input[type="number"]'));
+      }
+    }
+
+    // Generate options for select
+    function generateOptions(filter = '') {
+      const lowerFilter = filter.toLowerCase();
+      let options = '<option value="">-- Select Item --</option>';
+      
+      Object.entries(itemsDB).forEach(([category, items]) => {
+        const filteredItems = items.filter(item => 
+          filter === '' || 
+          item.name.toLowerCase().includes(lowerFilter) ||
+          category.toLowerCase().includes(lowerFilter)
+        );
         
-        updateProjectSelector();
-        loadCurrentProject();
-    };
+        if (filteredItems.length > 0) {
+          options += `<optgroup label="${category}">`;
+          filteredItems.forEach(item => {
+            options += `<option value="${item.name}" 
+                               data-unit="${item.unit}" 
+                               data-price="${item.price}" 
+                               data-category="${category}">
+                          ${item.name} (${item.unit} - ${item.price})
+                        </option>`;
+          });
+          options += '</optgroup>';
+        }
+      });
+      
+      return options;
+    }
 
-    const showAuthModal = () => document.getElementById('authModal').classList.remove('hidden');
-    const hideAuthModal = () => document.getElementById('authModal').classList.add('hidden');
+    // Filter items in dropdown
+    function filterItems(input) {
+      const rowId = input.getAttribute('data-row-id');
+      const select = document.getElementById('select_' + rowId);
+      select.innerHTML = generateOptions(input.value);
+      if (input.value.length > 0) {
+        select.style.display = 'block';
+      }
+    }
 
-    const updateGitHubStatus = async (tryConnect = false) => {
-        const statusEl = document.getElementById('githubStatus');
-        const connectBtn = document.getElementById('connectGitHubMainBtn');
+    // Show dropdown
+    function showDropdown(input) {
+      const rowId = input.getAttribute('data-row-id');
+      const select = document.getElementById('select_' + rowId);
+      setTimeout(() => {
+        select.style.display = 'block';
+      }, 100);
+    }
+
+    // Hide dropdown
+    function hideDropdown(input) {
+      const rowId = input.getAttribute('data-row-id');
+      const select = document.getElementById('select_' + rowId);
+      setTimeout(() => {
+        if (!select.matches(':hover')) {
+          select.style.display = 'none';
+        }
+      }, 200);
+    }
+
+    // Select item from dropdown
+    function selectItem(select, rowId) {
+      const option = select.selectedOptions[0];
+      const row = select.closest('tr');
+      const input = row.querySelector('.item-search');
+      
+      if (option && option.value) {
+        input.value = option.value;
+        row.querySelector('.category').textContent = option.getAttribute('data-category');
+        row.querySelector('.unit').textContent = option.getAttribute('data-unit');
+        row.querySelector('input[type="number"]:nth-of-type(2)').value = option.getAttribute('data-price');
         
-        if (tryConnect && githubManager.token) {
-            const success = await githubManager.connect(githubManager.username, githubManager.token, githubManager.repo);
-            githubManager.isConnected = success;
-        }
+        calculateRow(input);
+        select.style.display = 'none';
+      }
+    }
 
-        if (githubManager.isConnected) {
-            statusEl.className = 'p-3 rounded-md text-sm text-center font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-            statusEl.innerHTML = `✅ Connected to ${githubManager.repo}`;
-            connectBtn.innerHTML = `<span>🔄</span><span>Sync/Reconnect</span>`;
-        } else {
-            statusEl.className = 'p-3 rounded-md text-sm text-center font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
-            statusEl.innerHTML = `❌ Disconnected. Data is local.`;
-            connectBtn.innerHTML = `<span>🔗</span><span>Connect GitHub</span>`;
-        }
-    };
-    
-    const showTemporaryStatus = (element, message, success = true, duration = 3000) => {
-        const originalHTML = element.innerHTML;
-        const originalClasses = element.className;
-        element.disabled = true;
+    // Update Item Selection (modified to work with search)
+    function updateItem(element) {
+      calculateRow(element);
+    }
 
-        element.className = `${originalClasses.split(' ').filter(c => !c.startsWith('bg-')).join(' ')} ${success ? 'bg-green-600' : 'bg-red-600'}`;
-        element.innerHTML = `<span>${success ? '✅' : '❌'}</span><span>${message}</span>`;
-        
-        setTimeout(() => {
-            element.innerHTML = originalHTML;
-            element.className = originalClasses;
-            element.disabled = false;
-        }, duration);
-    };
+    // Calculate Row Total
+    function calculateRow(element) {
+      const row = element.closest('tr');
+      const quantity = parseFloat(row.cells[2].querySelector('input').value) || 0;
+      const unitPrice = parseFloat(row.cells[4].querySelector('input').value) || 0;
+      const total = quantity * unitPrice;
+      
+      row.querySelector('.total').textContent = `$${total.toFixed(2)}`;
+      
+      calculateTotals();
+    }
 
-    // --- PROJECT MANAGEMENT --- //
-    const loadLocalProjects = () => {
-        const localData = localStorage.getItem('projects');
-        if (localData) {
-            projects = JSON.parse(localData);
-        }
-    };
-    
-    const saveAllProjectsLocally = () => {
-        localStorage.setItem('projects', JSON.stringify(projects));
-        if(currentProjectId) localStorage.setItem('currentProjectId', currentProjectId);
-    };
+    // Calculate All Totals
+    function calculateTotals() {
+      const rows = document.querySelectorAll('#tableBody tr');
+      let subtotal = 0;
+      
+      rows.forEach(row => {
+        const totalText = row.querySelector('.total').textContent;
+        subtotal += parseFloat(totalText.replace('$', '')) || 0;
+      });
+      
+      const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+      const contingencyRate = parseFloat(document.getElementById('contingency').value) || 0;
+      
+      const tax = subtotal * (taxRate / 100);
+      const contingency = subtotal * (contingencyRate / 100);
+      const grandTotal = subtotal + tax + contingency;
+      
+      document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+      document.getElementById('tax').textContent = `$${tax.toFixed(2)}`;
+      document.getElementById('contingencyAmount').textContent = `$${contingency.toFixed(2)}`;
+      document.getElementById('grandTotal').textContent = `$${grandTotal.toFixed(2)}`;
+    }
 
-    const syncProjectsFromGitHub = async () => {
-        if (!githubManager.isConnected) return;
-        const statusEl = document.getElementById('githubStatus');
-        statusEl.innerHTML = `<span class="spinner w-4 h-4 inline-block border-2 border-transparent border-t-current rounded-full"></span> Syncing...`;
+    // Delete Row
+    function deleteRow(button) {
+      if (confirm('Delete this item?')) {
+        button.closest('tr').remove();
+        calculateTotals();
+      }
+    }
 
-        try {
-            const githubProjects = await githubManager.loadProjects();
-            // Merge projects, GitHub is the source of truth
-            projects = { ...projects, ...githubProjects }; 
-            
-            if (Object.keys(githubProjects).length > 0) {
-                 showTemporaryStatus(document.getElementById('connectGitHubMainBtn'), 'Sync Complete', true, 2000);
-            }
-            saveAllProjectsLocally();
-            updateProjectSelector();
-            loadCurrentProject(); // Reload to reflect changes
-        } catch (e) {
-            console.error(e);
-        } finally {
-            updateGitHubStatus();
-        }
-    };
-    
-    const createNewProject = (name) => {
-        const projectId = 'proj_' + Date.now();
-        projects[projectId] = {
-            id: projectId, name: name, projectName: name,
-            regionFactor: '1.00', taxRate: '8.25', contingency: '10',
-            darkMode: document.body.classList.contains('dark'),
-            timestamp: new Date().toISOString(), rows: []
-        };
-        currentProjectId = projectId;
-        saveAllProjectsLocally();
-        return projectId;
-    };
-    
-    const handleNewProject = async () => {
-        const name = prompt('Enter new project name:', 'New Project ' + (Object.keys(projects).length + 1));
-        if (name) {
-            await saveCurrentProject();
-            createNewProject(name);
-            updateProjectSelector();
-            loadCurrentProject();
-        }
-    };
-    
-    const handleDeleteProject = async () => {
-        if (!currentProjectId || Object.keys(projects).length <= 1) {
-            alert('Cannot delete the last project.');
-            return;
-        }
-        const confirmed = await showConfirmation('Delete Project', `Are you sure you want to delete "${projects[currentProjectId].name}"? This action cannot be undone.`);
-        if (confirmed) {
-            if (githubManager.isConnected) {
-                await githubManager.deleteProject(currentProjectId);
-            }
-            delete projects[currentProjectId];
-            currentProjectId = Object.keys(projects)[0];
-            saveAllProjectsLocally();
-            updateProjectSelector();
-            loadCurrentProject();
-        }
-    };
-    
-    const updateProjectSelector = () => {
-        const selector = document.getElementById('projectSelector');
-        selector.innerHTML = '';
-        Object.values(projects).sort((a,b) => (a.name > b.name) ? 1 : -1).forEach(project => {
-            const option = document.createElement('option');
-            option.value = project.id;
-            option.textContent = project.name;
-            selector.appendChild(option);
-        });
-        selector.value = currentProjectId;
-    };
-
-    const handleProjectChange = async (event) => {
-        await saveCurrentProject();
-        currentProjectId = event.target.value;
-        localStorage.setItem('currentProjectId', currentProjectId);
-        loadCurrentProject();
-    };
-
-    const saveCurrentProject = async (showFeedback = false) => {
-        if (!currentProjectId) return;
-
-        const projectData = {
-            ...projects[currentProjectId],
-            name: document.getElementById('projectName').value,
-            projectName: document.getElementById('projectName').value,
-            regionFactor: document.getElementById('regionFactor').value,
-            taxRate: document.getElementById('taxRate').value,
-            contingency: document.getElementById('contingency').value,
-            darkMode: document.getElementById('darkModeToggle').checked,
-            timestamp: new Date().toISOString(),
-            rows: Array.from(document.querySelectorAll('#tableBody tr')).map(getRowData)
-        };
-        projects[currentProjectId] = projectData;
-        saveAllProjectsLocally();
-        
-        if (githubManager.isConnected) {
-            const success = await githubManager.saveProject(currentProjectId, projectData);
-            if (showFeedback) {
-                 showTemporaryStatus(document.getElementById('saveEstimateBtn'), success ? 'Saved to Cloud' : 'Save Failed', success);
-            }
-        } else if (showFeedback) {
-             showTemporaryStatus(document.getElementById('saveEstimateBtn'), 'Saved Locally');
-        }
-    };
-    
-    const loadCurrentProject = () => {
-        if (!currentProjectId || !projects[currentProjectId]) return;
-        const project = projects[currentProjectId];
-
-        document.getElementById('projectName').value = project.name || '';
-        document.getElementById('regionFactor').value = project.regionFactor || '1.00';
-        document.getElementById('taxRate').value = project.taxRate || '8.25';
-        document.getElementById('contingency').value = project.contingency || '10';
-        
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        darkModeToggle.checked = project.darkMode || false;
-        document.documentElement.classList.toggle('dark', darkModeToggle.checked);
-        
-        const tableBody = document.getElementById('tableBody');
-        tableBody.innerHTML = '';
-        if (project.rows && project.rows.length > 0) {
-            project.rows.forEach(addRow);
-        } else {
-            addRow(); // Start with one empty row
-        }
-        updateSummary();
-    };
-
-    // --- FILE OPERATIONS --- //
-    const downloadProject = async () => {
-        if (!currentProjectId) return;
-        await saveCurrentProject(); // Ensure latest data is saved
-        const project = projects[currentProjectId];
-        const blob = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${project.name.replace(/[^a-z0-9]/gi, '_')}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    };
-
-    const loadProjectFile = (event) => {
-        const file = event.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-            try {
-                const data = JSON.parse(e.target.result);
-                if (data.id && data.rows) { // It's a single project file
-                    const newId = 'proj_' + Date.now();
-                    data.id = newId;
-                    projects[newId] = data;
-                    currentProjectId = newId;
-                    saveAllProjectsLocally();
-                    updateProjectSelector();
-                    loadCurrentProject();
-                    if (githubManager.isConnected) await githubManager.saveProject(newId, data);
-                    alert('Project loaded successfully!');
-                } else {
-                    alert('Invalid project file format.');
-                }
-            } catch (error) {
-                alert('Error loading file. Please ensure it is a valid JSON project file.');
-            }
-        };
-        reader.readAsText(file);
-        event.target.value = ''; // Reset file input
-    };
-
-    // --- EVENT LISTENERS --- //
-    const setupEventListeners = () => {
-        document.getElementById('darkModeToggle').addEventListener('change', async (e) => {
-            document.documentElement.classList.toggle('dark', e.target.checked);
-            if(costChart) updateChart();
-            await saveCurrentProject();
-        });
-        
-        document.getElementById('projectSelector').addEventListener('change', handleProjectChange);
-        document.getElementById('newProjectBtn').addEventListener('click', handleNewProject);
-        document.getElementById('deleteProjectBtn').addEventListener('click', handleDeleteProject);
-
-        // GitHub Modal
-        document.getElementById('connectGitHubBtn').addEventListener('click', handleGitHubConnect);
-        document.getElementById('skipGitHubBtn').addEventListener('click', hideAuthModal);
-        document.getElementById('connectGitHubMainBtn').addEventListener('click', async () => {
-             if (githubManager.isConnected) {
-                await syncProjectsFromGitHub();
-            } else {
-                showAuthModal();
-            }
-        });
-        
-        // Settings & Actions
-        ['regionFactor', 'taxRate', 'contingency', 'projectName'].forEach(id => {
-            document.getElementById(id).addEventListener('input', debounce(async () => {
-                recalculateAllRows();
-                updateSummary();
-                await saveCurrentProject();
-            }, 500));
-        });
-        
-        document.getElementById('addItemBtn').addEventListener('click', addRow);
-        document.getElementById('resetEstimateBtn').addEventListener('click', handleReset);
-        document.getElementById('saveEstimateBtn').addEventListener('click', () => saveCurrentProject(true));
-        document.getElementById('exportCsvBtn').addEventListener('click', exportToCSV);
-        
-        // File I/O
-        document.getElementById('downloadProjectBtn').addEventListener('click', downloadProject);
-        document.getElementById('loadProjectFileBtn').addEventListener('click', () => document.getElementById('fileInput').click());
-        document.getElementById('fileInput').addEventListener('change', loadProjectFile);
-    };
-
-    const handleGitHubConnect = async () => {
-        const username = document.getElementById('githubUsername').value.trim();
-        const token = document.getElementById('githubToken').value.trim();
-        const repo = document.getElementById('githubRepo').value.trim();
-        if (!username || !token || !repo) {
-            alert('Please fill in all GitHub fields.'); return;
-        }
-
-        const btn = document.getElementById('connectGitHubBtn');
-        showTemporaryStatus(btn, 'Connecting...', true, 99999);
-
-        const success = await githubManager.connect(username, token, repo);
-        if (success) {
-            hideAuthModal();
-            updateGitHubStatus();
-            await syncProjectsFromGitHub(); // Sync after connecting
-            // Push all local projects to GitHub
-            for (const [id, project] of Object.entries(projects)) {
-                await githubManager.saveProject(id, project);
-            }
-        } else {
-            alert('Failed to connect. Check token, username, and repo name.');
-        }
-        showTemporaryStatus(btn, 'Connect GitHub', true, 10); // Reset button
-    };
-
-    // --- TABLE & CALCULATIONS --- //
-    const createItemSelect = (selectedItem = '') => {
-        const select = document.createElement('select');
-        select.className = 'w-full bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-600 rounded-md p-1 focus:ring-blue-500 focus:border-blue-500 text-xs';
-        select.innerHTML = '<option value="">-- Select Item --</option>';
-        const categories = [...new Set(priceDatabase.map(item => item.category))];
-        categories.forEach(category => {
-            const optgroup = document.createElement('optgroup');
-            optgroup.label = category;
-            priceDatabase.filter(item => item.category === category).forEach(item => {
-                const option = document.createElement('option');
-                option.value = item.item;
-                option.textContent = `${item.item} (${item.unit})`;
-                if (selectedItem === item.item) option.selected = true;
-                optgroup.appendChild(option);
-            });
-            select.appendChild(optgroup);
-        });
-        select.addEventListener('change', e => updateRowFromSelect(e.target));
-        return select;
-    };
-
-    const addRow = (savedData = {}) => {
-        const tbody = document.getElementById('tableBody');
-        const row = tbody.insertRow();
-        row.className = 'bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600';
-
-        const createCell = (content, className = '') => {
-            const cell = row.insertCell();
-            cell.className = `px-4 py-2 ${className}`;
-            if (typeof content === 'string') {
-                cell.innerHTML = content;
-            } else {
-                cell.appendChild(content);
-            }
-            return cell;
-        };
-        const createInput = (type, value, handler) => {
-            const input = document.createElement('input');
-            input.type = type;
-            input.value = value;
-            input.min = '0';
-            input.className = 'w-16 bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-600 rounded-md p-1 focus:ring-blue-500 focus:border-blue-500 text-xs';
-            input.addEventListener('input', debounce(e => handler(e.target), 300));
-            return input;
-        };
-
-        createCell(createItemSelect(savedData.item || ''));
-        createCell('', 'font-medium text-gray-900 dark:text-white'); // Category
-        createCell(createInput('number', savedData.quantity || '1', updateRowCalculations));
-        createCell(''); // Unit
-        createCell(createInput('number', savedData.unitPrice || '0', updateRowCalculations));
-        createCell(createInput('number', savedData.markup || '10', updateRowCalculations));
-        createCell('$0.00', 'font-bold text-right'); // Final Cost
-        
-        const actionsCell = createCell('', 'text-center');
-        const deleteBtn = document.createElement('button');
-        deleteBtn.innerHTML = '🗑️';
-        deleteBtn.className = 'p-1 hover:text-red-500';
-        deleteBtn.title = 'Delete Item';
-        deleteBtn.onclick = async e => {
-            if (document.querySelectorAll('#tableBody tr').length > 1) {
-                e.target.closest('tr').remove();
-                updateSummary();
-                await saveCurrentProject();
-            } else {
-                alert("Cannot delete the last item. Reset the project instead.");
-            }
-        };
-        actionsCell.appendChild(deleteBtn);
-
-        if (savedData.item) {
-            updateRowFromSelect(row.cells[0].querySelector('select'));
-        }
-    };
-
-    const getRowData = (row) => ({
+    // Save Project
+    function saveProject() {
+      const projectName = document.getElementById('projectName').value || 'Untitled Project';
+      const projectId = currentProject || 'project_' + Date.now();
+      
+      const rows = Array.from(document.querySelectorAll('#tableBody tr')).map(row => ({
         item: row.cells[0].querySelector('select').value,
         category: row.cells[1].textContent,
         quantity: row.cells[2].querySelector('input').value,
         unit: row.cells[3].textContent,
-        unitPrice: row.cells[4].querySelector('input').value,
-        markup: row.cells[5].querySelector('input').value
-    });
+        unitPrice: row.cells[4].querySelector('input').value
+      }));
+      
+      projects[projectId] = {
+        id: projectId,
+        name: projectName,
+        regionFactor: document.getElementById('regionFactor').value,
+        taxRate: document.getElementById('taxRate').value,
+        contingency: document.getElementById('contingency').value,
+        rows: rows,
+        timestamp: new Date().toISOString()
+      };
+      
+      currentProject = projectId;
+      saveToStorage();
+      
+      // Show confirmation
+      const saveBtn = document.getElementById('saveBtn');
+      saveBtn.textContent = '✅ Saved!';
+      setTimeout(() => {
+        saveBtn.textContent = '💾 Save';
+      }, 2000);
+    }
 
-    const updateRowFromSelect = (select) => {
-        const row = select.closest('tr');
-        const itemData = priceDatabase.find(item => item.item === select.value);
-        if (itemData) {
-            row.cells[1].textContent = itemData.category;
-            row.cells[3].textContent = itemData.unit;
-            row.cells[4].querySelector('input').value = itemData.price;
-        }
-        updateRowCalculations(select);
-    };
+    // Load from Storage
+    function loadFromStorage() {
+      const saved = localStorage.getItem('constructionEstimator');
+      if (saved) {
+        const data = JSON.parse(saved);
+        projects = data.projects || {};
+        currentProject = data.currentProject;
+        document.getElementById('darkMode').checked = data.darkMode || false;
+        toggleTheme();
+      }
+    }
 
-    const updateRowCalculations = (element) => {
-        const row = element.closest('tr');
-        const qty = parseFloat(row.cells[2].querySelector('input').value) || 0;
-        const price = parseFloat(row.cells[4].querySelector('input').value) || 0;
-        const markup = parseFloat(row.cells[5].querySelector('input').value) || 0;
-        const regionFactor = parseFloat(document.getElementById('regionFactor').value) || 1;
-        
-        const finalCost = qty * price * (1 + markup / 100) * regionFactor;
-        row.cells[6].textContent = `$${finalCost.toFixed(2)}`;
-        
-        updateSummary();
-        saveCurrentProject(); // Auto-save on calculation changes
-    };
+    // Save to Storage
+    function saveToStorage() {
+      const data = {
+        projects: projects,
+        currentProject: currentProject,
+        darkMode: document.getElementById('darkMode').checked
+      };
+      localStorage.setItem('constructionEstimator', JSON.stringify(data));
+    }
 
-    const recalculateAllRows = () => {
-        document.querySelectorAll('#tableBody tr').forEach(row => updateRowCalculations(row.cells[0].querySelector('select')));
-    };
-
-    const updateSummary = () => {
-        const rows = document.querySelectorAll('#tableBody tr');
-        let subtotal = 0;
-        let lineCosts = [];
-
-        rows.forEach(row => {
-            const cost = parseFloat(row.cells[6].textContent.replace('$', '')) || 0;
-            subtotal += cost;
-            lineCosts.push(cost);
-        });
-
-        const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
-        const contingencyRate = parseFloat(document.getElementById('contingency').value) || 0;
-        const taxAmount = subtotal * (taxRate / 100);
-        const contingencyAmount = subtotal * (contingencyRate / 100);
-        const grandTotal = subtotal + taxAmount + contingencyAmount;
-        const avgLineCost = rows.length > 0 ? (subtotal / rows.length) : 0;
-
-        document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
-        document.getElementById('taxAmount').textContent = `$${taxAmount.toFixed(2)}`;
-        document.getElementById('contingencyAmount').textContent = `$${contingencyAmount.toFixed(2)}`;
-        document.getElementById('grandTotal').textContent = `$${grandTotal.toFixed(2)}`;
-        
-        document.getElementById('itemCount').textContent = rows.length;
-        document.getElementById('avgLineCost').textContent = `$${avgLineCost.toFixed(2)}`;
-
-        updateChart();
-    };
-
-    const updateChart = () => {
-        const categoryTotals = {};
-        document.querySelectorAll('#tableBody tr').forEach(row => {
-            const category = row.cells[1].textContent || 'Uncategorized';
-            const cost = parseFloat(row.cells[6].textContent.replace('$', '')) || 0;
-            categoryTotals[category] = (categoryTotals[category] || 0) + cost;
-        });
-
-        const labels = Object.keys(categoryTotals);
-        const data = Object.values(categoryTotals);
-        const isDark = document.documentElement.classList.contains('dark');
-
-        const chartData = {
-            labels: labels,
-            datasets: [{
-                data: data,
-                backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#6366f1', '#ec4899', '#6b7280'],
-                borderColor: isDark ? '#1f2937' : '#ffffff',
-                borderWidth: 2,
-            }]
-        };
-
-        if (costChart) {
-            costChart.data = chartData;
-            costChart.options.plugins.legend.labels.color = isDark ? '#d1d5db' : '#4b5563';
-            costChart.options.plugins.tooltip.backgroundColor = isDark ? 'rgba(31, 41, 55, 0.8)' : 'rgba(255, 255, 255, 0.8)';
-            costChart.options.plugins.tooltip.titleColor = isDark ? '#f9fafb' : '#1f2937';
-            costChart.options.plugins.tooltip.bodyColor = isDark ? '#d1d5db' : '#4b5563';
-            costChart.update();
-        } else {
-            const ctx = document.getElementById('costChart').getContext('2d');
-            costChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: chartData,
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'right', labels: { color: isDark ? '#d1d5db' : '#4b5563', boxWidth: 12, padding: 15, font: { size: 12 } } },
-                        tooltip: {
-                            enabled: true, mode: 'index', intersect: false,
-                            backgroundColor: isDark ? 'rgba(31, 41, 55, 0.8)' : 'rgba(255, 255, 255, 0.8)',
-                            titleColor: isDark ? '#f9fafb' : '#1f2937', bodyColor: isDark ? '#d1d5db' : '#4b5563',
-                            borderColor: isDark ? '#4b5563' : '#e5e7eb', borderWidth: 1,
-                            callbacks: {
-                                label: (context) => `${context.label}: $${context.parsed.toFixed(2)}`
-                            }
-                        }
-                    }
-                }
-            });
-        }
-    };
-    
-    const handleReset = async () => {
-        const confirmed = await showConfirmation('Reset Project', 'Are you sure you want to clear all items from the current project?');
-        if (confirmed) {
-            document.getElementById('tableBody').innerHTML = '';
-            addRow();
-            updateSummary();
-            await saveCurrentProject();
-        }
-    };
-    
-    const exportToCSV = async () => {
-        await saveCurrentProject();
-        const project = projects[currentProjectId];
-        let csvContent = "data:text/csv;charset=utf-8,";
-        csvContent += `Project Name,"${project.name}"\r\n`;
-        csvContent += `Date,"${new Date().toLocaleDateString()}"\r\n\r\n`;
-        csvContent += "Item,Category,Quantity,Unit,Unit Price,Markup %,Final Cost\r\n";
-        
+    // Update Dashboard
+    function updateDashboard() {
+      const projectCount = Object.keys(projects).length;
+      let totalValue = 0;
+      let totalItems = 0;
+      const categoryTotals = {};
+      
+      Object.values(projects).forEach(project => {
         project.rows.forEach(row => {
-            const finalCost = (parseFloat(row.quantity) || 0) * (parseFloat(row.unitPrice) || 0) * (1 + (parseFloat(row.markup) || 0) / 100) * (parseFloat(project.regionFactor) || 1);
-            csvContent += `"${row.item}","${row.category}",${row.quantity},"${row.unit}",${row.unitPrice},${row.markup},${finalCost.toFixed(2)}\r\n`;
+          const total = parseFloat(row.quantity) * parseFloat(row.unitPrice);
+          totalValue += total;
+          totalItems++;
+          
+          const category = row.category || 'Other';
+          categoryTotals[category] = (categoryTotals[category] || 0) + total;
         });
-        
-        csvContent += `\r\n,,,,,Subtotal,$${document.getElementById('subtotal').textContent.replace('$', '')}\r\n`;
-        csvContent += `,,,,,Tax,$${document.getElementById('taxAmount').textContent.replace('$', '')}\r\n`;
-        csvContent += `,,,,,Contingency,$${document.getElementById('contingencyAmount').textContent.replace('$', '')}\r\n`;
-        csvContent += `,,,,,Grand Total,$${document.getElementById('grandTotal').textContent.replace('$', '')}\r\n`;
+      });
+      
+      document.getElementById('totalProjects').textContent = projectCount;
+      document.getElementById('totalValue').textContent = `$${totalValue.toFixed(0)}`;
+      document.getElementById('avgProject').textContent = projectCount > 0 ? 
+        `$${(totalValue / projectCount).toFixed(0)}` : '$0';
+      document.getElementById('activeItems').textContent = totalItems;
+      
+      // Update Chart
+      updateChart(categoryTotals);
+    }
 
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `${project.name.replace(/[^a-z0-9]/gi, '_')}_estimate.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
+    // Update Chart
+    function updateChart(data) {
+      const ctx = document.getElementById('chartCanvas');
+      if (!ctx) return;
+      
+      if (chart) {
+        chart.destroy();
+      }
+      
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      
+      chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: Object.keys(data),
+          datasets: [{
+            data: Object.values(data),
+            backgroundColor: [
+              '#3b82f6',
+              '#10b981',
+              '#f59e0b',
+              '#ef4444',
+              '#8b5cf6'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: isDark ? '#f9fafb' : '#111827',
+                padding: 15
+              }
+            }
+          }
+        }
+      });
+    }
 
-    // --- START APP --- //
-    document.addEventListener('DOMContentLoaded', initApp);
+    // Display Projects
+    function displayProjects() {
+      const container = document.getElementById('projectsList');
+      
+      if (Object.keys(projects).length === 0) {
+        container.innerHTML = '<p class="text-secondary">No saved projects yet.</p>';
+        return;
+      }
+      
+      container.innerHTML = Object.entries(projects).map(([id, project]) => `
+        <div class="card" style="margin-bottom: 0.5rem;">
+          <div class="card-body" style="padding: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <strong>${project.name}</strong>
+                <p style="font-size: 0.875rem; color: var(--text-secondary); margin: 0;">
+                  ${new Date(project.timestamp).toLocaleDateString()} - ${project.rows.length} items
+                </p>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-primary btn-icon" onclick="loadProjectData('${id}')">📂</button>
+                <button class="btn btn-danger btn-icon" onclick="deleteProject('${id}')">🗑️</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
 
-    </script>
+    // Load Project Data
+    function loadProjectData(projectId) {
+      const project = projects[projectId];
+      if (!project) return;
+      
+      currentProject = projectId;
+      
+      // Switch to estimate page
+      switchPage('estimate');
+      
+      // Load project data
+      document.getElementById('projectName').value = project.name;
+      document.getElementById('regionFactor').value = project.regionFactor;
+      document.getElementById('taxRate').value = project.taxRate;
+      document.getElementById('contingency').value = project.contingency;
+      
+      // Clear and load rows
+      document.getElementById('tableBody').innerHTML = '';
+      project.rows.forEach(row => addRow(row));
+      
+      calculateTotals();
+    }
+
+    // Delete Project
+    function deleteProject(projectId) {
+      if (confirm('Delete this project?')) {
+        delete projects[projectId];
+        if (currentProject === projectId) {
+          currentProject = null;
+        }
+        saveToStorage();
+        displayProjects();
+        updateDashboard();
+      }
+    }
+
+    // Export Data
+    function exportData() {
+      const data = {
+        projects: projects,
+        exportDate: new Date().toISOString()
+      };
+      
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `construction_estimates_${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Modal Functions
+    function showModal(title, body, onConfirm) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalBody').innerHTML = body;
+      document.getElementById('modalConfirm').onclick = () => {
+        onConfirm();
+        closeModal();
+      };
+      document.getElementById('modal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+
+    // GitHub Connection (Placeholder)
+    function connectGitHub() {
+      const username = document.getElementById('githubUsername').value;
+      const token = document.getElementById('githubToken').value;
+      
+      if (username && token) {
+        document.getElementById('syncStatus').innerHTML = `
+          <p class="text-success">✅ Connected to GitHub</p>
+          <p style="font-size: 0.875rem;">User: ${username}</p>
+        `;
+      }
+    }
+  </script>
 </body>
 </html>
