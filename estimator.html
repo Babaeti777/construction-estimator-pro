@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Construction Estimator Pro</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Light Theme Colors */
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8f9fa;
+      --bg-tertiary: #f1f3f5;
+      --text-primary: #212529;
+      --text-secondary: #495057;
+      --text-tertiary: #6c757d;
+      --border-color: #e9ecef;
+      --accent-color: #4263eb;
+      --accent-hover: #364fc7;
+      --success-color: #51cf66;
+      --danger-color: #ff6b6b;
+      --warning-color: #ffd43b;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+      
+      /* Spacing */
+      --spacing-xs: 0.5rem;
+      --spacing-sm: 0.75rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2rem;
+      --spacing-2xl: 3rem;
+      
+      /* Border Radius */
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #1a1b1e;
+      --bg-secondary: #25262b;
+      --bg-tertiary: #2c2e33;
+      --text-primary: #f8f9fa;
+      --text-secondary: #ced4da;
+      --text-tertiary: #868e96;
+      --border-color: #373a40;
+      --accent-color: #5c7cfa;
+      --accent-hover: #748ffc;
+      --success-color: #69db7c;
+      --danger-color: #ff8787;
+      --warning-color: #ffd43b;
+      
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.5);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-lg);
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: var(--spacing-2xl);
+      padding: var(--spacing-2xl) 0;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: var(--spacing-sm);
+      color: var(--text-primary);
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 1.125rem;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-primary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: var(--spacing-lg);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .card-header {
+      background: var(--bg-tertiary);
+      padding: var(--spacing-md) var(--spacing-lg);
+      font-weight: 600;
+      font-size: 1.125rem;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .card-body {
+      padding: var(--spacing-lg);
+    }
+
+    /* Form Elements */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
+
+    .form-label {
+      font-weight: 500;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    .form-input,
+    .form-select {
+      padding: var(--spacing-sm) var(--spacing-md);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(66, 99, 235, 0.1);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: var(--spacing-sm) var(--spacing-lg);
+      border: none;
+      border-radius: var(--radius-md);
+      font-weight: 500;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-success {
+      background: var(--success-color);
+      color: white;
+    }
+
+    .btn-danger {
+      background: var(--danger-color);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: var(--spacing-sm);
+      flex-wrap: wrap;
+    }
+
+    /* Toggle Switch */
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 48px;
+      height: 24px;
+    }
+
+    .toggle-input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--border-color);
+      transition: 0.3s;
+      border-radius: 24px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+
+    .toggle-input:checked + .toggle-slider {
+      background: var(--accent-color);
+    }
+
+    .toggle-input:checked + .toggle-slider:before {
+      transform: translateX(24px);
+    }
+
+    /* Theme Toggle Icons */
+    .theme-icons {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+
+    /* Table */
+    .table-container {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      background: var(--bg-primary);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .table th {
+      background: var(--bg-tertiary);
+      padding: var(--spacing-md);
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .table td {
+      padding: var(--spacing-sm);
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+
+    .table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table tr:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .table select,
+    .table input {
+      width: 100%;
+      padding: var(--spacing-xs);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+    }
+
+    .table-footer {
+      background: var(--bg-tertiary);
+      font-weight: 600;
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .stat-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent-color);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .stat-card.success .stat-value {
+      color: var(--success-color);
+    }
+
+    .stat-card.warning .stat-value {
+      color: var(--warning-color);
+    }
+
+    /* Chart */
+    .chart-container {
+      height: 400px;
+      position: relative;
+      padding: var(--spacing-md);
+    }
+
+    /* Alert */
+    .alert {
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--spacing-md);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border-left: 4px solid var(--accent-color);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: var(--spacing-md);
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .btn-group {
+        justify-content: center;
+      }
+      
+      .table {
+        font-size: 0.75rem;
+      }
+      
+      .table th,
+      .table td {
+        padding: var(--spacing-xs);
+      }
+      
+      .stat-value {
+        font-size: 1.5rem;
+      }
+    }
+
+    /* Loading State */
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    /* Animations */
+    .fade-in {
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-tertiary);
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <div class="container">
+    <div class="header">
+      <h1>Construction Estimator Pro</h1>
+      <p>Modern construction cost estimation tool</p>
+    </div>
+
+    <div class="card fade-in">
+      <div class="card-header">
+        <span>📁</span>
+        <span>Project Manager</span>
+      </div>
+      <div class="card-body">
+        <div class="form-grid">
+          <div class="form-group" style="grid-column: 1 / -1;">
+            <label class="form-label">Current Project</label>
+            <div style="display: flex; gap: 0.5rem;">
+              <select id="projectSelector" class="form-select" style="flex: 1;">
+                <option value="">-- Select Project --</option>
+              </select>
+              <button id="newProjectBtn" class="btn btn-primary">
+                <span>➕</span>
+                <span>New</span>
+              </button>
+              <button id="deleteProjectBtn" class="btn btn-danger">
+                <span>🗑️</span>
+                <span>Delete</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="btn-group" style="margin-top: 1rem;">
+          <button id="downloadProjectBtn" class="btn btn-success">
+            <span>💾</span>
+            <span>Download Project</span>
+          </button>
+          <button id="loadProjectFileBtn" class="btn btn-secondary">
+            <span>📂</span>
+            <span>Load Project File</span>
+          </button>
+          <button id="downloadAllProjectsBtn" class="btn btn-primary">
+            <span>📦</span>
+            <span>Download All Projects</span>
+          </button>
+        </div>
+        <input type="file" id="fileInput" accept=".json" style="display: none;">
+        
+        <div class="alert" style="margin-top: 1rem; margin-bottom: 0;">
+          💡 <strong>Tip:</strong> Your projects are saved in memory during this session. Download project files to save permanently and reload them anytime.
+        </div>
+      </div>
+    </div>
+
+    <div class="card fade-in">
+      <div class="card-header">
+        <span>📈</span>
+        <span>2024-2025 Market Trends</span>
+      </div>
+      <div class="card-body">
+        <div class="stats-grid">
+          <div class="stat-card warning">
+            <div class="stat-value">+38.7%</div>
+            <div class="stat-label">Materials vs Pre-Pandemic</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">+2.7%</div>
+            <div class="stat-label">Annual Labor Cost Growth</div>
+          </div>
+          <div class="stat-card warning">
+            <div class="stat-value">546k</div>
+            <div class="stat-label">Worker Shortage</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">5-7%</div>
+            <div class="stat-label">Equipment Rental Increase</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card fade-in">
+      <div class="card-header">
+        <span>⚙️</span>
+        <span>Project Settings</span>
+      </div>
+      <div class="card-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="projectName">Project Name</label>
+            <input type="text" id="projectName" class="form-input" placeholder="Enter project name">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="regionFactor">Regional Adjustment</label>
+            <select id="regionFactor" class="form-select">
+              <option value="1.00">National Average</option>
+              <option value="0.80">Southeast (10-20% below avg)</option>
+              <option value="0.90">Midwest</option>
+              <option value="0.95">South Central</option>
+              <option value="1.10">Northeast</option>
+              <option value="1.25">West Coast (25-40% premium)</option>
+              <option value="1.40">San Francisco Bay Area</option>
+              <option value="1.35">New York Metro</option>
+              <option value="1.30">Los Angeles Metro</option>
+              <option value="1.15">Chicago Metro</option>
+              <option value="0.75">Rural Areas (20-40% savings)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="taxRate">Tax Rate (%)</label>
+            <input type="number" id="taxRate" class="form-input" value="8.25" step="0.01" min="0" max="20">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="contingency">Contingency (%)</label>
+            <input type="number" id="contingency" class="form-input" value="10" step="0.5" min="0" max="50">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Theme</label>
+            <div class="toggle-container">
+              <div class="theme-icons">
+                <span>☀️</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="darkModeToggle" class="toggle-input">
+                  <span class="toggle-slider"></span>
+                </label>
+                <span>🌙</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="btn-group">
+          <button id="addItemBtn" class="btn btn-success">
+            <span>➕</span>
+            <span>Add Item</span>
+          </button>
+          <button id="saveEstimateBtn" class="btn btn-primary">
+            <span>💾</span>
+            <span>Save</span>
+          </button>
+          <button id="exportCsvBtn" class="btn btn-secondary">
+            <span>📊</span>
+            <span>Export CSV</span>
+          </button>
+          <button id="resetEstimateBtn" class="btn btn-danger">
+            <span>🔄</span>
+            <span>Reset</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card fade-in">
+      <div class="card-header">
+        <span>📋</span>
+        <span>Cost Items</span>
+      </div>
+      <div class="card-body">
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+                <th>Unit Price ($)</th>
+                <th>Extended ($)</th>
+                <th>Markup (%)</th>
+                <th>Final Cost ($)</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              </tbody>
+            <tfoot>
+              <tr class="table-footer">
+                <td colspan="7"><strong>Subtotal</strong></td>
+                <td id="subtotal"><strong>$0.00</strong></td>
+                <td></td>
+              </tr>
+              <tr class="table-footer">
+                <td colspan="7"><strong>Tax</strong></td>
+                <td id="taxAmount"><strong>$0.00</strong></td>
+                <td></td>
+              </tr>
+              <tr class="table-footer">
+                <td colspan="7"><strong>Contingency</strong></td>
+                <td id="contingencyAmount"><strong>$0.00</strong></td>
+                <td></td>
+              </tr>
+              <tr class="table-footer">
+                <td colspan="7"><strong>Grand Total</strong></td>
+                <td id="grandTotal"><strong>$0.00</strong></td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card fade-in">
+      <div class="card-header">
+        <span>📊</span>
+        <span>Project Summary</span>
+      </div>
+      <div class="card-body">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="itemCount">0</div>
+            <div class="stat-label">Total Items</div>
+          </div>
+          <div class="stat-card success">
+            <div class="stat-value" id="totalCost">$0.00</div>
+            <div class="stat-label">Grand Total</div>
+          </div>
+          <div class="stat-card warning">
+            <div class="stat-value" id="maxLineCost">$0.00</div>
+            <div class="stat-label">Highest Line Item</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="avgLineCost">$0.00</div>
+            <div class="stat-label">Average Line Cost</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card fade-in">
+      <div class="card-header">
+        <span>📈</span>
+        <span>Cost Analysis</span>
+      </div>
+      <div class="card-body">
+        <div class="chart-container">
+          <canvas id="costChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Comprehensive 2024-2025 Construction Cost Database
+    const priceDatabase = [
+        // === TRADITIONAL MATERIALS ===
+        { category: "Material", item: "Concrete (Ready Mix)", unit: "cubic yard", price: 166 },
+        { category: "Material", item: "Concrete Installation", unit: "sq ft", price: 10.50 },
+        { category: "Material", item: "Structural Steel", unit: "ton", price: 1650 },
+        { category: "Material", item: "Rebar #4", unit: "linear foot", price: 1.32 },
+        { category: "Material", item: "Rebar #5", unit: "linear foot", price: 2.05 },
+        { category: "Material", item: "Rebar #6", unit: "linear foot", price: 2.94 },
+        
+        // Lumber
+        { category: "Material", item: "Framing Lumber 2x4", unit: "linear foot", price: 1.65 },
+        { category: "Material", item: "Framing Lumber 2x6", unit: "linear foot", price: 2.80 },
+        { category: "Material", item: "Framing Lumber 2x8", unit: "linear foot", price: 4.25 },
+        { category: "Material", item: "Framing Lumber 2x10", unit: "linear foot", price: 6.15 },
+        { category: "Material", item: "Framing Lumber 2x12", unit: "linear foot", price: 8.90 },
+        { category: "Material", item: "Plywood 1/2\"", unit: "sheet", price: 35 },
+        { category: "Material", item: "Plywood 3/4\"", unit: "sheet", price: 52 },
+        { category: "Material", item: "OSB Sheathing 7/16\"", unit: "sheet", price: 28 },
+        
+        // Drywall
+        { category: "Material", item: "Drywall 1/2\"", unit: "sheet", price: 16.80 },
+        { category: "Material", item: "Drywall 5/8\"", unit: "sheet", price: 19.25 },
+        { category: "Material", item: "Drywall Installation", unit: "sq ft", price: 0.65 },
+        
+        // Insulation
+        { category: "Material", item: "Fiberglass Batts R-15", unit: "sq ft", price: 0.95 },
+        { category: "Material", item: "Fiberglass Batts R-19", unit: "sq ft", price: 1.15 },
+        { category: "Material", item: "Spray Foam Insulation", unit: "sq ft", price: 1.50 },
+        { category: "Material", item: "Rigid Foam Board", unit: "sq ft", price: 1.25 },
+        
+        // Roofing Materials
+        { category: "Material", item: "Asphalt Shingles", unit: "sq ft", price: 3.75 },
+        { category: "Material", item: "Metal Roofing", unit: "sq ft", price: 8.50 },
+        { category: "Material", item: "Clay Tiles", unit: "sq ft", price: 12.00 },
+        { category: "Material", item: "Roof Installation", unit: "sq ft", price: 8.75 },
+        
+        // Siding & Exterior
+        { category: "Material", item: "Vinyl Siding", unit: "sq ft", price: 5.25 },
+        { category: "Material", item: "Fiber Cement Siding", unit: "sq ft", price: 8.75 },
+        { category: "Material", item: "Brick Veneer", unit: "sq ft", price: 15.50 },
+        { category: "Material", item: "Stucco System", unit: "sq ft", price: 9.25 },
+        
+        // Windows & Doors
+        { category: "Material", item: "Windows (Standard)", unit: "each", price: 485 },
+        { category: "Material", item: "Windows (Energy Efficient)", unit: "each", price: 725 },
+        { category: "Material", item: "Windows (Premium)", unit: "each", price: 1250 },
+        { category: "Material", item: "Doors (Interior)", unit: "each", price: 215 },
+        { category: "Material", item: "Doors (Exterior)", unit: "each", price: 775 },
+        { category: "Material", item: "Sliding Patio Door", unit: "each", price: 1850 },
+        
+        // === SUSTAINABLE MATERIALS ===
+        { category: "Sustainable", item: "Cross-Laminated Timber (CLT)", unit: "cubic meter", price: 650 },
+        { category: "Sustainable", item: "Engineered Wood Beams", unit: "linear foot", price: 18.50 },
+        { category: "Sustainable", item: "Bamboo Flooring", unit: "sq ft", price: 8.25 },
+        { category: "Sustainable", item: "Cork Flooring", unit: "sq ft", price: 6.75 },
+        { category: "Sustainable", item: "Recycled Steel", unit: "ton", price: 1485 },
+        { category: "Sustainable", item: "Recycled Concrete", unit: "cubic yard", price: 145 },
+        { category: "Sustainable", item: "Green Roof (Extensive)", unit: "sq ft", price: 20.00 },
+        { category: "Sustainable", item: "Green Roof (Intensive)", unit: "sq ft", price: 52.50 },
+        { category: "Sustainable", item: "Solar Shingles", unit: "sq ft", price: 21.50 },
+        { category: "Sustainable", item: "Geothermal Heat Pump", unit: "ton", price: 6500 },
+        
+        // === TRADITIONAL LABOR ===
+        { category: "Labor", item: "Carpenter (Skilled)", unit: "hour", price: 29.50 },
+        { category: "Labor", item: "Carpenter (Helper)", unit: "hour", price: 19.75 },
+        { category: "Labor", item: "Carpenter (Master)", unit: "hour", price: 42.00 },
+        { category: "Labor", item: "Electrician (Journeyman)", unit: "hour", price: 34.50 },
+        { category: "Labor", item: "Electrician (Master)", unit: "hour", price: 48.75 },
+        { category: "Labor", item: "Electrician (Apprentice)", unit: "hour", price: 21.50 },
+        { category: "Labor", item: "Plumber (Journeyman)", unit: "hour", price: 34.75 },
+        { category: "Labor", item: "Plumber (Master)", unit: "hour", price: 52.00 },
+        { category: "Labor", item: "Mason", unit: "hour", price: 31.25 },
+        { category: "Labor", item: "Roofer", unit: "hour", price: 26.50 },
+        { category: "Labor", item: "Painter", unit: "hour", price: 23.75 },
+        { category: "Labor", item: "Tile Setter", unit: "hour", price: 28.50 },
+        { category: "Labor", item: "Flooring Installer", unit: "hour", price: 25.75 },
+        { category: "Labor", item: "General Laborer", unit: "hour", price: 18.25 },
+        { category: "Labor", item: "Foreman", unit: "hour", price: 38.50 },
+        { category: "Labor", item: "Project Manager", unit: "hour", price: 65.00 },
+        
+        // === SPECIALIZED TRADES ===
+        { category: "Specialized Labor", item: "Solar Installer", unit: "hour", price: 32.00 },
+        { category: "Specialized Labor", item: "BIM Specialist", unit: "hour", price: 43.50 },
+        { category: "Specialized Labor", item: "Smart Home Technician", unit: "hour", price: 45.00 },
+        { category: "Specialized Labor", item: "Green Building Specialist", unit: "hour", price: 38.75 },
+        { category: "Specialized Labor", item: "Construction Drone Operator", unit: "hour", price: 60.00 },
+        { category: "Specialized Labor", item: "LiDAR Mapping Specialist", unit: "hour", price: 95.00 },
+        { category: "Specialized Labor", item: "LEED Consultant", unit: "hour", price: 125.00 },
+        { category: "Specialized Labor", item: "Energy Auditor", unit: "hour", price: 85.00 },
+        { category: "Specialized Labor", item: "Commissioning Agent", unit: "hour", price: 110.00 },
+        
+        // === EQUIPMENT RENTAL ===
+        { category: "Equipment", item: "Excavator (Mini <8k lbs)", unit: "day", price: 285 },
+        { category: "Equipment", item: "Excavator (Mid 8-20k lbs)", unit: "day", price: 485 },
+        { category: "Equipment", item: "Excavator (Large >20k lbs)", unit: "day", price: 825 },
+        { category: "Equipment", item: "Bulldozer (Small)", unit: "day", price: 465 },
+        { category: "Equipment", item: "Bulldozer (Large)", unit: "day", price: 785 },
+        { category: "Equipment", item: "Crane (Mobile 25-ton)", unit: "day", price: 650 },
+        { category: "Equipment", item: "Crane (Mobile 50-ton)", unit: "day", price: 950 },
+        { category: "Equipment", item: "Crane (Tower)", unit: "day", price: 1850 },
+        { category: "Equipment", item: "Loader (Skid Steer)", unit: "day", price: 245 },
+        { category: "Equipment", item: "Loader (Wheel)", unit: "day", price: 485 },
+        { category: "Equipment", item: "Concrete Mixer Truck", unit: "day", price: 685 },
+        { category: "Equipment", item: "Concrete Pump", unit: "day", price: 1250 },
+        { category: "Equipment", item: "Scissor Lift", unit: "day", price: 185 },
+        { category: "Equipment", item: "Boom Lift", unit: "day", price: 325 },
+        { category: "Equipment", item: "Generator (20kW)", unit: "day", price: 125 },
+        { category: "Equipment", item: "Generator (100kW)", unit: "day", price: 385 },
+        { category: "Equipment", item: "Compressor (185 CFM)", unit: "day", price: 95 },
+        
+        // === TECH-ENHANCED EQUIPMENT ===
+        { category: "Tech Equipment", item: "GPS-Enabled Excavator", unit: "day", price: 625 },
+        { category: "Tech Equipment", item: "Telematics Bulldozer", unit: "day", price: 875 },
+        { category: "Tech Equipment", item: "Electric Mini Excavator", unit: "day", price: 385 },
+        { category: "Tech Equipment", item: "Hybrid Crane", unit: "day", price: 1185 },
+        { category: "Tech Equipment", item: "Construction Drone", unit: "day", price: 485 },
+        { category: "Tech Equipment", item: "3D Laser Scanner", unit: "day", price: 750 },
+        { category: "Tech Equipment", item: "Robotic Total Station", unit: "day", price: 285 },
+        
+        // === HVAC & MECHANICAL SYSTEMS ===
+        { category: "HVAC", item: "Central AC Unit (3-ton)", unit: "each", price: 4850 },
+        { category: "HVAC", item: "Central AC Unit (5-ton)", unit: "each", price: 6750 },
+        { category: "HVAC", item: "Heat Pump (3-ton)", unit: "each", price: 5250 },
+        { category: "HVAC", item: "Furnace (80% Efficiency)", unit: "each", price: 2850 },
+        { category: "HVAC", item: "Furnace (95% Efficiency)", unit: "each", price: 4250 },
+        { category: "HVAC", item: "Ductwork Installation", unit: "sq ft", price: 12.50 },
+        { category: "HVAC", item: "Commercial HVAC", unit: "sq ft", price: 22.50 },
+        { category: "HVAC", item: "Smart Thermostat", unit: "each", price: 385 },
+        { category: "HVAC", item: "Zone Control System", unit: "each", price: 2850 },
+        
+        // === SOLAR & RENEWABLE ENERGY ===
+        { category: "Solar", item: "Solar Panel Installation", unit: "watt", price: 2.50 },
+        { category: "Solar", item: "Solar Panels (Monocrystalline)", unit: "watt", price: 0.85 },
+        { category: "Solar", item: "Solar Inverter", unit: "each", price: 1250 },
+        { category: "Solar", item: "Battery Storage (10kWh)", unit: "each", price: 8500 },
+        { category: "Solar", item: "EV Charging Station", unit: "each", price: 1850 },
+        { category: "Solar", item: "Solar Permits & Inspection", unit: "project", price: 1200 },
+        
+        // === SMART HOME & TECHNOLOGY ===
+        { category: "Smart Tech", item: "Home Automation Hub", unit: "each", price: 485 },
+        { category: "Smart Tech", item: "Smart Lighting System", unit: "sq ft", price: 8.50 },
+        { category: "Smart Tech", item: "Security System (Basic)", unit: "each", price: 1250 },
+        { category: "Smart Tech", item: "Security System (Advanced)", unit: "each", price: 3850 },
+        { category: "Smart Tech", item: "Smart Door Locks", unit: "each", price: 285 },
+        { category: "Smart Tech", item: "Whole House Audio", unit: "each", price: 4500 },
+        { category: "Smart Tech", item: "Fiber Optic Wiring", unit: "linear foot", price: 4.25 },
+        { category: "Smart Tech", item: "Cat6A Network Wiring", unit: "linear foot", price: 2.75 },
+        
+        // === SUBCONTRACTORS ===
+        { category: "Subcontractor", item: "Framing", unit: "sq ft", price: 9.00 },
+        { category: "Subcontractor", item: "Electrical (Rough-in)", unit: "sq ft", price: 6.00 },
+        { category: "Subcontractor", item: "Electrical (Finish)", unit: "sq ft", price: 4.50 },
+        { category: "Subcontractor", item: "Plumbing (Rough-in)", unit: "sq ft", price: 4.75 },
+        { category: "Subcontractor", item: "Plumbing (Finish)", unit: "sq ft", price: 3.25 },
+        { category: "Subcontractor", item: "HVAC Installation", unit: "sq ft", price: 8.50 },
+        { category: "Subcontractor", item: "Drywall & Finishing", unit: "sq ft", price: 2.85 },
+        { category: "Subcontractor", item: "Painting (Interior)", unit: "sq ft", price: 2.25 },
+        { category: "Subcontractor", item: "Painting (Exterior)", unit: "sq ft", price: 3.50 },
+        { category: "Subcontractor", item: "Flooring (Hardwood)", unit: "sq ft", price: 14.50 },
+        { category: "Subcontractor", item: "Flooring (Tile)", unit: "sq ft", price: 10.25 },
+        { category: "Subcontractor", item: "Flooring (Carpet)", unit: "sq ft", price: 6.75 },
+        { category: "Subcontractor", item: "Flooring (Luxury Vinyl)", unit: "sq ft", price: 8.50 },
+        { category: "Subcontractor", item: "Kitchen Cabinets", unit: "linear foot", price: 185 },
+        { category: "Subcontractor", item: "Countertops (Granite)", unit: "sq ft", price: 85 },
+        { category: "Subcontractor", item: "Countertops (Quartz)", unit: "sq ft", price: 95 },
+        
+        // === EMERGING SUBCONTRACTOR SERVICES ===
+        { category: "Emerging Services", item: "Solar Installation", unit: "watt", price: 1.00 },
+        { category: "Emerging Services", item: "Smart Home Integration", unit: "sq ft", price: 12.50 },
+        { category: "Emerging Services", item: "EV Charging Installation", unit: "each", price: 1200 },
+        { category: "Emerging Services", item: "Energy Efficiency Retrofit", unit: "sq ft", price: 15.75 },
+        { category: "Emerging Services", item: "BIM Modeling", unit: "hour", price: 115 },
+        { category: "Emerging Services", item: "3D Scanning Services", unit: "sq ft", price: 0.85 },
+        { category: "Emerging Services", item: "Drone Survey", unit: "acre", price: 285 },
+        { category: "Emerging Services", item: "LEED Certification", unit: "project", price: 12500 },
+        { category: "Emerging Services", item: "Energy Modeling", unit: "project", price: 8500 },
+        
+        // === SPECIALIZED FINISHES ===
+        { category: "Finishes", item: "Luxury Vinyl Plank", unit: "sq ft", price: 6.50 },
+        { category: "Finishes", item: "Engineered Hardwood", unit: "sq ft", price: 12.75 },
+        { category: "Finishes", item: "Natural Stone Tile", unit: "sq ft", price: 18.50 },
+        { category: "Finishes", item: "Ceramic Tile", unit: "sq ft", price: 8.25 },
+        { category: "Finishes", item: "Polished Concrete", unit: "sq ft", price: 7.50 },
+        { category: "Finishes", item: "Epoxy Flooring", unit: "sq ft", price: 9.25 },
+        { category: "Finishes", item: "Crown Molding", unit: "linear foot", price: 12.50 },
+        { category: "Finishes", item: "Wainscoting", unit: "sq ft", price: 18.75 },
+        
+        // === SITE WORK & UTILITIES ===
+        { category: "Site Work", item: "Excavation", unit: "cubic yard", price: 15.50 },
+        { category: "Site Work", item: "Grading", unit: "sq ft", price: 1.25 },
+        { category: "Site Work", item: "Concrete Driveway", unit: "sq ft", price: 8.50 },
+        { category: "Site Work", item: "Asphalt Driveway", unit: "sq ft", price: 5.75 },
+        { category: "Site Work", item: "Landscaping", unit: "sq ft", price: 4.25 },
+        { category: "Site Work", item: "Irrigation System", unit: "sq ft", price: 2.85 },
+        { category: "Site Work", item: "Water Service Connection", unit: "each", price: 3500 },
+        { category: "Site Work", item: "Sewer Connection", unit: "each", price: 4500 },
+        { category: "Site Work", item: "Electric Service (200A)", unit: "each", price: 2850 },
+        { category: "Site Work", item: "Gas Line Connection", unit: "linear foot", price: 18.50 }
+    ];
+
+    let costChart = null;
+    let projects = {};
+    let currentProjectId = null;
+
+    // Initialize app
+    function initApp() {
+      setupEventListeners();
+      createNewProject('Project 1');
+      updateProjectSelector();
+      updateSummary();
+    }
+
+    // Create new project
+    function createNewProject(name) {
+      const projectId = 'proj_' + Date.now();
+      projects[projectId] = {
+        id: projectId,
+        name: name,
+        projectName: name,
+        regionFactor: '1.00',
+        taxRate: '8.25',
+        contingency: '10',
+        darkMode: false,
+        timestamp: new Date().toISOString(),
+        rows: []
+      };
+      currentProjectId = projectId;
+      return projectId;
+    }
+
+    // New project button handler
+    function newProject() {
+      const name = prompt('Enter project name:', 'New Project');
+      if (name) {
+        saveCurrentProject();
+        createNewProject(name);
+        loadCurrentProject();
+        updateProjectSelector();
+        if (document.getElementById('tableBody').children.length === 0) {
+          addRow();
+        }
+        updateSummary();
+      }
+    }
+
+    // Delete project
+    function deleteProject() {
+      if (!currentProjectId || Object.keys(projects).length <= 1) {
+        alert('Cannot delete the last project');
+        return;
+      }
+      
+      if (confirm('Delete this project? This cannot be undone.')) {
+        delete projects[currentProjectId];
+        currentProjectId = Object.keys(projects)[0];
+        loadCurrentProject();
+        updateProjectSelector();
+      }
+    }
+
+    // Update project selector
+    function updateProjectSelector() {
+      const selector = document.getElementById('projectSelector');
+      selector.innerHTML = '<option value="">-- Select Project --</option>';
+      
+      Object.entries(projects).forEach(([id, project]) => {
+        const option = document.createElement('option');
+        option.value = id;
+        option.textContent = project.name;
+        if (id === currentProjectId) option.selected = true;
+        selector.appendChild(option);
+      });
+    }
+
+    // Project selector change handler
+    function handleProjectChange() {
+      const selector = document.getElementById('projectSelector');
+      if (selector.value && selector.value !== currentProjectId) {
+        saveCurrentProject();
+        currentProjectId = selector.value;
+        loadCurrentProject();
+      }
+    }
+
+    // Save current project
+    function saveCurrentProject() {
+      if (!currentProjectId) return;
+      
+      projects[currentProjectId] = {
+        ...projects[currentProjectId],
+        projectName: document.getElementById('projectName').value,
+        regionFactor: document.getElementById('regionFactor').value,
+        taxRate: document.getElementById('taxRate').value,
+        contingency: document.getElementById('contingency').value,
+        darkMode: document.getElementById('darkModeToggle').checked,
+        timestamp: new Date().toISOString(),
+        rows: Array.from(document.querySelectorAll('#tableBody tr')).map(getRowData)
+      };
+    }
+
+    // Load current project
+    function loadCurrentProject() {
+      if (!currentProjectId || !projects[currentProjectId]) return;
+      
+      const project = projects[currentProjectId];
+      document.getElementById('projectName').value = project.projectName || '';
+      document.getElementById('regionFactor').value = project.regionFactor || '1.00';
+      document.getElementById('taxRate').value = project.taxRate || '8.25';
+      document.getElementById('contingency').value = project.contingency || '10';
+      document.getElementById('darkModeToggle').checked = project.darkMode || false;
+      
+      document.body.setAttribute('data-theme', project.darkMode ? 'dark' : 'light');
+      
+      document.getElementById('tableBody').innerHTML = '';
+      if (project.rows && project.rows.length > 0) {
+        project.rows.forEach(addRow);
+      } else {
+        addRow();
+      }
+      updateSummary();
+    }
+
+    // Download current project
+    function downloadProject() {
+      if (!currentProjectId) return;
+      
+      saveCurrentProject();
+      const project = projects[currentProjectId];
+      const blob = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${project.name.replace(/[^a-z0-9]/gi, '_')}_estimate.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Download all projects
+    function downloadAllProjects() {
+      saveCurrentProject();
+      const blob = new Blob([JSON.stringify(projects, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `all_construction_projects_${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Load project file
+    function loadProjectFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          
+          // Check if it's a single project or multiple projects
+          if (data.id && data.rows) {
+            // Single project
+            saveCurrentProject();
+            const projectId = 'proj_' + Date.now();
+            projects[projectId] = { ...data, id: projectId };
+            currentProjectId = projectId;
+            loadCurrentProject();
+            updateProjectSelector();
+          } else {
+            // Multiple projects
+            saveCurrentProject();
+            projects = data;
+            currentProjectId = Object.keys(projects)[0];
+            loadCurrentProject();
+            updateProjectSelector();
+          }
+          
+          alert('Project(s) loaded successfully!');
+        } catch (error) {
+          alert('Error loading file. Please ensure it\'s a valid project file.');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    // Event listeners
+    function setupEventListeners() {
+      document.getElementById('darkModeToggle').addEventListener('change', toggleDarkMode);
+      document.getElementById('projectSelector').addEventListener('change', handleProjectChange);
+      
+      ['regionFactor', 'taxRate', 'contingency'].forEach(id => {
+        document.getElementById(id).addEventListener('input', debounce(handleSettingsChange, 300));
+      });
+      
+      document.getElementById('projectName').addEventListener('input', debounce(saveEstimate, 500));
+      
+      // Project Manager buttons
+      document.getElementById('newProjectBtn').addEventListener('click', newProject);
+      document.getElementById('deleteProjectBtn').addEventListener('click', deleteProject);
+      document.getElementById('downloadProjectBtn').addEventListener('click', downloadProject);
+      document.getElementById('loadProjectFileBtn').addEventListener('click', () => document.getElementById('fileInput').click());
+      document.getElementById('downloadAllProjectsBtn').addEventListener('click', downloadAllProjects);
+      document.getElementById('fileInput').addEventListener('change', loadProjectFile);
+
+      // Settings buttons
+      document.getElementById('addItemBtn').addEventListener('click', addRow);
+      document.getElementById('saveEstimateBtn').addEventListener('click', saveEstimate);
+      document.getElementById('exportCsvBtn').addEventListener('click', exportToCSV);
+      document.getElementById('resetEstimateBtn').addEventListener('click', resetEstimate);
+    }
+
+    // Debounce utility
+    function debounce(func, wait) {
+      let timeout;
+      return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+    }
+
+    // Dark mode toggle
+    function toggleDarkMode() {
+      const isDark = document.getElementById('darkModeToggle').checked;
+      document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      saveEstimate();
+      if (costChart) updateChart();
+    }
+
+    // Settings change handler
+    function handleSettingsChange() {
+      recalculateAllRows();
+      updateSummary();
+      saveEstimate();
+    }
+
+    // Create item dropdown
+    function createItemSelect(selectedItem = '') {
+      const select = document.createElement('select');
+      select.className = 'form-select';
+      
+      const defaultOption = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.textContent = '-- Select Item --';
+      select.appendChild(defaultOption);
+      
+      const categories = [...new Set(priceDatabase.map(item => item.category))];
+      categories.forEach(category => {
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = category;
+        
+        priceDatabase
+          .filter(item => item.category === category)
+          .forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.item;
+            option.textContent = `${item.item} (${item.unit})`;
+            if (selectedItem === item.item) option.selected = true;
+            optgroup.appendChild(option);
+          });
+        
+        select.appendChild(optgroup);
+      });
+      
+      select.addEventListener('change', function() {
+        updateRowFromSelect(this);
+        updateSummary();
+        saveEstimate();
+      });
+      
+      return select;
+    }
+
+    // Add row
+    function addRow(savedData = {}) {
+      const tbody = document.getElementById('tableBody');
+      const row = document.createElement('tr');
+      row.className = 'fade-in';
+      
+      // Create cells
+      const cells = [
+        createItemCell(savedData),
+        createTextCell(savedData.category || ''),
+        createInputCell('number', savedData.quantity || '0', 'updateRowCalculations'),
+        createTextCell(savedData.unit || ''),
+        createInputCell('number', savedData.unitPrice || '0', 'updateRowCalculations'),
+        createTextCell('$0.00'),
+        createInputCell('number', savedData.markup || '0', 'updateRowCalculations'),
+        createTextCell('$0.00'),
+        createActionsCell()
+      ];
+      
+      cells.forEach(cell => row.appendChild(cell));
+      tbody.appendChild(row);
+      
+      if (savedData.item) {
+        updateRowFromSelect(row.cells[0].querySelector('select'));
+      }
+      updateRowCalculations(row.cells[2].querySelector('input'));
+    }
+
+    function createItemCell(savedData) {
+      const cell = document.createElement('td');
+      const select = createItemSelect(savedData.item || '');
+      cell.appendChild(select);
+      return cell;
+    }
+
+    function createTextCell(text) {
+      const cell = document.createElement('td');
+      cell.textContent = text;
+      return cell;
+    }
+
+    function createInputCell(type, value, handler) {
+      const cell = document.createElement('td');
+      const input = document.createElement('input');
+      input.type = type;
+      input.value = value;
+      input.min = '0';
+      input.step = '0.01';
+      input.className = 'form-input';
+      input.addEventListener('input', function() {
+        window[handler](this);
+        updateSummary();
+        saveEstimate();
+      });
+      cell.appendChild(input);
+      return cell;
+    }
+
+    function createActionsCell() {
+      const cell = document.createElement('td');
+      
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = '🗑️';
+      deleteBtn.className = 'btn btn-danger';
+      deleteBtn.style.padding = '0.5rem';
+      deleteBtn.style.marginRight = '0.25rem';
+      deleteBtn.addEventListener('click', function() {
+        if (confirm('Delete this item?')) {
+          cell.closest('tr').remove();
+          updateSummary();
+          saveEstimate();
+        }
+      });
+      
+      const duplicateBtn = document.createElement('button');
+      duplicateBtn.textContent = '📋';
+      duplicateBtn.className = 'btn btn-secondary';
+      duplicateBtn.style.padding = '0.5rem';
+      duplicateBtn.addEventListener('click', function() {
+        const rowData = getRowData(cell.closest('tr'));
+        addRow(rowData);
+        updateSummary();
+        saveEstimate();
+      });
+      
+      cell.appendChild(deleteBtn);
+      cell.appendChild(duplicateBtn);
+      return cell;
+    }
+
+    // Get row data
+    function getRowData(row) {
+      return {
+        item: row.cells[0].querySelector('select').value,
+        category: row.cells[1].textContent,
+        quantity: row.cells[2].querySelector('input').value,
+        unit: row.cells[3].textContent,
+        unitPrice: row.cells[4].querySelector('input').value,
+        markup: row.cells[6].querySelector('input').value
+      };
+    }
+
+    // Update row from select
+    function updateRowFromSelect(select) {
+      const row = select.closest('tr');
+      const selectedItem = select.value;
+      
+      if (selectedItem) {
+        const itemData = priceDatabase.find(item => item.item === selectedItem);
+        if (itemData) {
+          row.cells[1].textContent = itemData.category;
+          row.cells[3].textContent = itemData.unit;
+          row.cells[4].querySelector('input').value = itemData.price;
+        }
+      } else {
+        row.cells[1].textContent = '';
+        row.cells[3].textContent = '';
+        row.cells[4].querySelector('input').value = '0';
+      }
+      
+      updateRowCalculations(select);
+    }
+
+    // Update row calculations with enhanced validation
+    function updateRowCalculations(element) {
+      const row = element.closest('tr');
+      const quantityInput = row.cells[2].querySelector('input');
+      const unitPriceInput = row.cells[4].querySelector('input');
+      const markupInput = row.cells[6].querySelector('input');
+
+      // **IMPLEMENTED SUGGESTION: Prevent negative values**
+      if (parseFloat(quantityInput.value) < 0) quantityInput.value = '0';
+      if (parseFloat(markupInput.value) < 0) markupInput.value = '0';
+      
+      const quantity = parseFloat(quantityInput.value) || 0;
+      const unitPrice = parseFloat(unitPriceInput.value) || 0;
+      const markup = parseFloat(markupInput.value) || 0;
+      const regionFactor = parseFloat(document.getElementById('regionFactor').value) || 1;
+      
+      const extended = quantity * unitPrice;
+      const withMarkup = extended * (1 + markup / 100);
+      const final = withMarkup * regionFactor;
+      
+      row.cells[5].textContent = `$${extended.toFixed(2)}`;
+      row.cells[7].textContent = `$${final.toFixed(2)}`;
+    }
+
+    // Recalculate all rows
+    function recalculateAllRows() {
+      document.querySelectorAll('#tableBody tr').forEach(row => {
+        updateRowCalculations(row.cells[2].querySelector('input'));
+      });
+    }
+
+    // Update summary
+    function updateSummary() {
+      const rows = document.querySelectorAll('#tableBody tr');
+      let subtotal = 0;
+      let maxLine = 0;
+      
+      rows.forEach(row => {
+        const cost = parseFloat(row.cells[7].textContent.replace('$', '')) || 0;
+        subtotal += cost;
+        if (cost > maxLine) maxLine = cost;
+      });
+      
+      const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+      const contingencyRate = parseFloat(document.getElementById('contingency').value) || 0;
+      
+      const taxAmount = subtotal * (taxRate / 100);
+      const contingencyAmount = subtotal * (contingencyRate / 100);
+      const grandTotal = subtotal + taxAmount + contingencyAmount;
+      const avgLineCost = rows.length > 0 ? subtotal / rows.length : 0;
+      
+      // Update footer
+      document.getElementById('subtotal').innerHTML = `<strong>$${subtotal.toFixed(2)}</strong>`;
+      document.getElementById('taxAmount').innerHTML = `<strong>$${taxAmount.toFixed(2)}</strong>`;
+      document.getElementById('contingencyAmount').innerHTML = `<strong>$${contingencyAmount.toFixed(2)}</strong>`;
+      document.getElementById('grandTotal').innerHTML = `<strong>$${grandTotal.toFixed(2)}</strong>`;
+      
+      // Update cards
+      document.getElementById('itemCount').textContent = rows.length;
+      document.getElementById('totalCost').textContent = `$${grandTotal.toFixed(2)}`;
+      document.getElementById('maxLineCost').textContent = `$${maxLine.toFixed(2)}`;
+      document.getElementById('avgLineCost').textContent = `$${avgLineCost.toFixed(2)}`;
+      
+      updateChart();
+    }
+
+    // Update chart
+    function updateChart() {
+      const categoryTotals = {};
+      document.querySelectorAll('#tableBody tr').forEach(row => {
+        const category = row.cells[1].textContent || 'Uncategorized';
+        const cost = parseFloat(row.cells[7].textContent.replace('$', '')) || 0;
+        categoryTotals[category] = (categoryTotals[category] || 0) + cost;
+      });
+      
+      const labels = Object.keys(categoryTotals);
+      const data = Object.values(categoryTotals);
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      
+      const chartData = {
+        labels: labels,
+        datasets: [{
+          data: data,
+          backgroundColor: [
+            '#4263eb', '#51cf66', '#ffd43b', '#ff6b6b',
+            '#a78bfa', '#60a5fa', '#34d399', '#fbbf24'
+          ],
+          borderWidth: 0
+        }]
+      };
+      
+      if (costChart) {
+        costChart.data = chartData;
+        costChart.options.plugins.legend.labels.color = isDark ? '#f8f9fa' : '#212529';
+        costChart.update();
+      } else {
+        const ctx = document.getElementById('costChart').getContext('2d');
+        costChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: chartData,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  color: isDark ? '#f8f9fa' : '#212529',
+                  padding: 20,
+                  font: { size: 12 }
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                    const percentage = ((context.parsed / total) * 100).toFixed(1);
+                    return `${context.label}: $${context.parsed.toFixed(2)} (${percentage}%)`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // Save estimate
+    function saveEstimate() {
+      saveCurrentProject();
+      
+      // Visual feedback
+      const saveBtn = document.getElementById('saveEstimateBtn');
+      const originalHTML = saveBtn.innerHTML;
+      saveBtn.innerHTML = '<span>✅</span><span>Saved!</span>';
+      saveBtn.classList.add('btn-success');
+      setTimeout(() => {
+        saveBtn.innerHTML = originalHTML;
+        saveBtn.classList.remove('btn-success');
+      }, 2000);
+    }
+
+    // Load estimate (for compatibility)
+    function loadEstimate() {
+      // This function is now handled by loadCurrentProject
+    }
+
+    // Reset estimate
+    function resetEstimate() {
+      if (!confirm('Reset the current project? This cannot be undone.')) return;
+      
+      if (!currentProjectId) return;
+      
+      document.getElementById('projectName').value = projects[currentProjectId].name;
+      document.getElementById('regionFactor').value = '1.00';
+      document.getElementById('taxRate').value = '8.25';
+      document.getElementById('contingency').value = '10';
+      document.getElementById('darkModeToggle').checked = false;
+      document.body.setAttribute('data-theme', 'light');
+      
+      document.getElementById('tableBody').innerHTML = '';
+      addRow();
+      updateSummary();
+      saveCurrentProject();
+    }
+
+    // Export to CSV
+    function exportToCSV() {
+      const projectName = document.getElementById('projectName').value || 'Construction Estimate';
+      const rows = document.querySelectorAll('#tableBody tr');
+      
+      let csv = `Project Name:,${projectName}\n`;
+      csv += `Date:,${new Date().toLocaleDateString()}\n`;
+      csv += `Regional Factor:,${document.getElementById('regionFactor').options[document.getElementById('regionFactor').selectedIndex].text}\n`;
+      csv += `Tax Rate:,${document.getElementById('taxRate').value}%\n`;
+      csv += `Contingency:,${document.getElementById('contingency').value}%\n\n`;
+      csv += 'Item,Category,Quantity,Unit,Unit Price,Extended Cost,Markup %,Final Cost\n';
+      
+      rows.forEach(row => {
+        const cells = row.cells;
+        const data = [
+          cells[0].querySelector('select').value || 'Custom Item',
+          cells[1].textContent,
+          cells[2].querySelector('input').value,
+          cells[3].textContent,
+          cells[4].querySelector('input').value,
+          cells[5].textContent.replace('$', ''),
+          cells[6].querySelector('input').value,
+          cells[7].textContent.replace('$', '')
+        ];
+        csv += `"${data.join('","')}"\n`;
+      });
+      
+      csv += '\n';
+      csv += `Subtotal:,${document.getElementById('subtotal').textContent.replace(/[$,]/g, '')}\n`;
+      csv += `Tax:,${document.getElementById('taxAmount').textContent.replace(/[$,]/g, '')}\n`;
+      csv += `Contingency:,${document.getElementById('contingencyAmount').textContent.replace(/[$,]/g, '')}\n`;
+      csv += `Grand Total:,${document.getElementById('grandTotal').textContent.replace(/[$,]/g, '')}\n`;
+      
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${projectName.replace(/[^a-z0-9]/gi, '_')}_estimate.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Initialize when page loads
+    window.addEventListener('load', initApp);
+  </script>
+</body>
+</html>
