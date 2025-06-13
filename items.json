@@ -1,0 +1,700 @@
+{
+  "itemsDB": {
+    "Concrete & Masonry": [{ "name": "Concrete (Ready Mix)", "unit": "cubic yard", "price": 166, "updated": "2024-12" }, { "name": "Concrete Installation", "unit": "sq ft", "price": 10.5, "updated": "2024-12" }, { "name": "Concrete Pump Service", "unit": "hour", "price": 185, "updated": "2024-12" }, { "name": "Rebar #4", "unit": "linear foot", "price": 1.32, "updated": "2024-12" }, { "name": "Rebar #5", "unit": "linear foot", "price": 2.05, "updated": "2024-12" }, { "name": "Rebar #6", "unit": "linear foot", "price": 2.94, "updated": "2024-12" }, { "name": "Wire Mesh (6x6)", "unit": "sq ft", "price": 0.35, "updated": "2024-12" }, { "name": "Concrete Block 8\"", "unit": "each", "price": 2.25, "updated": "2024-12" }, { "name": "Concrete Block 12\"", "unit": "each", "price": 3.15, "updated": "2024-12" }, { "name": "Mortar Mix", "unit": "bag", "price": 8.95, "updated": "2024-12" }, { "name": "Brick (Standard)", "unit": "1000", "price": 485, "updated": "2024-12" }, { "name": "Stone Veneer", "unit": "sq ft", "price": 18.75, "updated": "2024-12" }, { "name": "Concrete Sealer", "unit": "gallon", "price": 32.5, "updated": "2024-12" }],
+    "Structural Steel": [{ "name": "Structural Steel Beam", "unit": "ton", "price": 1650, "updated": "2024-12" }, { "name": "Steel Column", "unit": "ton", "price": 1875, "updated": "2024-12" }, { "name": "Metal Decking", "unit": "sq ft", "price": 3.85, "updated": "2024-12" }, { "name": "Steel Studs 3-5/8\"", "unit": "linear foot", "price": 2.45, "updated": "2024-12" }, { "name": "Steel Studs 6\"", "unit": "linear foot", "price": 3.25, "updated": "2024-12" }, { "name": "Steel Track", "unit": "linear foot", "price": 2.15, "updated": "2024-12" }, { "name": "Welding Labor", "unit": "hour", "price": 85, "updated": "2024-12" }, { "name": "Steel Joist", "unit": "linear foot", "price": 18.5, "updated": "2024-12" }],
+    "Lumber & Wood": [{ "name": "Framing Lumber 2x4x8", "unit": "each", "price": 5.85, "updated": "2024-12" }, { "name": "Framing Lumber 2x4", "unit": "linear foot", "price": 1.65, "updated": "2024-12" }, { "name": "Framing Lumber 2x6", "unit": "linear foot", "price": 2.8, "updated": "2024-12" }, { "name": "Framing Lumber 2x8", "unit": "linear foot", "price": 4.25, "updated": "2024-12" }, { "name": "Framing Lumber 2x10", "unit": "linear foot", "price": 6.15, "updated": "2024-12" }, { "name": "Framing Lumber 2x12", "unit": "linear foot", "price": 8.9, "updated": "2024-12" }, { "name": "Plywood 1/2\" CDX", "unit": "sheet", "price": 35, "updated": "2024-12" }, { "name": "Plywood 3/4\" CDX", "unit": "sheet", "price": 52, "updated": "2024-12" }, { "name": "OSB Sheathing 7/16\"", "unit": "sheet", "price": 28, "updated": "2024-12" }, { "name": "OSB Sheathing 5/8\"", "unit": "sheet", "price": 36, "updated": "2024-12" }, { "name": "Engineered I-Joist 11-7/8\"", "unit": "linear foot", "price": 4.85, "updated": "2024-12" }, { "name": "Glulam Beam 3.5x11.5", "unit": "linear foot", "price": 22.5, "updated": "2024-12" }, { "name": "LVL Beam 1.75x11.875", "unit": "linear foot", "price": 8.75, "updated": "2024-12" }],
+    "Roofing": [{ "name": "Asphalt Shingles (3-tab)", "unit": "sq ft", "price": 3.75, "updated": "2024-12" }, { "name": "Architectural Shingles", "unit": "sq ft", "price": 4.85, "updated": "2024-12" }, { "name": "Metal Roofing (Standing Seam)", "unit": "sq ft", "price": 8.5, "updated": "2024-12" }, { "name": "Metal Roofing (Corrugated)", "unit": "sq ft", "price": 5.25, "updated": "2024-12" }, { "name": "Clay Tiles", "unit": "sq ft", "price": 12, "updated": "2024-12" }, { "name": "Concrete Tiles", "unit": "sq ft", "price": 8.75, "updated": "2024-12" }, { "name": "EPDM Rubber", "unit": "sq ft", "price": 5.85, "updated": "2024-12" }, { "name": "TPO Membrane", "unit": "sq ft", "price": 6.25, "updated": "2024-12" }, { "name": "Modified Bitumen", "unit": "sq ft", "price": 4.95, "updated": "2024-12" }, { "name": "Roof Underlayment (Felt)", "unit": "sq ft", "price": 0.45, "updated": "2024-12" }, { "name": "Roof Underlayment (Synthetic)", "unit": "sq ft", "price": 0.85, "updated": "2024-12" }, { "name": "Ice & Water Shield", "unit": "sq ft", "price": 1.25, "updated": "2024-12" }, { "name": "Ridge Vents", "unit": "linear foot", "price": 8.5, "updated": "2024-12" }, { "name": "Gutters (5\" Aluminum)", "unit": "linear foot", "price": 8.75, "updated": "2024-12" }, { "name": "Gutters (6\" Aluminum)", "unit": "linear foot", "price": 12.5, "updated": "2024-12" }, { "name": "Downspouts", "unit": "each", "price": 35, "updated": "2024-12" }],
+    "Insulation": [{ "name": "Fiberglass Batts R-13", "unit": "sq ft", "price": 0.85, "updated": "2024-12" }, { "name": "Fiberglass Batts R-15", "unit": "sq ft", "price": 0.95, "updated": "2024-12" }, { "name": "Fiberglass Batts R-19", "unit": "sq ft", "price": 1.15, "updated": "2024-12" }, { "name": "Fiberglass Batts R-30", "unit": "sq ft", "price": 1.45, "updated": "2024-12" }, { "name": "Fiberglass Batts R-38", "unit": "sq ft", "price": 1.85, "updated": "2024-12" }, { "name": "Spray Foam (Closed Cell)", "unit": "sq ft", "price": 1.5, "updated": "2024-12" }, { "name": "Spray Foam (Open Cell)", "unit": "sq ft", "price": 0.95, "updated": "2024-12" }, { "name": "Rigid Foam Board 1\"", "unit": "sq ft", "price": 1.25, "updated": "2024-12" }, { "name": "Rigid Foam Board 2\"", "unit": "sq ft", "price": 2.15, "updated": "2024-12" }, { "name": "Blown-in Cellulose", "unit": "sq ft", "price": 0.75, "updated": "2024-12" }, { "name": "Blown-in Fiberglass", "unit": "sq ft", "price": 0.85, "updated": "2024-12" }, { "name": "Mineral Wool Batts", "unit": "sq ft", "price": 1.35, "updated": "2024-12" }, { "name": "Radiant Barrier", "unit": "sq ft", "price": 0.35, "updated": "2024-12" }],
+    "Drywall & Finishes": [{ "name": "Drywall 1/2\" Regular", "unit": "sheet", "price": 16.8, "updated": "2024-12" }, { "name": "Drywall 5/8\" Regular", "unit": "sheet", "price": 19.25, "updated": "2024-12" }, { "name": "Drywall 1/2\" Moisture Resistant", "unit": "sheet", "price": 24.5, "updated": "2024-12" }, { "name": "Drywall 5/8\" Fire-Rated", "unit": "sheet", "price": 28.75, "updated": "2024-12" }, { "name": "Drywall Tape", "unit": "roll", "price": 8.5, "updated": "2024-12" }, { "name": "Joint Compound", "unit": "bucket", "price": 18.5, "updated": "2024-12" }, { "name": "Drywall Installation", "unit": "sq ft", "price": 0.65, "updated": "2024-12" }, { "name": "Drywall Finishing (Level 4)", "unit": "sq ft", "price": 0.85, "updated": "2024-12" }, { "name": "Interior Paint (Flat)", "unit": "gallon", "price": 28, "updated": "2024-12" }, { "name": "Interior Paint (Eggshell)", "unit": "gallon", "price": 32, "updated": "2024-12" }, { "name": "Interior Paint (Semi-gloss)", "unit": "gallon", "price": 36, "updated": "2024-12" }, { "name": "Exterior Paint", "unit": "gallon", "price": 45, "updated": "2024-12" }, { "name": "Primer", "unit": "gallon", "price": 28, "updated": "2024-12" }, { "name": "Paint Labor", "unit": "sq ft", "price": 0.85, "updated": "2024-12" }, { "name": "Texture Application", "unit": "sq ft", "price": 0.65, "updated": "2024-12" }, { "name": "Crown Molding", "unit": "linear foot", "price": 12.5, "updated": "2024-12" }, { "name": "Base Molding", "unit": "linear foot", "price": 4.85, "updated": "2024-12" }],
+    "Flooring": [{ "name": "Hardwood Flooring (Oak)", "unit": "sq ft", "price": 8.5, "updated": "2024-12" }, { "name": "Hardwood Flooring (Maple)", "unit": "sq ft", "price": 9.75, "updated": "2024-12" }, { "name": "Engineered Wood", "unit": "sq ft", "price": 6.75, "updated": "2024-12" }, { "name": "Laminate Flooring", "unit": "sq ft", "price": 3.85, "updated": "2024-12" }, { "name": "Luxury Vinyl Plank", "unit": "sq ft", "price": 4.25, "updated": "2024-12" }, { "name": "Ceramic Tile", "unit": "sq ft", "price": 5.85, "updated": "2024-12" }, { "name": "Porcelain Tile", "unit": "sq ft", "price": 7.25, "updated": "2024-12" }, { "name": "Natural Stone Tile", "unit": "sq ft", "price": 15.5, "updated": "2024-12" }, { "name": "Carpet (Builder Grade)", "unit": "sq ft", "price": 2.85, "updated": "2024-12" }, { "name": "Carpet (Mid-Grade)", "unit": "sq ft", "price": 3.85, "updated": "2024-12" }, { "name": "Carpet (Premium)", "unit": "sq ft", "price": 5.25, "updated": "2024-12" }, { "name": "Carpet Pad", "unit": "sq ft", "price": 0.65, "updated": "2024-12" }, { "name": "Vinyl Sheet", "unit": "sq ft", "price": 2.95, "updated": "2024-12" }, { "name": "Polished Concrete", "unit": "sq ft", "price": 7.5, "updated": "2024-12" }, { "name": "Flooring Installation", "unit": "sq ft", "price": 3.25, "updated": "2024-12" }],
+    "Windows & Doors": [{ "name": "Window (Standard DH)", "unit": "each", "price": 485, "updated": "2024-12" }, { "name": "Window (Energy Star)", "unit": "each", "price": 725, "updated": "2024-12" }, { "name": "Window (Premium)", "unit": "each", "price": 1250, "updated": "2024-12" }, { "name": "Casement Window", "unit": "each", "price": 825, "updated": "2024-12" }, { "name": "Bay Window", "unit": "each", "price": 2850, "updated": "2024-12" }, { "name": "Bow Window", "unit": "each", "price": 3250, "updated": "2024-12" }, { "name": "Skylight (Fixed)", "unit": "each", "price": 685, "updated": "2024-12" }, { "name": "Skylight (Venting)", "unit": "each", "price": 985, "updated": "2024-12" }, { "name": "Interior Door (Hollow)", "unit": "each", "price": 185, "updated": "2024-12" }, { "name": "Interior Door (Solid)", "unit": "each", "price": 325, "updated": "2024-12" }, { "name": "Exterior Door (Steel)", "unit": "each", "price": 685, "updated": "2024-12" }, { "name": "Exterior Door (Fiberglass)", "unit": "each", "price": 875, "updated": "2024-12" }, { "name": "Exterior Door (Wood)", "unit": "each", "price": 1250, "updated": "2024-12" }, { "name": "French Doors", "unit": "pair", "price": 2450, "updated": "2024-12" }, { "name": "Sliding Patio Door", "unit": "each", "price": 1850, "updated": "2024-12" }, { "name": "Garage Door (16x7)", "unit": "each", "price": 1650, "updated": "2024-12" }, { "name": "Garage Door (Double)", "unit": "each", "price": 2850, "updated": "2024-12" }],
+    "Siding & Exterior": [{ "name": "Vinyl Siding", "unit": "sq ft", "price": 5.25, "updated": "2024-12" }, { "name": "Fiber Cement Siding", "unit": "sq ft", "price": 8.75, "updated": "2024-12" }, { "name": "Wood Siding (Cedar)", "unit": "sq ft", "price": 9.85, "updated": "2024-12" }, { "name": "Wood Siding (Pine)", "unit": "sq ft", "price": 7.25, "updated": "2024-12" }, { "name": "Aluminum Siding", "unit": "sq ft", "price": 6.25, "updated": "2024-12" }, { "name": "Brick Veneer", "unit": "sq ft", "price": 15.5, "updated": "2024-12" }, { "name": "Stone Veneer", "unit": "sq ft", "price": 18.75, "updated": "2024-12" }, { "name": "Stucco System (3-coat)", "unit": "sq ft", "price": 9.25, "updated": "2024-12" }, { "name": "EIFS System", "unit": "sq ft", "price": 11.5, "updated": "2024-12" }, { "name": "House Wrap", "unit": "sq ft", "price": 0.25, "updated": "2024-12" }, { "name": "Soffit (Vinyl)", "unit": "linear foot", "price": 8.5, "updated": "2024-12" }, { "name": "Fascia (Aluminum)", "unit": "linear foot", "price": 12.85, "updated": "2024-12" }, { "name": "Exterior Trim", "unit": "linear foot", "price": 8.75, "updated": "2024-12" }],
+    "Plumbing": [{ "name": "Copper Pipe 1/2\"", "unit": "linear foot", "price": 4.85, "updated": "2024-12" }, { "name": "Copper Pipe 3/4\"", "unit": "linear foot", "price": 6.25, "updated": "2024-12" }, { "name": "Copper Pipe 1\"", "unit": "linear foot", "price": 8.75, "updated": "2024-12" }, { "name": "PEX Pipe 1/2\"", "unit": "linear foot", "price": 1.25, "updated": "2024-12" }, { "name": "PEX Pipe 3/4\"", "unit": "linear foot", "price": 1.85, "updated": "2024-12" }, { "name": "PVC Pipe 2\"", "unit": "linear foot", "price": 3.25, "updated": "2024-12" }, { "name": "PVC Pipe 3\"", "unit": "linear foot", "price": 4.85, "updated": "2024-12" }, { "name": "PVC Pipe 4\"", "unit": "linear foot", "price": 5.85, "updated": "2024-12" }, { "name": "Water Heater (40 gal)", "unit": "each", "price": 985, "updated": "2024-12" }, { "name": "Water Heater (50 gal)", "unit": "each", "price": 1250, "updated": "2024-12" }, { "name": "Tankless Water Heater", "unit": "each", "price": 2850, "updated": "2024-12" }, { "name": "Toilet (Standard)", "unit": "each", "price": 285, "updated": "2024-12" }, { "name": "Toilet (Comfort Height)", "unit": "each", "price": 385, "updated": "2024-12" }, { "name": "Toilet (Premium)", "unit": "each", "price": 585, "updated": "2024-12" }, { "name": "Sink (Kitchen SS)", "unit": "each", "price": 425, "updated": "2024-12" }, { "name": "Sink (Bathroom)", "unit": "each", "price": 225, "updated": "2024-12" }, { "name": "Shower Unit", "unit": "each", "price": 985, "updated": "2024-12" }, { "name": "Bathtub (Standard)", "unit": "each", "price": 785, "updated": "2024-12" }, { "name": "Bathtub (Whirlpool)", "unit": "each", "price": 2850, "updated": "2024-12" }],
+    "Electrical": [{ "name": "Romex Wire 12/2", "unit": "linear foot", "price": 0.85, "updated": "2024-12" }, { "name": "Romex Wire 14/2", "unit": "linear foot", "price": 0.65, "updated": "2024-12" }, { "name": "Romex Wire 10/2", "unit": "linear foot", "price": 1.25, "updated": "2024-12" }, { "name": "Conduit 1/2\"", "unit": "linear foot", "price": 2.15, "updated": "2024-12" }, { "name": "Conduit 3/4\"", "unit": "linear foot", "price": 2.85, "updated": "2024-12" }, { "name": "Electrical Panel 100A", "unit": "each", "price": 1250, "updated": "2024-12" }, { "name": "Electrical Panel 200A", "unit": "each", "price": 1850, "updated": "2024-12" }, { "name": "Circuit Breaker 15A", "unit": "each", "price": 35, "updated": "2024-12" }, { "name": "Circuit Breaker 20A", "unit": "each", "price": 45, "updated": "2024-12" }, { "name": "Circuit Breaker 30A", "unit": "each", "price": 55, "updated": "2024-12" }, { "name": "Outlet (Standard)", "unit": "each", "price": 15, "updated": "2024-12" }, { "name": "GFCI Outlet", "unit": "each", "price": 35, "updated": "2024-12" }, { "name": "USB Outlet", "unit": "each", "price": 45, "updated": "2024-12" }, { "name": "Light Switch", "unit": "each", "price": 12, "updated": "2024-12" }, { "name": "Dimmer Switch", "unit": "each", "price": 28, "updated": "2024-12" }, { "name": "Smart Switch", "unit": "each", "price": 65, "updated": "2024-12" }, { "name": "Ceiling Fan", "unit": "each", "price": 185, "updated": "2024-12" }, { "name": "Recessed Light", "unit": "each", "price": 85, "updated": "2024-12" }, { "name": "LED Bulb", "unit": "each", "price": 8.5, "updated": "2024-12" }, { "name": "EV Charger Outlet", "unit": "each", "price": 850, "updated": "2024-12" }],
+    "HVAC": [{ "name": "Central AC (2-ton)", "unit": "each", "price": 3850, "updated": "2024-12" }, { "name": "Central AC (3-ton)", "unit": "each", "price": 4850, "updated": "2024-12" }, { "name": "Central AC (4-ton)", "unit": "each", "price": 5850, "updated": "2024-12" }, { "name": "Central AC (5-ton)", "unit": "each", "price": 6750, "updated": "2024-12" }, { "name": "Heat Pump (3-ton)", "unit": "each", "price": 5250, "updated": "2024-12" }, { "name": "Heat Pump (4-ton)", "unit": "each", "price": 6250, "updated": "2024-12" }, { "name": "Furnace (80% eff)", "unit": "each", "price": 2850, "updated": "2024-12" }, { "name": "Furnace (95% eff)", "unit": "each", "price": 4250, "updated": "2024-12" }, { "name": "Furnace (98% eff)", "unit": "each", "price": 5250, "updated": "2024-12" }, { "name": "Ductwork (Supply)", "unit": "sq ft", "price": 12.5, "updated": "2024-12" }, { "name": "Ductwork (Return)", "unit": "sq ft", "price": 10.5, "updated": "2024-12" }, { "name": "Duct Insulation", "unit": "sq ft", "price": 2.85, "updated": "2024-12" }, { "name": "Mini-Split System", "unit": "each", "price": 3250, "updated": "2024-12" }, { "name": "Thermostat (Basic)", "unit": "each", "price": 125, "updated": "2024-12" }, { "name": "Thermostat (Smart)", "unit": "each", "price": 285, "updated": "2024-12" }, { "name": "Ventilation Fan", "unit": "each", "price": 185, "updated": "2024-12" }, { "name": "HRV System", "unit": "each", "price": 2850, "updated": "2024-12" }],
+    "Labor": [{ "name": "General Laborer", "unit": "hour", "price": 18.25, "updated": "2024-12" }, { "name": "Skilled Laborer", "unit": "hour", "price": 24.5, "updated": "2024-12" }, { "name": "Carpenter (Apprentice)", "unit": "hour", "price": 22.5, "updated": "2024-12" }, { "name": "Carpenter (Helper)", "unit": "hour", "price": 19.75, "updated": "2024-12" }, { "name": "Carpenter (Skilled)", "unit": "hour", "price": 29.5, "updated": "2024-12" }, { "name": "Carpenter (Master)", "unit": "hour", "price": 42, "updated": "2024-12" }, { "name": "Electrician (Apprentice)", "unit": "hour", "price": 21.5, "updated": "2024-12" }, { "name": "Electrician (Journeyman)", "unit": "hour", "price": 34.5, "updated": "2024-12" }, { "name": "Electrician (Master)", "unit": "hour", "price": 48.75, "updated": "2024-12" }, { "name": "Plumber (Apprentice)", "unit": "hour", "price": 22.5, "updated": "2024-12" }, { "name": "Plumber (Journeyman)", "unit": "hour", "price": 34.75, "updated": "2024-12" }, { "name": "Plumber (Master)", "unit": "hour", "price": 52, "updated": "2024-12" }, { "name": "HVAC Technician", "unit": "hour", "price": 38.5, "updated": "2024-12" }, { "name": "Mason", "unit": "hour", "price": 31.25, "updated": "2024-12" }, { "name": "Roofer", "unit": "hour", "price": 26.5, "updated": "2024-12" }, { "name": "Painter", "unit": "hour", "price": 23.75, "updated": "2024-12" }, { "name": "Tile Setter", "unit": "hour", "price": 28.5, "updated": "2024-12" }, { "name": "Drywall Installer", "unit": "hour", "price": 24.5, "updated": "2024-12" }, { "name": "Flooring Installer", "unit": "hour", "price": 25.75, "updated": "2024-12" }, { "name": "Insulation Installer", "unit": "hour", "price": 22.5, "updated": "2024-12" }, { "name": "Concrete Finisher", "unit": "hour", "price": 28.75, "updated": "2024-12" }, { "name": "Welder", "unit": "hour", "price": 35.5, "updated": "2024-12" }, { "name": "Foreman", "unit": "hour", "price": 38.5, "updated": "2024-12" }, { "name": "Project Manager", "unit": "hour", "price": 65, "updated": "2024-12" }],
+    "Equipment": [{ "name": "Excavator (Mini <5t)", "unit": "day", "price": 285, "updated": "2024-12" }, { "name": "Excavator (Mid 5-10t)", "unit": "day", "price": 485, "updated": "2024-12" }, { "name": "Excavator (Large >10t)", "unit": "day", "price": 825, "updated": "2024-12" }, { "name": "Bulldozer (Small)", "unit": "day", "price": 465, "updated": "2024-12" }, { "name": "Bulldozer (Large)", "unit": "day", "price": 785, "updated": "2024-12" }, { "name": "Backhoe Loader", "unit": "day", "price": 385, "updated": "2024-12" }, { "name": "Skid Steer", "unit": "day", "price": 245, "updated": "2024-12" }, { "name": "Wheel Loader", "unit": "day", "price": 485, "updated": "2024-12" }, { "name": "Crane (25-ton)", "unit": "day", "price": 650, "updated": "2024-12" }, { "name": "Crane (50-ton)", "unit": "day", "price": 950, "updated": "2024-12" }, { "name": "Crane (100-ton)", "unit": "day", "price": 1850, "updated": "2024-12" }, { "name": "Scissor Lift", "unit": "day", "price": 185, "updated": "2024-12" }, { "name": "Boom Lift (40ft)", "unit": "day", "price": 325, "updated": "2024-12" }, { "name": "Boom Lift (60ft)", "unit": "day", "price": 485, "updated": "2024-12" }, { "name": "Telehandler", "unit": "day", "price": 385, "updated": "2024-12" }, { "name": "Concrete Mixer", "unit": "day", "price": 125, "updated": "2024-12" }, { "name": "Concrete Pump", "unit": "day", "price": 1250, "updated": "2024-12" }, { "name": "Generator (20kW)", "unit": "day", "price": 125, "updated": "2024-12" }, { "name": "Generator (50kW)", "unit": "day", "price": 225, "updated": "2024-12" }, { "name": "Generator (100kW)", "unit": "day", "price": 385, "updated": "2024-12" }, { "name": "Air Compressor", "unit": "day", "price": 95, "updated": "2024-12" }, { "name": "Scaffolding", "unit": "day", "price": 85, "updated": "2024-12" }, { "name": "Trencher", "unit": "day", "price": 285, "updated": "2024-12" }],
+    "Site Work": [{ "name": "Excavation", "unit": "cubic yard", "price": 15.5, "updated": "2024-12" }, { "name": "Backfill", "unit": "cubic yard", "price": 12.5, "updated": "2024-12" }, { "name": "Grading", "unit": "sq ft", "price": 1.25, "updated": "2024-12" }, { "name": "Compaction", "unit": "sq ft", "price": 0.85, "updated": "2024-12" }, { "name": "Fill Dirt", "unit": "cubic yard", "price": 28, "updated": "2024-12" }, { "name": "Topsoil", "unit": "cubic yard", "price": 45, "updated": "2024-12" }, { "name": "Gravel Base", "unit": "ton", "price": 38, "updated": "2024-12" }, { "name": "Sand", "unit": "ton", "price": 35, "updated": "2024-12" }, { "name": "Crushed Stone", "unit": "ton", "price": 42, "updated": "2024-12" }, { "name": "Concrete Driveway", "unit": "sq ft", "price": 8.5, "updated": "2024-12" }, { "name": "Asphalt Driveway", "unit": "sq ft", "price": 5.75, "updated": "2024-12" }, { "name": "Paver Driveway", "unit": "sq ft", "price": 12.5, "updated": "2024-12" }, { "name": "Retaining Wall", "unit": "sq ft", "price": 22.5, "updated": "2024-12" }, { "name": "French Drain", "unit": "linear foot", "price": 18.5, "updated": "2024-12" }, { "name": "Silt Fence", "unit": "linear foot", "price": 3.25, "updated": "2024-12" }, { "name": "Erosion Control", "unit": "sq ft", "price": 1.85, "updated": "2024-12" }],
+    "Landscaping": [{ "name": "Sod Installation", "unit": "sq ft", "price": 0.85, "updated": "2024-12" }, { "name": "Seed & Straw", "unit": "sq ft", "price": 0.25, "updated": "2024-12" }, { "name": "Hydroseeding", "unit": "sq ft", "price": 0.15, "updated": "2024-12" }, { "name": "Mulch (Hardwood)", "unit": "cubic yard", "price": 45, "updated": "2024-12" }, { "name": "Mulch (Pine)", "unit": "cubic yard", "price": 35, "updated": "2024-12" }, { "name": "Mulch (Rubber)", "unit": "cubic yard", "price": 85, "updated": "2024-12" }, { "name": "Decorative Rock", "unit": "ton", "price": 125, "updated": "2024-12" }, { "name": "River Rock", "unit": "ton", "price": 185, "updated": "2024-12" }, { "name": "Trees (2\" caliper)", "unit": "each", "price": 285, "updated": "2024-12" }, { "name": "Trees (3\" caliper)", "unit": "each", "price": 485, "updated": "2024-12" }, { "name": "Shrubs (1 gal)", "unit": "each", "price": 15, "updated": "2024-12" }, { "name": "Shrubs (5 gal)", "unit": "each", "price": 45, "updated": "2024-12" }, { "name": "Shrubs (15 gal)", "unit": "each", "price": 125, "updated": "2024-12" }, { "name": "Irrigation System", "unit": "sq ft", "price": 2.85, "updated": "2024-12" }, { "name": "Drip Irrigation", "unit": "linear foot", "price": 1.85, "updated": "2024-12" }, { "name": "Landscape Lighting", "unit": "each", "price": 125, "updated": "2024-12" }, { "name": "Edging (Steel)", "unit": "linear foot", "price": 4.25, "updated": "2024-12" }, { "name": "Edging (Plastic)", "unit": "linear foot", "price": 2.15, "updated": "2024-12" }],
+    "Kitchen & Bath": [{ "name": "Kitchen Cabinets (Stock)", "unit": "linear foot", "price": 125, "updated": "2024-12" }, { "name": "Kitchen Cabinets (Semi-Custom)", "unit": "linear foot", "price": 185, "updated": "2024-12" }, { "name": "Kitchen Cabinets (Custom)", "unit": "linear foot", "price": 425, "updated": "2024-12" }, { "name": "Countertop (Laminate)", "unit": "sq ft", "price": 35, "updated": "2024-12" }, { "name": "Countertop (Solid Surface)", "unit": "sq ft", "price": 65, "updated": "2024-12" }, { "name": "Countertop (Granite)", "unit": "sq ft", "price": 85, "updated": "2024-12" }, { "name": "Countertop (Quartz)", "unit": "sq ft", "price": 95, "updated": "2024-12" }, { "name": "Countertop (Marble)", "unit": "sq ft", "price": 125, "updated": "2024-12" }, { "name": "Backsplash (Subway Tile)", "unit": "sq ft", "price": 12.5, "updated": "2024-12" }, { "name": "Backsplash (Mosaic)", "unit": "sq ft", "price": 18.5, "updated": "2024-12" }, { "name": "Kitchen Sink (SS Single)", "unit": "each", "price": 285, "updated": "2024-12" }, { "name": "Kitchen Sink (SS Double)", "unit": "each", "price": 425, "updated": "2024-12" }, { "name": "Kitchen Faucet", "unit": "each", "price": 285, "updated": "2024-12" }, { "name": "Range Hood", "unit": "each", "price": 485, "updated": "2024-12" }, { "name": "Dishwasher", "unit": "each", "price": 685, "updated": "2024-12" }, { "name": "Refrigerator", "unit": "each", "price": 1850, "updated": "2024-12" }, { "name": "Stove/Range", "unit": "each", "price": 985, "updated": "2024-12" }, { "name": "Microwave", "unit": "each", "price": 385, "updated": "2024-12" }, { "name": "Vanity (36\")", "unit": "each", "price": 585, "updated": "2024-12" }, { "name": "Vanity (48\")", "unit": "each", "price": 785, "updated": "2024-12" }, { "name": "Vanity (60\")", "unit": "each", "price": 985, "updated": "2024-12" }, { "name": "Medicine Cabinet", "unit": "each", "price": 185, "updated": "2024-12" }],
+    "Specialty": [{ "name": "Solar Panel (400W)", "unit": "each", "price": 285, "updated": "2024-12" }, { "name": "Solar Installation", "unit": "watt", "price": 0.85, "updated": "2024-12" }, { "name": "Solar Inverter", "unit": "each", "price": 1250, "updated": "2024-12" }, { "name": "Battery Storage (10kWh)", "unit": "each", "price": 8500, "updated": "2024-12" }, { "name": "Smart Home Hub", "unit": "each", "price": 485, "updated": "2024-12" }, { "name": "Security System", "unit": "each", "price": 1250, "updated": "2024-12" }, { "name": "Security Camera", "unit": "each", "price": 185, "updated": "2024-12" }, { "name": "Fire Sprinkler", "unit": "head", "price": 85, "updated": "2024-12" }, { "name": "Elevator (Residential)", "unit": "each", "price": 28500, "updated": "2024-12" }, { "name": "Pool (In-ground)", "unit": "each", "price": 45000, "updated": "2024-12" }, { "name": "Pool (Above-ground)", "unit": "each", "price": 8500, "updated": "2024-12" }, { "name": "Hot Tub", "unit": "each", "price": 8500, "updated": "2024-12" }, { "name": "Sauna (Indoor)", "unit": "each", "price": 12500, "updated": "2024-12" }, { "name": "Deck (Wood)", "unit": "sq ft", "price": 25, "updated": "2024-12" }, { "name": "Deck (Composite)", "unit": "sq ft", "price": 35, "updated": "2024-12" }, { "name": "Pergola", "unit": "sq ft", "price": 45, "updated": "2024-12" }, { "name": "Gazebo", "unit": "each", "price": 8500, "updated": "2024-12" }, { "name": "Fence (Wood)", "unit": "linear foot", "price": 28, "updated": "2024-12" }, { "name": "Fence (Vinyl)", "unit": "linear foot", "price": 35, "updated": "2024-12" }, { "name": "Fence (Chain Link)", "unit": "linear foot", "price": 18, "updated": "2024-12" }, { "name": "Fence (Aluminum)", "unit": "linear foot", "price": 42, "updated": "2024-12" }]
+    },
+    quickAddItems: { "all": ["Concrete (Ready Mix)","Framing Lumber 2x4","Drywall 1/2\" Regular","Interior Paint (Eggshell)","Carpenter (Skilled)","Electrician (Journeyman)","Plumber (Journeyman)","Hardwood Flooring (Oak)"], "concrete": ["Concrete (Ready Mix)","Concrete Installation","Rebar #4","Concrete Block 8\"","Wire Mesh (6x6)","Concrete Finisher"], "framing": ["Framing Lumber 2x4","Framing Lumber 2x6","Plywood 1/2\" CDX","OSB Sheathing 7/16\"","Engineered I-Joist 11-7/8\"","Carpenter (Skilled)"], "electrical": ["Romex Wire 12/2","Electrical Panel 200A","Outlet (Standard)","Light Switch","Recessed Light","Electrician (Journeyman)"], "plumbing": ["PEX Pipe 1/2\"","Water Heater (50 gal)","Toilet (Standard)","Sink (Kitchen SS)","Plumber (Journeyman)","Shower Unit"], "finishes": ["Interior Paint (Eggshell)","Hardwood Flooring (Oak)","Ceramic Tile","Crown Molding","Kitchen Cabinets (Semi-Custom)","Painter"] },
+    
+    // --- Cached DOM Elements ---
+    elements: {},
+
+    // =============================================================================
+    //  INITIALIZATION & BINDING
+    // =============================================================================
+    init() {
+        this.cacheDOMElements();
+        this.loadFromStorage();
+        this.applySettings();
+        this.bindEventListeners();
+        this.switchPage('dashboard');
+        console.log("Construction Estimator Initialized");
+    },
+    cacheDOMElements() {
+        this.elements = {
+            sidebar: document.getElementById('sidebar'),
+            sidebarNav: document.getElementById('sidebarNav'),
+            menuToggle: document.getElementById('menuToggle'),
+            pageTitle: document.getElementById('pageTitle'),
+            content: document.getElementById('content'),
+            darkModeToggle: document.getElementById('darkMode'),
+            saveBtn: document.getElementById('saveBtn'),
+            confirmationModal: document.getElementById('confirmationModal'),
+            modalTitle: document.getElementById('modalTitle'),
+            modalBody: document.getElementById('modalBody'),
+            modalConfirm: document.getElementById('modalConfirm'),
+            modalCancel: document.getElementById('modalCancel'),
+            notificationContainer: document.getElementById('notificationContainer'),
+            chatButton: document.getElementById('chatButton'),
+            chatContainer: document.getElementById('chatContainer'),
+            closeChatBtn: document.getElementById('closeChatBtn'),
+            chatMessages: document.getElementById('chatMessages'),
+            chatInput: document.getElementById('chatInput'),
+            chatSendBtn: document.getElementById('chatSendBtn'),
+        };
+    },
+    bindEventListeners() {
+        this.elements.sidebarNav.addEventListener('click', e => {
+            const navItem = e.target.closest('.nav-item');
+            if (navItem) this.switchPage(navItem.dataset.page);
+        });
+        this.elements.menuToggle.addEventListener('click', () => this.elements.sidebar.classList.toggle('open'));
+        this.elements.darkModeToggle.addEventListener('change', this.toggleTheme.bind(this));
+        this.elements.saveBtn.addEventListener('click', this.saveProject.bind(this));
+        this.elements.modalConfirm.addEventListener('click', () => {
+            if (typeof this.modalCallback === 'function') this.modalCallback();
+            this.hideModal();
+        });
+        this.elements.modalCancel.addEventListener('click', this.hideModal.bind(this));
+        this.elements.confirmationModal.addEventListener('click', (e) => {
+            if (e.target.id === 'confirmationModal') this.hideModal();
+        });
+        this.elements.content.addEventListener('click', this.handleContentClick.bind(this));
+        this.elements.content.addEventListener('input', this.handleContentInput.bind(this));
+        this.elements.content.addEventListener('focusin', this.handleContentFocus.bind(this));
+        this.elements.chatButton.addEventListener('click', this.toggleChat.bind(this));
+        this.elements.closeChatBtn.addEventListener('click', this.toggleChat.bind(this));
+        this.elements.chatSendBtn.addEventListener('click', this.sendChatMessage.bind(this));
+        this.elements.chatInput.addEventListener('keypress', e => {
+            if (e.key === 'Enter') this.sendChatMessage();
+        });
+    },
+
+    // =============================================================================
+    //  EVENT HANDLER LOGIC (Delegation)
+    // =============================================================================
+    handleContentClick(e) {
+        const target = e.target;
+        if (target.closest('.delete-row-btn')) this.deleteRow(target.closest('tr'));
+        else if (target.closest('.duplicate-row-btn')) this.duplicateRow(target.closest('tr'));
+        else if (target.closest('.add-item-btn')) this.addRow();
+        else if (target.closest('.dropdown-item')) this.selectItem(target.closest('.dropdown-item'));
+        else if (target.closest('.quick-add-btn')) this.quickAddItemToTable(target.dataset.item);
+        else if (target.closest('.category-pill')) {
+             if(target.closest('#dbCategoryFilter')) this.displayDatabase(target.dataset.category, target);
+             else if(target.closest('#quickAddCategoryFilter')) this.filterQuickAdd(target.dataset.category, target);
+        }
+        else if (target.closest('.load-project-btn')) this.loadProject(target.dataset.id);
+        else if (target.closest('.delete-project-btn')) this.deleteProject(target.dataset.id);
+        else if (target.closest('#settingsSaveBtn')) this.saveSettings();
+        else if (target.closest('#exportAllBtn')) this.exportData();
+        else if (target.closest('#importAllBtn')) this.importData();
+        else if (target.closest('#exportDbBtn')) this.exportDatabase();
+        else if (target.closest('#updateDbBtn')) this.updatePrices();
+    },
+    handleContentInput(e) {
+        const target = e.target;
+        if (target.matches('.quantity-input, .price-input')) this.calculateRow(target.closest('tr'));
+        else if (target.matches('#taxRate, #profitMargin, #contingency, #regionFactor')) {
+            this.updateDisplayValues();
+            this.calculateTotals();
+        }
+        else if(target.matches('.item-search')) this.filterItems(target);
+    },
+    handleContentFocus(e) {
+        if(e.target.matches('.item-search')) this.showDropdown(e.target);
+    },
+
+    // =============================================================================
+    //  PAGE ROUTING & RENDERING
+    // =============================================================================
+    switchPage(page) {
+        if (!page) return;
+        if (page === 'estimate' && this.currentProjectId) {
+            this.showModal('Start New Estimate', '<p>This will clear the current form. Are you sure?</p>', () => {
+                this.clearEstimateForm();
+                this.executePageSwitch(page);
+            });
+        } else {
+            this.executePageSwitch(page);
+        }
+    },
+    executePageSwitch(page) {
+        this.currentPage = page;
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.toggle('active', item.dataset.page === page);
+        });
+        document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+        const pageElement = document.getElementById(page + 'Page');
+        if (pageElement) {
+            pageElement.classList.remove('hidden');
+            const renderFunction = this[`render${page.charAt(0).toUpperCase() + page.slice(1)}Page`];
+            if (typeof renderFunction === 'function') {
+                renderFunction.call(this);
+            }
+        }
+        this.elements.pageTitle.textContent = page.charAt(0).toUpperCase() + page.slice(1);
+    },
+    
+    renderDashboardPage() {
+       this.elements.content.querySelector('#dashboardPage').innerHTML = `
+            <div class="quick-actions">
+                <button class="btn btn-success" onclick="EstimatorApp.switchPage('estimate')">➕ New Estimate</button>
+                <button class="btn btn-secondary" id="exportAllBtn">📤 Export All Data</button>
+                <button class="btn btn-secondary" id="importAllBtn">📥 Import Data</button>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-icon">📁</div><div class="stat-value" id="totalProjects">0</div><div class="stat-label">Total Projects</div></div>
+                <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-value" id="totalValue">$0</div><div class="stat-label">Total Estimated Value</div></div>
+                <div class="stat-card"><div class="stat-icon">📈</div><div class="stat-value" id="avgProject">$0</div><div class="stat-label">Average Project Value</div></div>
+                <div class="stat-card"><div class="stat-icon">🔨</div><div class="stat-value" id="activeItems">0</div><div class="stat-label">Total Line Items</div></div>
+            </div>
+            <div class="card"><div class="card-header"><h3 class="card-title"><span>📊</span><span>Cost Breakdown by Category</span></h3></div><div class="card-body"><div class="chart-container" style="height:300px"><canvas id="dashboardChart"></canvas></div></div></div>
+            <div class="card"><div class="card-header"><h3 class="card-title"><span>📅</span><span>Recent Projects</span></h3></div><div class="card-body" id="recentProjects"></div></div>`;
+        this.updateDashboard();
+    },
+    
+    renderEstimatePage() {
+        this.elements.content.querySelector('#estimatePage').innerHTML = `
+            <div class="card">
+                <div class="card-header"><h3 class="card-title"><span>📝</span><span>Project Information</span></h3></div>
+                <div class="card-body"><div class="form-grid">
+                    <div class="form-group"><label class="form-label" for="projectName">Project Name</label><input type="text" class="form-input" id="projectName" placeholder="Enter project name"></div>
+                    <div class="form-group"><label class="form-label" for="clientName">Client Name</label><input type="text" class="form-input" id="clientName" placeholder="Enter client name"></div>
+                    <div class="form-group"><label class="form-label" for="projectAddress">Project Address</label><input type="text" class="form-input" id="projectAddress" placeholder="Enter project address"></div>
+                    <div class="form-group"><label class="form-label" for="regionFactor">Regional Factor</label>
+                        <select class="form-select" id="regionFactor">
+                            <option value="1.00">National Average</option><option value="0.85">Rural (-15%)</option><option value="0.90">Southeast (-10%)</option><option value="0.95">Midwest (-5%)</option><option value="1.10">Northeast (+10%)</option><option value="1.25">West Coast (+25%)</option><option value="1.35">NYC Metro (+35%)</option><option value="1.40">SF Bay Area (+40%)</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label class="form-label" for="taxRate">Tax Rate (%)</label><input type="number" class="form-input" id="taxRate" value="8.25" step="0.01" min="0" max="20"></div>
+                    <div class="form-group"><label class="form-label" for="profitMargin">Profit Margin (%)</label><input type="number" class="form-input" id="profitMargin" value="15" step="0.5" min="0" max="50"></div>
+                    <div class="form-group"><label class="form-label" for="contingency">Contingency (%)</label><input type="number" class="form-input" id="contingency" value="10" step="0.5" min="0" max="30"></div>
+                </div></div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><span>🔨</span><span>Cost Items</span></h3>
+                    <button class="btn btn-success add-item-btn">➕ Add Item</button>
+                </div>
+                <div class="card-body">
+                    <div class="quick-add-section">
+                        <div class="quick-add-title">Quick Add Common Items</div>
+                        <div class="category-pills" id="quickAddCategoryFilter"></div>
+                        <div class="quick-add-grid" id="quickAddGrid"></div>
+                    </div>
+                    <div class="table-wrapper"><table class="table" id="estimateTable">
+                        <thead><tr><th style="width: 30%;">Item Description</th><th style="width: 15%;">Category</th><th style="width: 10%;">Quantity</th><th style="width: 10%;">Unit</th><th style="width: 12%;">Unit Price</th><th style="width: 13%;">Total</th><th style="width: 10%;">Actions</th></tr></thead>
+                        <tbody id="tableBody"></tbody>
+                        <tfoot>
+                            <tr><td colspan="5"><strong>Subtotal</strong></td><td id="subtotal">$0.00</td><td></td></tr>
+                            <tr><td colspan="5">Tax (<span id="taxRateDisplay">8.25</span>%)</td><td id="tax">$0.00</td><td></td></tr>
+                            <tr><td colspan="5">Profit (<span id="profitDisplay">15</span>%)</td><td id="profitAmount">$0.00</td><td></td></tr>
+                            <tr><td colspan="5">Contingency (<span id="contingencyDisplay">10</span>%)</td><td id="contingencyAmount">$0.00</td><td></td></tr>
+                            <tr style="background: var(--primary); color: white;"><td colspan="5"><strong>Grand Total</strong></td><td id="grandTotal" style="font-size: 1.125rem;">$0.00</td><td></td></tr>
+                        </tfoot>
+                    </table></div>
+                </div>
+            </div>`;
+        if (document.getElementById('tableBody').children.length === 0) this.addRow();
+        this.renderQuickAddPills();
+        this.filterQuickAdd('all', document.querySelector('#quickAddCategoryFilter .active'));
+    },
+    
+    renderProjectsPage() {
+        this.elements.content.querySelector('#projectsPage').innerHTML = `
+        <div class="card">
+            <div class="card-header"><h3 class="card-title"><span>📁</span><span>Saved Projects</span></h3></div>
+            <div class="card-body" id="projectsList"></div>
+        </div>`;
+        this.displayProjects();
+    },
+    
+    renderDatabasePage() {
+         this.elements.content.querySelector('#databasePage').innerHTML = `
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><span>📚</span><span>Construction Price Database</span></h3>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-secondary" id="exportDbBtn">📤 Export</button>
+                        <button class="btn btn-primary" id="updateDbBtn">🔄 Check for Updates</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="category-pills" id="dbCategoryFilter"></div>
+                    <div class="table-wrapper" style="max-height: 60vh; overflow-y: auto;">
+                        <table class="table">
+                            <thead><tr><th>Category</th><th>Item</th><th>Unit</th><th>Price</th><th>Last Updated</th></tr></thead>
+                            <tbody id="databaseTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>`;
+        this.initializeDatabasePage();
+    },
+    
+    renderSettingsPage() {
+        this.elements.content.querySelector('#settingsPage').innerHTML = `
+            <div class="card">
+                <div class="card-header"><h3 class="card-title"><span>⚙️</span><span>Application Settings</span></h3></div>
+                <div class="card-body">
+                    <div class="form-grid">
+                        <div class="form-group"><label class="form-label" for="companyName">Company Name</label><input type="text" class="form-input" id="companyName" placeholder="Your Company Name"></div>
+                        <div class="form-group"><label class="form-label" for="companyEmail">Company Email</label><input type="email" class="form-input" id="companyEmail" placeholder="company@email.com"></div>
+                        <div class="form-group"><label class="form-label" for="defaultTaxRate">Default Tax Rate (%)</label><input type="number" class="form-input" id="defaultTaxRate"></div>
+                        <div class="form-group"><label class="form-label" for="defaultProfitMargin">Default Profit Margin (%)</label><input type="number" class="form-input" id="defaultProfitMargin"></div>
+                        <div class="form-group"><label class="form-label" for="defaultContingency">Default Contingency (%)</label><input type="number" class="form-input" id="defaultContingency"></div>
+                        <div class="form-group"><label class="form-label" for="currencySymbol">Currency Symbol</label><input type="text" class="form-input" id="currencySymbol"></div>
+                    </div>
+                    <button class="btn btn-primary" id="settingsSaveBtn" style="margin-top: 1.5rem;">💾 Save Settings</button>
+                </div>
+            </div>`;
+        this.applySettings(); // Re-apply to populate the fields
+    },
+    
+    renderCalculatorPage() { this.elements.content.querySelector('#calculatorPage').innerHTML = `<div class="card"><div class="card-body" style="text-align: center;">🧮 Calculator coming soon...</div></div>`},
+    renderReportsPage() { this.elements.content.querySelector('#reportsPage').innerHTML = `<div class="card"><div class="card-body" style="text-align: center;">📈 Reports coming soon...</div></div>`},
+
+    addRow(data = {}) {
+        const tableBody = document.getElementById('tableBody');
+        const template = document.getElementById('estimateRowTemplate');
+        const newRow = template.content.cloneNode(true);
+        const tr = newRow.querySelector('tr');
+        tr.querySelector('.item-search').value = data.item || '';
+        tr.querySelector('.category-cell').textContent = data.category || '';
+        tr.querySelector('.quantity-input').value = data.quantity || 1;
+        tr.querySelector('.unit-cell').textContent = data.unit || '';
+        tr.querySelector('.price-input').value = data.unitPrice || 0;
+        tableBody.appendChild(tr);
+        if (data.item) this.calculateRow(tr);
+    },
+    
+    deleteRow(rowElement) {
+        this.showModal('Delete Item', '<p>Are you sure you want to permanently delete this item?</p>', () => {
+            rowElement.remove();
+            this.calculateTotals();
+            this.showNotification('Item deleted.', 'info');
+            if (document.getElementById('tableBody').children.length === 0) {
+                this.addRow();
+            }
+        });
+    },
+    
+    duplicateRow(rowElement) {
+        const data = {
+            item: rowElement.querySelector('.item-search').value,
+            category: rowElement.querySelector('.category-cell').textContent,
+            quantity: rowElement.querySelector('.quantity-input').value,
+            unit: rowElement.querySelector('.unit-cell').textContent,
+            unitPrice: rowElement.querySelector('.price-input').value
+        };
+        this.addRow(data);
+        this.showNotification('Item duplicated.', 'success');
+    },
+
+    calculateRow(row) {
+        if (!row) return;
+        const quantity = parseFloat(row.querySelector('.quantity-input').value) || 0;
+        const unitPrice = parseFloat(row.querySelector('.price-input').value) || 0;
+        const regionFactor = document.getElementById('regionFactor') ? parseFloat(document.getElementById('regionFactor').value) || 1 : 1;
+        const total = quantity * unitPrice * regionFactor;
+        row.querySelector('.total-cell').textContent = this.formatCurrency(total);
+        this.calculateTotals();
+    },
+
+    calculateTotals() {
+        const tableBody = document.getElementById('tableBody');
+        if (!tableBody) return;
+        const rows = tableBody.querySelectorAll('tr');
+        let subtotal = 0;
+        rows.forEach(row => {
+            const totalText = row.querySelector('.total-cell').textContent;
+            subtotal += parseFloat(totalText.replace(/[^0-9.-]+/g, '')) || 0;
+        });
+        const taxRate = document.getElementById('taxRate') ? parseFloat(document.getElementById('taxRate').value) || 0 : 0;
+        const profitRate = document.getElementById('profitMargin') ? parseFloat(document.getElementById('profitMargin').value) || 0 : 0;
+        const contingencyRate = document.getElementById('contingency') ? parseFloat(document.getElementById('contingency').value) || 0 : 0;
+        const tax = subtotal * (taxRate / 100);
+        const profit = subtotal * (profitRate / 100);
+        const contingency = subtotal * (contingencyRate / 100);
+        const grandTotal = subtotal + tax + profit + contingency;
+        document.getElementById('subtotal').textContent = this.formatCurrency(subtotal);
+        document.getElementById('tax').textContent = this.formatCurrency(tax);
+        document.getElementById('profitAmount').textContent = this.formatCurrency(profit);
+        document.getElementById('contingencyAmount').textContent = this.formatCurrency(contingency);
+        document.getElementById('grandTotal').textContent = this.formatCurrency(grandTotal);
+    },
+
+    updateDisplayValues() {
+        if(document.getElementById('taxRateDisplay')) {
+            document.getElementById('taxRateDisplay').textContent = document.getElementById('taxRate').value;
+            document.getElementById('profitDisplay').textContent = document.getElementById('profitMargin').value;
+            document.getElementById('contingencyDisplay').textContent = document.getElementById('contingency').value;
+        }
+    },
+    saveToStorage() {
+        try {
+            localStorage.setItem('estimatorProjects_v2', JSON.stringify(this.projects));
+            localStorage.setItem('estimatorSettings_v2', JSON.stringify(this.settings));
+            localStorage.setItem('estimatorChatHistory_v2', JSON.stringify(this.chatHistory));
+        } catch (e) { this.showNotification('Storage Error', 'danger', 'Could not save data.'); }
+    },
+    loadFromStorage() {
+        try {
+            this.projects = JSON.parse(localStorage.getItem('estimatorProjects_v2')) || {};
+            this.settings = JSON.parse(localStorage.getItem('estimatorSettings_v2')) || {};
+            this.chatHistory = JSON.parse(localStorage.getItem('estimatorChatHistory_v2')) || [];
+        } catch (e) { this.projects = {}; this.settings = {}; this.chatHistory = []; }
+    },
+    applySettings() {
+        this.currencySymbol = this.settings.currencySymbol || '$';
+        const isDark = this.settings.darkMode || false;
+        this.elements.darkModeToggle.checked = isDark;
+        document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+
+        if(this.currentPage === 'settings' && document.getElementById('companyName')) {
+            document.getElementById('companyName').value = this.settings.companyName || '';
+            document.getElementById('companyEmail').value = this.settings.companyEmail || '';
+            document.getElementById('currencySymbol').value = this.currencySymbol;
+            document.getElementById('defaultTaxRate').value = this.settings.defaultTaxRate || 8.25;
+            document.getElementById('defaultProfitMargin').value = this.settings.defaultProfitMargin || 15;
+            document.getElementById('defaultContingency').value = this.settings.defaultContingency || 10;
+        }
+    },
+    toggleTheme() {
+        this.settings.darkMode = this.elements.darkModeToggle.checked;
+        this.applySettings();
+        this.saveToStorage();
+        if (this.currentPage === 'dashboard') {
+            this.updateDashboard();
+        }
+    },
+    formatCurrency(value) {
+        const num = parseFloat(value) || 0;
+        return this.currencySymbol + num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    },
+    showNotification(title, type = 'info', message = '') {
+        const notif = document.createElement('div');
+        notif.className = `notification ${type}`;
+        const icons = { success: '✅', danger: '❌', warning: '⚠️', info: 'ℹ️' };
+        notif.innerHTML = `<div style="font-size:1.25rem">${icons[type]}</div><div><div style="font-weight:600">${title}</div>${message}</div>`;
+        this.elements.notificationContainer.appendChild(notif);
+        setTimeout(() => {
+            notif.classList.add('closing');
+            setTimeout(() => notif.remove(), 300);
+        }, 5000);
+    },
+    showModal(title, bodyHtml, callback) {
+        this.elements.modalTitle.textContent = title;
+        this.elements.modalBody.innerHTML = bodyHtml;
+        this.modalCallback = callback;
+        this.elements.confirmationModal.classList.add('active');
+    },
+    hideModal() {
+        this.elements.confirmationModal.classList.remove('active');
+        this.modalCallback = null;
+    },
+    renderQuickAddPills() {
+        const filterContainer = document.getElementById('quickAddCategoryFilter');
+        if (!filterContainer) return;
+        const categories = Object.keys(this.quickAddItems);
+        let pillsHTML = categories.map(cat => `<button class="category-pill ${cat === 'all' ? 'active' : ''}" data-category="${cat}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</button>`).join('');
+        filterContainer.innerHTML = pillsHTML;
+    },
+    filterQuickAdd(category, pillElement) {
+        const grid = document.getElementById('quickAddGrid');
+        if(!grid) return;
+        if (pillElement) {
+            document.querySelectorAll('#quickAddCategoryFilter .category-pill').forEach(p => p.classList.remove('active'));
+            pillElement.classList.add('active');
+        }
+        const items = this.quickAddItems[category] || [];
+        grid.innerHTML = items.map(item => `<button class="quick-add-btn" data-item="${item}">${item}</button>`).join('');
+    },
+    quickAddItemToTable(itemName) {
+        let foundItem = null;
+        let itemCategory = '';
+        for (const [category, items] of Object.entries(this.itemsDB)) {
+            foundItem = items.find(i => i.name === itemName);
+            if(foundItem) {
+                itemCategory = category;
+                break;
+            }
+        }
+        if(foundItem) {
+            this.addRow({ item: foundItem.name, category: itemCategory, unit: foundItem.unit, unitPrice: foundItem.price, quantity: 1 });
+            this.showNotification(`Added ${itemName}`, 'success');
+        }
+    },
+    filterItems(input) {
+        const dropdown = input.nextElementSibling;
+        if (dropdown) {
+            dropdown.innerHTML = this.generateDropdownContent(input.value);
+            dropdown.classList.remove('hidden');
+        }
+    },
+    showDropdown(input) {
+        const dropdown = input.nextElementSibling;
+        if(dropdown) {
+            dropdown.innerHTML = this.generateDropdownContent(input.value);
+            dropdown.classList.remove('hidden');
+        }
+    },
+    selectItem(element) {
+        const row = element.closest('tr');
+        const { name, category, unit, price } = element.dataset;
+        row.querySelector('.item-search').value = name;
+        row.querySelector('.category-cell').textContent = category;
+        row.querySelector('.unit-cell').textContent = unit;
+        row.querySelector('.price-input').value = price;
+        this.calculateRow(row);
+        element.parentElement.classList.add('hidden');
+    },
+    generateDropdownContent(filter = '') {
+        const lowerFilter = filter.toLowerCase();
+        let html = '';
+        let hasResults = false;
+        Object.entries(this.itemsDB).forEach(([category, items]) => {
+            const filteredItems = items.filter(item => 
+                filter === '' || item.name.toLowerCase().includes(lowerFilter) || category.toLowerCase().includes(lowerFilter)
+            );
+            if (filteredItems.length > 0) {
+                hasResults = true;
+                html += `<div class="dropdown-category">${category}</div>`;
+                filteredItems.forEach(item => {
+                    html += `<div class="dropdown-item" data-name="${item.name}" data-category="${category}" data-unit="${item.unit}" data-price="${item.price}">
+                        <div>${item.name}</div><small>${this.formatCurrency(item.price)}/${item.unit}</small>
+                    </div>`;
+                });
+            }
+        });
+        return hasResults ? html : '<div class="dropdown-item">No results found</div>';
+    },
+    saveProject() {
+        const projectName = document.getElementById('projectName').value.trim();
+        if (!projectName) {
+            return this.showNotification('Project Name Required', 'danger', 'Please enter a project name.');
+        }
+        const projectData = {
+            info: {
+                projectName,
+                clientName: document.getElementById('clientName').value,
+                projectAddress: document.getElementById('projectAddress').value,
+                regionFactor: document.getElementById('regionFactor').value,
+                taxRate: document.getElementById('taxRate').value,
+                profitMargin: document.getElementById('profitMargin').value,
+                contingency: document.getElementById('contingency').value,
+                grandTotal: document.getElementById('grandTotal').textContent,
+                lastModified: new Date().toISOString()
+            },
+            items: Array.from(document.querySelectorAll('#tableBody tr')).map(row => ({
+                item: row.querySelector('.item-search').value,
+                category: row.querySelector('.category-cell').textContent,
+                quantity: row.querySelector('.quantity-input').value,
+                unit: row.querySelector('.unit-cell').textContent,
+                unitPrice: row.querySelector('.price-input').value
+            }))
+        };
+        const id = this.currentProjectId || 'proj_' + Date.now();
+        this.projects[id] = projectData;
+        this.currentProjectId = id;
+        this.saveToStorage();
+        this.showNotification(`Project "${projectName}" saved!`, 'success');
+        this.updateDashboard();
+    },
+    loadProject(id) {
+        const project = this.projects[id];
+        if (!project) return;
+        this.currentProjectId = id;
+        this.executePageSwitch('estimate');
+        setTimeout(() => {
+            Object.keys(project.info).forEach(key => {
+                const el = document.getElementById(key);
+                if(el && typeof el.value !== 'undefined') el.value = project.info[key];
+            });
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+            project.items.forEach(item => this.addRow(item));
+            if (project.items.length === 0) this.addRow();
+            this.updateDisplayValues();
+            this.calculateTotals();
+        }, 0);
+    },
+    deleteProject(id) {
+        const projectName = this.projects[id]?.info?.projectName || 'this project';
+        this.showModal('Delete Project', `<p>Delete <strong>${projectName}</strong>? This cannot be undone.</p>`, () => {
+            delete this.projects[id];
+            if (this.currentProjectId === id) this.clearEstimateForm();
+            this.saveToStorage();
+            if(this.currentPage === 'projects') this.displayProjects();
+            if(this.currentPage === 'dashboard') this.updateDashboard();
+            this.showNotification(`Project "${projectName}" deleted.`, 'info');
+        });
+    },
+    clearEstimateForm() {
+        this.currentProjectId = null;
+        if(this.currentPage === 'estimate') {
+            this.renderEstimatePage(); // Rerender to reset the form
+            setTimeout(() => {
+                 document.getElementById('taxRate').value = this.settings.defaultTaxRate || 8.25;
+                 document.getElementById('profitMargin').value = this.settings.defaultProfitMargin || 15;
+                 document.getElementById('contingency').value = this.settings.defaultContingency || 10;
+                 this.updateDisplayValues();
+                 this.calculateTotals();
+            }, 0);
+        }
+    },
+    updateDashboard() {
+        const projectIds = Object.keys(this.projects);
+        const projectCount = projectIds.length;
+        let totalValue = 0;
+        let totalItems = 0;
+        const categoryCosts = {};
+        projectIds.forEach(id => {
+            const project = this.projects[id];
+            totalValue += parseFloat((project.info.grandTotal || '$0').replace(/[^0-9.-]+/g, '')) || 0;
+            totalItems += project.items.length;
+            const projectRegionFactor = parseFloat(project.info.regionFactor) || 1;
+            project.items.forEach(item => {
+                const category = item.category || 'Uncategorized';
+                const itemTotal = (parseFloat(item.quantity) || 0) * (parseFloat(item.unitPrice) || 0) * projectRegionFactor;
+                categoryCosts[category] = (categoryCosts[category] || 0) + itemTotal;
+            });
+        });
+        document.getElementById('totalProjects').textContent = projectCount;
+        document.getElementById('totalValue').textContent = this.formatCurrency(totalValue);
+        document.getElementById('avgProject').textContent = this.formatCurrency(projectCount > 0 ? totalValue / projectCount : 0);
+        document.getElementById('activeItems').textContent = totalItems;
+        this.renderDashboardChart(categoryCosts);
+        this.renderRecentProjects();
+    },
+    renderDashboardChart(data) {
+        const canvas = document.getElementById('dashboardChart');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const isDark = document.body.getAttribute('data-theme') === 'dark';
+        if (this.chart) this.chart.destroy();
+        if (Object.keys(data).length === 0) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = isDark ? '#94a3b8' : '#64748b';
+            ctx.textAlign = 'center';
+            ctx.font = '16px Inter';
+            ctx.fillText('No data to display.', canvas.width / 2, canvas.height / 2);
+            return;
+        }
+        this.chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(data),
+                datasets: [{ data: Object.values(data), backgroundColor: ['#3b82f6', '#ef4444', '#22c55e', '#f59e0b', '#6366f1', '#8b5cf6'], borderColor: isDark ? '#0f172a' : '#ffffff', borderWidth: 2 }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'right', labels: { color: isDark ? '#f8fafc' : '#0f172a', font: { family: 'Inter' } } },
+                    tooltip: { callbacks: { label: c => `${c.label}: ${this.formatCurrency(c.parsed)}` } }
+                }
+            }
+        });
+    },
+    renderRecentProjects() {
+        const container = document.getElementById('recentProjects');
+        const recentIds = Object.keys(this.projects).sort((a,b) => (this.projects[b].info.lastModified||'').localeCompare(this.projects[a].info.lastModified||'')).slice(0,5);
+        if(!container) return;
+        if(recentIds.length === 0) {
+            container.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--text-tertiary)">No recent projects.</div>`;
+            return;
+        }
+        container.innerHTML = `<div class="table-wrapper"><table class="table">
+            <thead><tr><th>Project Name</th><th>Client</th><th>Total</th><th>Actions</th></tr></thead>
+            <tbody>${recentIds.map(id => {
+                const p = this.projects[id];
+                return `<tr>
+                    <td>${p.info.projectName}</td><td>${p.info.clientName || 'N/A'}</td>
+                    <td>${p.info.grandTotal}</td>
+                    <td><button class="btn btn-primary btn-sm load-project-btn" data-id="${id}">Load</button></td>
+                </tr>`;
+            }).join('')}</tbody></table></div>`;
+    },
+    displayProjects() {
+        const container = document.getElementById('projectsList');
+        if(!container) return;
+        const projectIds = Object.keys(this.projects).sort((a,b) => (this.projects[b].info.lastModified||'').localeCompare(this.projects[a].info.lastModified||''));
+        if(projectIds.length === 0) {
+            container.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--text-tertiary)">No saved projects.</div>`;
+            return;
+        }
+        container.innerHTML = `<div class="table-wrapper"><table class="table">
+            <thead><tr><th>Project Name</th><th>Client</th><th>Total</th><th>Last Modified</th><th>Actions</th></tr></thead>
+            <tbody>${projectIds.map(id => {
+                const p = this.projects[id];
+                return `<tr>
+                    <td>${p.info.projectName}</td><td>${p.info.clientName || 'N/A'}</td>
+                    <td>${p.info.grandTotal || this.formatCurrency(0)}</td>
+                    <td>${new Date(p.info.lastModified).toLocaleDateString()}</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm load-project-btn" data-id="${id}">Load</button>
+                        <button class="btn btn-danger btn-sm delete-project-btn" data-id="${id}">Delete</button>
+                    </td>
+                </tr>`;
+            }).join('')}</tbody></table></div>`;
+    },
+    initializeDatabasePage() {
+        const filterContainer = document.getElementById('dbCategoryFilter');
+        if(!filterContainer) return;
+        const categories = Object.keys(this.itemsDB);
+        filterContainer.innerHTML = '<button class="category-pill active" data-category="all">All Categories</button>' +
+            categories.map(cat => `<button class="category-pill" data-category="${cat}">${cat}</button>`).join('');
+        this.displayDatabase('all', filterContainer.querySelector('.active'));
+    },
+    displayDatabase(filterCategory, pillElement) {
+        if (pillElement) {
+             document.querySelectorAll('#dbCategoryFilter .category-pill').forEach(p => p.classList.remove('active'));
+             pillElement.classList.add('active');
+        }
+        const tbody = document.getElementById('databaseTableBody');
+        tbody.innerHTML = '';
+        Object.entries(this.itemsDB).forEach(([category, items]) => {
+            if (filterCategory === 'all' || category === filterCategory) {
+                items.forEach(item => {
+                    const row = tbody.insertRow();
+                    row.innerHTML = `<td>${category}</td><td>${item.name}</td><td>${item.unit}</td><td>${this.formatCurrency(item.price)}</td><td>${item.updated}</td>`;
+                });
+            }
+        });
+    },
+    toggleChat() {
+        const isActive = this.elements.chatContainer.classList.toggle('active');
+        this.elements.chatButton.innerHTML = isActive ? '✕' : '💬';
+        if (isActive) this.elements.chatInput.focus();
+    },
+    sendChatMessage() {
+        const input = this.elements.chatInput;
+        const message = input.value.trim();
+        if(!message) return;
+        this.showNotification('Chat coming soon!', 'info');
+        input.value = '';
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    EstimatorApp.init();
+});
+</script>
+</body>
+</html>
