@@ -298,73 +298,8 @@ const EstimatorApp = {
     quickAddItems: { "all": ["Concrete (Ready Mix)","Framing Lumber 2x4","Drywall 1/2\" Regular","Interior Paint (Eggshell)","Carpenter (Skilled)","Electrician (Journeyman)","Plumber (Journeyman)","Hardwood Flooring (Oak)"], "concrete": ["Concrete (Ready Mix)","Concrete Installation","Rebar #4","Concrete Block 8\"","Wire Mesh (6x6)","Concrete Finisher"], "framing": ["Framing Lumber 2x4","Framing Lumber 2x6","Plywood 1/2\" CDX","OSB Sheathing 7/16\"","Engineered I-Joist 11-7/8\"","Carpenter (Skilled)"], "electrical": ["Romex Wire 12/2","Electrical Panel 200A","Outlet (Standard)","Light Switch","Recessed Light","Electrician (Journeyman)"], "plumbing": ["PEX Pipe 1/2\"","Water Heater (50 gal)","Toilet (Standard)","Sink (Kitchen SS)","Plumber (Journeyman)","Shower Unit"], "finishes": ["Interior Paint (Eggshell)","Hardwood Flooring (Oak)","Ceramic Tile","Crown Molding","Kitchen Cabinets (Semi-Custom)","Painter"] },
 
     elements: {},
-    init() { /* ... */ },
-    cacheDOMElements() { /* ... */ },
-    bindEventListeners() { /* ... */ },
-    handleContentClick(e) { /* ... */ },
-    handleContentInput(e) { /* ... */ },
-    handleContentFocus(e) { /* ... */ },
-    switchPage(page) { /* ... */ },
-    executePageSwitch(page) { /* ... */ },
-    renderDashboardPage() { /* ... */ },
-    renderEstimatePage() { /* ... */ },
-    renderProjectsPage() { /* ... */ },
-    renderDatabasePage() { /* ... */ },
-    renderSettingsPage() { /* ... */ },
-    renderCalculatorPage() { /* ... */ },
-    renderReportsPage() { /* ... */ },
-    addRow(data = {}) { /* ... */ },
-    deleteRow(rowElement) { /* ... */ },
-    duplicateRow(rowElement) { /* ... */ },
-    calculateRow(row) { /* ... */ },
-    calculateTotals() { /* ... */ },
-    updateDisplayValues() { /* ... */ },
-    saveToStorage() { /* ... */ },
-    loadFromStorage() { /* ... */ },
-    applySettings() { /* ... */ },
-    toggleTheme() { /* ... */ },
-    formatCurrency(value) { /* ... */ },
-    showNotification(title, type = 'info', message = '') { /* ... */ },
-    showModal(title, bodyHtml, callback) { /* ... */ },
-    hideModal() { /* ... */ },
-    renderQuickAddPills() { /* ... */ },
-    filterQuickAdd(category, pillElement) { /* ... */ },
-    quickAddItemToTable(itemName) { /* ... */ },
-    filterItems(input) { /* ... */ },
-    showDropdown(input) { /* ... */ },
-    selectItem(element) { /* ... */ },
-    generateDropdownContent(filter = '') { /* ... */ },
-    saveProject() { /* ... */ },
-    loadProject(id) { /* ... */ },
-    deleteProject(id) { /* ... */ },
-    clearEstimateForm() { /* ... */ },
-    updateDashboard() { /* ... */ },
-    renderDashboardChart(data) { /* ... */ },
-    renderRecentProjects() { /* ... */ },
-    displayProjects() { /* ... */ },
-    initializeDatabasePage() { /* ... */ },
-    displayDatabase(filterCategory, pillElement) { /* ... */ },
-    exportData(){ this.showNotification('Export coming soon.', 'info'); },
-    importData(){ this.showNotification('Import coming soon.', 'info'); },
-    exportDatabase(){ this.showNotification('Export coming soon.', 'info'); },
-    updatePrices(){ this.showNotification('Price updates coming soon.', 'info'); },
-    saveSettings(){ 
-        this.settings.companyName = document.getElementById('companyName').value;
-        this.settings.companyEmail = document.getElementById('companyEmail').value;
-        this.settings.defaultTaxRate = parseFloat(document.getElementById('defaultTaxRate').value);
-        this.settings.defaultProfitMargin = parseFloat(document.getElementById('defaultProfitMargin').value);
-        this.settings.defaultContingency = parseFloat(document.getElementById('defaultContingency').value);
-        this.settings.currencySymbol = document.getElementById('currencySymbol').value;
-        this.saveToStorage();
-        this.applySettings();
-        this.showNotification('Settings saved!', 'success'); 
-    },
-    toggleChat() { /* ... */ },
-    sendChatMessage() { /* ... */ },
-};
 
-// Replace placeholder methods with full implementations
-Object.assign(EstimatorApp, {
+    // --- Core Methods ---
     init() {
         this.cacheDOMElements();
         this.loadFromStorage();
@@ -399,7 +334,7 @@ Object.assign(EstimatorApp, {
     bindEventListeners() {
         this.elements.sidebarNav.addEventListener('click', e => {
             const navItem = e.target.closest('.nav-item');
-            if (navItem) this.switchPage(navItem.dataset.page);
+            if (navItem) this.switchPage(navItem.dataset.page, true); // Pass true for manual navigation
         });
         this.elements.menuToggle.addEventListener('click', () => this.elements.sidebar.classList.toggle('open'));
         this.elements.darkModeToggle.addEventListener('change', this.toggleTheme.bind(this));
@@ -422,6 +357,8 @@ Object.assign(EstimatorApp, {
             if (e.key === 'Enter') this.sendChatMessage();
         });
     },
+
+    // --- Event Handlers ---
     handleContentClick(e) {
         const target = e.target;
         if (target.closest('.delete-row-btn')) this.deleteRow(target.closest('tr'));
@@ -449,14 +386,21 @@ Object.assign(EstimatorApp, {
             this.calculateTotals();
         }
         else if(target.matches('.item-search')) this.filterItems(target);
+        else if (target.matches('.calculator-input')) {
+            const type = target.dataset.calculator;
+            if (type === 'area') this.calculateArea();
+            if (type === 'volume') this.calculateVolume();
+        }
     },
     handleContentFocus(e) {
         if(e.target.matches('.item-search')) this.showDropdown(e.target);
     },
-    switchPage(page) {
+
+    // --- Page Navigation & Rendering ---
+    switchPage(page, isManualNav = false) {
         if (!page) return;
-        if (page === 'estimate' && this.currentProjectId) {
-            this.showModal('Start New Estimate', '<p>This will clear the current form. Are you sure?</p>', () => {
+        if (page === 'estimate' && this.currentProjectId && isManualNav) {
+            this.showModal('Start New Estimate', '<p>This will clear the current form and start a new, unsaved estimate. Are you sure?</p>', () => {
                 this.clearEstimateForm();
                 this.executePageSwitch(page);
             });
@@ -479,14 +423,10 @@ Object.assign(EstimatorApp, {
             }
         }
         this.elements.pageTitle.textContent = page.charAt(0).toUpperCase() + page.slice(1);
+        this.elements.saveBtn.style.display = (page === 'estimate') ? 'inline-flex' : 'none';
     },
     renderDashboardPage() {
        this.elements.content.querySelector('#dashboardPage').innerHTML = `
-            <div class="quick-actions">
-                <button class="btn btn-success" onclick="EstimatorApp.switchPage('estimate')">➕ New Estimate</button>
-                <button class="btn btn-secondary" id="exportAllBtn">📤 Export All Data</button>
-                <button class="btn btn-secondary" id="importAllBtn">📥 Import Data</button>
-            </div>
             <div class="stats-grid">
                 <div class="stat-card"><div class="stat-icon">📁</div><div class="stat-value" id="totalProjects">0</div><div class="stat-label">Total Projects</div></div>
                 <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-value" id="totalValue">$0</div><div class="stat-label">Total Estimated Value</div></div>
@@ -586,20 +526,108 @@ Object.assign(EstimatorApp, {
                         <div class="form-group"><label class="form-label" for="defaultContingency">Default Contingency (%)</label><input type="number" class="form-input" id="defaultContingency"></div>
                         <div class="form-group"><label class="form-label" for="currencySymbol">Currency Symbol</label><input type="text" class="form-input" id="currencySymbol"></div>
                     </div>
-                    <button class="btn btn-primary" id="settingsSaveBtn" style="margin-top: 1.5rem;">💾 Save Settings</button>
+                     <div style="margin-top: 1.5rem; display: flex; gap: 0.5rem;">
+                        <button class="btn btn-primary" id="settingsSaveBtn">💾 Save Settings</button>
+                        <button class="btn btn-secondary" id="exportAllBtn">📤 Export All Data</button>
+                        <button class="btn btn-secondary" id="importAllBtn">📥 Import Data</button>
+                    </div>
                 </div>
             </div>`;
         this.applySettings(); // Re-apply to populate the fields
     },
-    renderCalculatorPage() { this.elements.content.querySelector('#calculatorPage').innerHTML = `<div class="card"><div class="card-body" style="text-align: center;">🧮 Calculator coming soon...</div></div>`},
+    renderCalculatorPage() {
+        this.elements.content.querySelector('#calculatorPage').innerHTML = `
+        <div class="form-grid">
+            <!-- Area Calculator Card -->
+            <div class="card">
+                <div class="card-header"><h3 class="card-title"><span>📐</span><span>Area Calculator</span></h3></div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label" for="areaLength">Length</label>
+                        <input type="number" id="areaLength" class="form-input calculator-input" data-calculator="area" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="areaWidth">Width</label>
+                        <input type="number" id="areaWidth" class="form-input calculator-input" data-calculator="area" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="areaUnit">Units</label>
+                        <select id="areaUnit" class="form-select calculator-input" data-calculator="area">
+                            <option value="ft">Feet (ft)</option>
+                            <option value="in">Inches (in)</option>
+                            <option value="m">Meters (m)</option>
+                            <option value="cm">Centimeters (cm)</option>
+                        </select>
+                    </div>
+                    <div style="margin-top: 1.5rem; background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm);">
+                        <div class="stat-label">Result</div>
+                        <div id="areaResult" class="stat-value" style="font-size: 1.75rem;">0 sq ft</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Volume Calculator Card -->
+            <div class="card">
+                <div class="card-header"><h3 class="card-title"><span>📦</span><span>Volume Calculator</span></h3></div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label" for="volLength">Length</label>
+                        <input type="number" id="volLength" class="form-input calculator-input" data-calculator="volume" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="volWidth">Width</label>
+                        <input type="number" id="volWidth" class="form-input calculator-input" data-calculator="volume" placeholder="0">
+                    </div>
+                     <div class="form-group">
+                        <label class="form-label" for="volHeight">Height / Depth</label>
+                        <input type="number" id="volHeight" class="form-input calculator-input" data-calculator="volume" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="volUnit">Units</label>
+                        <select id="volUnit" class="form-select calculator-input" data-calculator="volume">
+                            <option value="ft">Feet (ft)</option>
+                            <option value="in">Inches (in)</option>
+                             <option value="yd">Yards (yd)</option>
+                            <option value="m">Meters (m)</option>
+                            <option value="cm">Centimeters (cm)</option>
+                        </select>
+                    </div>
+                    <div style="margin-top: 1.5rem; background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm);">
+                        <div class="stat-label">Result</div>
+                        <div id="volumeResult" class="stat-value" style="font-size: 1.75rem;">0 cu ft</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+    },
     renderReportsPage() { this.elements.content.querySelector('#reportsPage').innerHTML = `<div class="card"><div class="card-body" style="text-align: center;">📈 Reports coming soon...</div></div>`},
+    
+    // --- Calculator Methods ---
+    calculateArea() {
+        const length = parseFloat(document.getElementById('areaLength').value) || 0;
+        const width = parseFloat(document.getElementById('areaWidth').value) || 0;
+        const unit = document.getElementById('areaUnit').value;
+        const result = length * width;
+        document.getElementById('areaResult').textContent = `${result.toLocaleString()} sq ${unit}`;
+    },
+    calculateVolume() {
+        const length = parseFloat(document.getElementById('volLength').value) || 0;
+        const width = parseFloat(document.getElementById('volWidth').value) || 0;
+        const height = parseFloat(document.getElementById('volHeight').value) || 0;
+        const unit = document.getElementById('volUnit').value;
+        const result = length * width * height;
+        document.getElementById('volumeResult').textContent = `${result.toLocaleString()} cu ${unit}`;
+    },
+
+    // --- Estimate Table Methods ---
     addRow(data = {}) {
         const tableBody = document.getElementById('tableBody');
+        if (!tableBody) return;
         const template = document.getElementById('estimateRowTemplate');
-        const newRow = template.content.cloneNode(true); // Use the template
+        const newRow = template.content.cloneNode(true);
         const tr = newRow.querySelector('tr');
         
-        // Populate the new row
         tr.querySelector('.item-search').value = data.item || '';
         tr.querySelector('.category-cell').textContent = data.category || '';
         tr.querySelector('.quantity-input').value = data.quantity || 1;
@@ -663,10 +691,13 @@ Object.assign(EstimatorApp, {
         document.getElementById('grandTotal').textContent = this.formatCurrency(grandTotal);
     },
     updateDisplayValues() {
+        if(this.currentPage !== 'estimate') return;
         document.getElementById('taxRateDisplay').textContent = document.getElementById('taxRate').value;
         document.getElementById('profitDisplay').textContent = document.getElementById('profitMargin').value;
         document.getElementById('contingencyDisplay').textContent = document.getElementById('contingency').value;
     },
+
+    // --- Project Data Management ---
     saveToStorage() {
         try {
             localStorage.setItem('estimatorProjects_v2', JSON.stringify(this.projects));
@@ -687,6 +718,99 @@ Object.assign(EstimatorApp, {
             this.chatHistory = [];
         }
     },
+    saveProject() {
+        const projectName = document.getElementById('projectName').value.trim();
+        if (!projectName) {
+            return this.showNotification('Project Name Required', 'danger', 'Please enter a project name.');
+        }
+        const projectData = {
+            info: {
+                projectName,
+                clientName: document.getElementById('clientName').value,
+                projectAddress: document.getElementById('projectAddress').value,
+                regionFactor: document.getElementById('regionFactor').value,
+                taxRate: document.getElementById('taxRate').value,
+                profitMargin: document.getElementById('profitMargin').value,
+                contingency: document.getElementById('contingency').value,
+                grandTotal: document.getElementById('grandTotal').textContent,
+                lastModified: new Date().toISOString()
+            },
+            items: Array.from(document.querySelectorAll('#tableBody tr')).map(row => ({
+                item: row.querySelector('.item-search').value,
+                category: row.querySelector('.category-cell').textContent,
+                quantity: row.querySelector('.quantity-input').value,
+                unit: row.querySelector('.unit-cell').textContent,
+                unitPrice: row.querySelector('.price-input').value
+            }))
+        };
+        const id = this.currentProjectId || 'proj_' + Date.now();
+        this.projects[id] = projectData;
+        this.currentProjectId = id;
+        this.saveToStorage();
+        this.showNotification(`Project "${projectName}" saved!`, 'success');
+        this.updateDashboard();
+    },
+    loadProject(id) {
+        const project = this.projects[id];
+        if (!project) return;
+        
+        // Temporarily clear current project to bypass confirmation modal in switchPage
+        this.currentProjectId = null;
+        this.switchPage('estimate'); // This renders the empty estimate page
+
+        // Use a small timeout to allow the DOM to render before populating fields
+        setTimeout(() => {
+            this.currentProjectId = id; // Now set the actual project ID
+            
+            const info = project.info || {};
+            Object.keys(info).forEach(key => {
+                const el = document.getElementById(key);
+                if (el && key !== 'grandTotal' && key !== 'lastModified') {
+                    el.value = info[key];
+                }
+            });
+            
+            const tableBody = document.getElementById('tableBody');
+            if (tableBody) {
+                tableBody.innerHTML = ''; // Clear any default rows
+                if (project.items && project.items.length > 0) {
+                    project.items.forEach(item => this.addRow(item));
+                } else {
+                    this.addRow(); // Add a blank row if loaded project has no items
+                }
+            }
+            
+            this.updateDisplayValues();
+            this.calculateTotals();
+            this.showNotification(`Loaded project: "${info.projectName}"`, 'success');
+        }, 50);
+    },
+    deleteProject(id) {
+        const projectName = this.projects[id]?.info?.projectName || 'this project';
+        this.showModal('Delete Project', `<p>Delete <strong>${projectName}</strong>? This cannot be undone.</p>`, () => {
+            delete this.projects[id];
+            if (this.currentProjectId === id) this.clearEstimateForm();
+            this.saveToStorage();
+            if (this.currentPage === 'projects') this.displayProjects();
+            this.updateDashboard();
+            this.showNotification(`Project "${projectName}" deleted.`, 'info');
+        });
+    },
+    clearEstimateForm() {
+        this.currentProjectId = null;
+        if(this.currentPage === 'estimate') {
+            this.renderEstimatePage(); // Rerender to reset the form
+            setTimeout(() => {
+                  document.getElementById('taxRate').value = this.settings.defaultTaxRate || 8.25;
+                  document.getElementById('profitMargin').value = this.settings.defaultProfitMargin || 15;
+                  document.getElementById('contingency').value = this.settings.defaultContingency || 10;
+                  this.updateDisplayValues();
+                  this.calculateTotals();
+            }, 0);
+        }
+    },
+
+    // --- Settings & UI ---
     applySettings() {
         this.currencySymbol = this.settings.currencySymbol || '$';
         const isDark = this.settings.darkMode || false;
@@ -735,6 +859,8 @@ Object.assign(EstimatorApp, {
         this.elements.confirmationModal.classList.remove('active');
         this.modalCallback = null;
     },
+
+    // --- Item Search & Quick Add ---
     renderQuickAddPills() {
         const filterContainer = document.getElementById('quickAddCategoryFilter');
         if (!filterContainer) return;
@@ -781,6 +907,8 @@ Object.assign(EstimatorApp, {
         }
     },
     showDropdown(input) {
+        // Hide other dropdowns
+        document.querySelectorAll('.item-dropdown').forEach(d => d.classList.add('hidden'));
         const dropdown = input.nextElementSibling;
         if(dropdown) {
             dropdown.innerHTML = this.generateDropdownContent(input.value);
@@ -817,86 +945,10 @@ Object.assign(EstimatorApp, {
         });
         return hasResults ? html : '<div class="dropdown-item">No results found</div>';
     },
-    saveProject() {
-        const projectName = document.getElementById('projectName').value.trim();
-        if (!projectName) {
-            return this.showNotification('Project Name Required', 'danger', 'Please enter a project name.');
-        }
-        const projectData = {
-            info: {
-                projectName,
-                clientName: document.getElementById('clientName').value,
-                projectAddress: document.getElementById('projectAddress').value,
-                regionFactor: document.getElementById('regionFactor').value,
-                taxRate: document.getElementById('taxRate').value,
-                profitMargin: document.getElementById('profitMargin').value,
-                contingency: document.getElementById('contingency').value,
-                grandTotal: document.getElementById('grandTotal').textContent,
-                lastModified: new Date().toISOString()
-            },
-            items: Array.from(document.querySelectorAll('#tableBody tr')).map(row => ({
-                item: row.querySelector('.item-search').value,
-                category: row.querySelector('.category-cell').textContent,
-                quantity: row.querySelector('.quantity-input').value,
-                unit: row.querySelector('.unit-cell').textContent,
-                unitPrice: row.querySelector('.price-input').value
-            }))
-        };
-        const id = this.currentProjectId || 'proj_' + Date.now();
-        this.projects[id] = projectData;
-        this.currentProjectId = id;
-        this.saveToStorage();
-        this.showNotification(`Project "${projectName}" saved!`, 'success');
-        this.updateDashboard();
-    },
-    loadProject(id) {
-        const project = this.projects[id];
-        if (!project) return;
-        
-        this.currentProjectId = id;
-        this.renderEstimatePage(); // Re-render the page to ensure all elements are there
 
-        setTimeout(() => {
-            Object.keys(project.info).forEach(key => {
-                const el = document.getElementById(key);
-                if(el) el.value = project.info[key];
-            });
-            
-            const tableBody = document.getElementById('tableBody');
-            tableBody.innerHTML = '';
-            project.items.forEach(item => this.addRow(item));
-            if (project.items.length === 0) this.addRow();
-            
-            this.updateDisplayValues();
-            this.calculateTotals();
-            this.executePageSwitch('estimate');
-        }, 0);
-    },
-    deleteProject(id) {
-        const projectName = this.projects[id]?.info?.projectName || 'this project';
-        this.showModal('Delete Project', `<p>Delete <strong>${projectName}</strong>? This cannot be undone.</p>`, () => {
-            delete this.projects[id];
-            if (this.currentProjectId === id) this.clearEstimateForm();
-            this.saveToStorage();
-            this.displayProjects();
-            this.updateDashboard();
-            this.showNotification(`Project "${projectName}" deleted.`, 'info');
-        });
-    },
-    clearEstimateForm() {
-        this.currentProjectId = null;
-        if(this.currentPage === 'estimate') {
-            this.renderEstimatePage(); // Rerender to reset the form
-            setTimeout(() => {
-                 Object.assign(document.getElementById('taxRate'), {value: this.settings.defaultTaxRate || 8.25});
-                 Object.assign(document.getElementById('profitMargin'), {value: this.settings.defaultProfitMargin || 15});
-                 Object.assign(document.getElementById('contingency'), {value: this.settings.defaultContingency || 10});
-                 this.updateDisplayValues();
-                 this.calculateTotals();
-            }, 0);
-        }
-    },
+    // --- Dashboard & Reporting ---
     updateDashboard() {
+        if (!document.getElementById('dashboardPage') || document.getElementById('dashboardPage').classList.contains('hidden')) return;
         const projectIds = Object.keys(this.projects);
         const projectCount = projectIds.length;
         let totalValue = 0;
@@ -934,14 +986,14 @@ Object.assign(EstimatorApp, {
             ctx.fillStyle = isDark ? '#94a3b8' : '#64748b';
             ctx.textAlign = 'center';
             ctx.font = '16px Inter';
-            ctx.fillText('No data to display.', canvas.width / 2, canvas.height / 2);
+            ctx.fillText('No data to display. Create an estimate!', canvas.width / 2, canvas.height / 2);
             return;
         }
         this.chart = new Chart(ctx, {
             type: 'doughnut',
             data: {
                 labels: Object.keys(data),
-                datasets: [{ data: Object.values(data), backgroundColor: ['#3b82f6', '#ef4444', '#22c55e', '#f59e0b', '#6366f1', '#8b5cf6'], borderColor: isDark ? '#0f172a' : '#ffffff', borderWidth: 2 }]
+                datasets: [{ data: Object.values(data), backgroundColor: ['#3b82f6', '#ef4444', '#22c55e', '#f59e0b', '#6366f1', '#8b5cf6', '#10b981', '#d946ef'], borderColor: isDark ? '#1e293b' : '#ffffff', borderWidth: 2 }]
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
@@ -954,6 +1006,7 @@ Object.assign(EstimatorApp, {
     },
     renderRecentProjects() {
         const container = document.getElementById('recentProjects');
+        if(!container) return;
         const recentIds = Object.keys(this.projects).sort((a,b) => (this.projects[b].info.lastModified||'').localeCompare(this.projects[a].info.lastModified||'')).slice(0,5);
         if(recentIds.length === 0) {
             container.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--text-tertiary)">No recent projects.</div>`;
@@ -972,6 +1025,7 @@ Object.assign(EstimatorApp, {
     },
     displayProjects() {
         const container = document.getElementById('projectsList');
+        if(!container) return;
         const projectIds = Object.keys(this.projects).sort((a,b) => (this.projects[b].info.lastModified||'').localeCompare(this.projects[a].info.lastModified||''));
         if(projectIds.length === 0) {
             container.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--text-tertiary)">No saved projects.</div>`;
@@ -992,6 +1046,8 @@ Object.assign(EstimatorApp, {
                 </tr>`;
             }).join('')}</tbody></table></div>`;
     },
+
+    // --- Database Page ---
     initializeDatabasePage() {
         const filterContainer = document.getElementById('dbCategoryFilter');
         if(!filterContainer) return;
@@ -1016,6 +1072,8 @@ Object.assign(EstimatorApp, {
             }
         });
     },
+
+    // --- Chat & Placeholder Methods ---
     toggleChat() {
         const isActive = this.elements.chatContainer.classList.toggle('active');
         this.elements.chatButton.innerHTML = isActive ? '✕' : '💬';
@@ -1027,8 +1085,23 @@ Object.assign(EstimatorApp, {
         if(!message) return;
         this.showNotification('Chat coming soon!', 'info');
         input.value = '';
-    }
-});
+    },
+    exportData(){ this.showNotification('Export coming soon.', 'info'); },
+    importData(){ this.showNotification('Import coming soon.', 'info'); },
+    exportDatabase(){ this.showNotification('Export coming soon.', 'info'); },
+    updatePrices(){ this.showNotification('Price updates coming soon.', 'info'); },
+    saveSettings(){ 
+        this.settings.companyName = document.getElementById('companyName').value;
+        this.settings.companyEmail = document.getElementById('companyEmail').value;
+        this.settings.defaultTaxRate = parseFloat(document.getElementById('defaultTaxRate').value);
+        this.settings.defaultProfitMargin = parseFloat(document.getElementById('defaultProfitMargin').value);
+        this.settings.defaultContingency = parseFloat(document.getElementById('defaultContingency').value);
+        this.settings.currencySymbol = document.getElementById('currencySymbol').value;
+        this.saveToStorage();
+        this.applySettings();
+        this.showNotification('Settings saved!', 'success'); 
+    },
+};
 
 // Start the application once the DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
