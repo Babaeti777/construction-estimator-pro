@@ -7,33 +7,69 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     /* CSS Variables */
     :root {
-      --primary: #3b82f6;
-      --primary-dark: #2563eb;
-      --success: #10b981;
+      --primary: #0ea5e9;
+      --primary-dark: #0284c7;
+      --primary-light: #38bdf8;
+      --secondary: #6366f1;
+      --success: #22c55e;
       --danger: #ef4444;
       --warning: #f59e0b;
+      --info: #3b82f6;
+      
       --bg: #ffffff;
-      --bg-secondary: #f9fafb;
-      --bg-tertiary: #f3f4f6;
-      --text: #111827;
-      --text-secondary: #6b7280;
-      --border: #e5e7eb;
-      --shadow: rgba(0, 0, 0, 0.1);
-      --radius: 0.5rem;
+      --bg-secondary: #f8fafc;
+      --bg-tertiary: #f1f5f9;
+      --bg-hover: #e2e8f0;
+      
+      --text: #0f172a;
+      --text-secondary: #475569;
+      --text-tertiary: #64748b;
+      --text-light: #94a3b8;
+      
+      --border: #e2e8f0;
+      --border-light: #f1f5f9;
+      
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+      
+      --radius: 0.75rem;
+      --radius-sm: 0.5rem;
+      --radius-lg: 1rem;
+      
+      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     [data-theme="dark"] {
-      --bg: #111827;
-      --bg-secondary: #1f2937;
-      --bg-tertiary: #374151;
-      --text: #f9fafb;
-      --text-secondary: #d1d5db;
-      --border: #4b5563;
-      --shadow: rgba(0, 0, 0, 0.3);
+      --primary: #38bdf8;
+      --primary-dark: #0ea5e9;
+      --primary-light: #7dd3fc;
+      --secondary: #818cf8;
+      
+      --bg: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --bg-hover: #475569;
+      
+      --text: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-tertiary: #94a3b8;
+      --text-light: #64748b;
+      
+      --border: #334155;
+      --border-light: #1e293b;
+      
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+      --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.6), 0 8px 10px -6px rgb(0 0 0 / 0.5);
     }
 
     /* Reset & Base */
@@ -48,7 +84,27 @@
       background: var(--bg-secondary);
       color: var(--text);
       line-height: 1.6;
-      transition: all 0.3s ease;
+      transition: var(--transition);
+      font-size: 15px;
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-tertiary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--text-light);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-tertiary);
     }
 
     /* Layout */
@@ -60,28 +116,39 @@
 
     /* Sidebar */
     .sidebar {
-      width: 280px;
+      width: 260px;
       background: var(--bg);
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      transition: transform 0.3s ease;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
     }
 
     .sidebar-header {
       padding: 1.5rem;
       border-bottom: 1px solid var(--border);
+      background: var(--bg-secondary);
     }
 
     .sidebar-header h1 {
-      font-size: 1.25rem;
+      font-size: 1.125rem;
       font-weight: 700;
-      margin-bottom: 0.25rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .sidebar-header h1::before {
+      content: "🏗️";
+      font-size: 1.5rem;
     }
 
     .sidebar-header p {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      margin-top: 0.25rem;
     }
 
     .sidebar-nav {
@@ -98,33 +165,54 @@
       font-size: 0.75rem;
       font-weight: 600;
       text-transform: uppercase;
-      color: var(--text-secondary);
+      color: var(--text-tertiary);
       margin-bottom: 0.5rem;
-      padding: 0 0.5rem;
+      padding: 0 0.75rem;
+      letter-spacing: 0.05em;
     }
 
     .nav-item {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding: 0.75rem;
-      border-radius: var(--radius);
+      padding: 0.625rem 0.75rem;
+      border-radius: var(--radius-sm);
       cursor: pointer;
-      transition: all 0.2s ease;
-      margin-bottom: 0.25rem;
+      transition: var(--transition);
+      margin-bottom: 0.125rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      position: relative;
     }
 
     .nav-item:hover {
-      background: var(--bg-secondary);
+      background: var(--bg-hover);
+      color: var(--text);
     }
 
     .nav-item.active {
       background: var(--primary);
       color: white;
+      box-shadow: var(--shadow);
+    }
+
+    .nav-item.active::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 60%;
+      background: white;
+      border-radius: 0 2px 2px 0;
     }
 
     .nav-item-icon {
-      font-size: 1.25rem;
+      font-size: 1.125rem;
+      width: 1.5rem;
+      text-align: center;
     }
 
     /* Main Content */
@@ -143,11 +231,19 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
 
     .header-title {
       font-size: 1.5rem;
       font-weight: 600;
+      color: var(--text);
     }
 
     .header-actions {
@@ -161,38 +257,51 @@
       flex: 1;
       padding: 2rem;
       overflow-y: auto;
+      background: var(--bg-secondary);
     }
 
     /* Cards */
     .card {
       background: var(--bg);
       border-radius: var(--radius);
-      box-shadow: 0 1px 3px var(--shadow);
+      box-shadow: var(--shadow);
       margin-bottom: 1.5rem;
+      border: 1px solid var(--border-light);
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
     }
 
     .card-header {
-      padding: 1.25rem;
+      padding: 1.5rem;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      background: var(--bg-secondary);
+      border-radius: var(--radius) var(--radius) 0 0;
     }
 
     .card-title {
       font-size: 1.125rem;
       font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .card-body {
-      padding: 1.25rem;
+      padding: 1.5rem;
     }
 
     /* Form Elements */
     .form-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
     }
 
     .form-group {
@@ -210,38 +319,61 @@
     .form-input,
     .form-select {
       padding: 0.625rem 0.875rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
       background: var(--bg);
       color: var(--text);
       font-size: 0.875rem;
-      transition: all 0.2s ease;
+      transition: var(--transition);
+      font-weight: 400;
     }
 
     .form-input:focus,
     .form-select:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+    }
+
+    .form-input::placeholder {
+      color: var(--text-light);
     }
 
     /* Buttons */
     .btn {
       padding: 0.625rem 1.25rem;
       border: none;
-      border-radius: var(--radius);
+      border-radius: var(--radius-sm);
       font-size: 0.875rem;
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: var(--transition);
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+
+    .btn:hover::before {
+      transform: translateX(0);
     }
 
     .btn:hover {
       transform: translateY(-1px);
-      box-shadow: 0 4px 6px var(--shadow);
+      box-shadow: var(--shadow-md);
     }
 
     .btn:active {
@@ -260,6 +392,11 @@
     .btn-secondary {
       background: var(--bg-tertiary);
       color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-hover);
     }
 
     .btn-success {
@@ -272,8 +409,21 @@
       color: white;
     }
 
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      padding: 0.5rem;
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg-hover);
+      color: var(--text);
+    }
+
     .btn-icon {
       padding: 0.625rem;
+      width: 2.5rem;
+      height: 2.5rem;
     }
 
     /* Table */
@@ -281,6 +431,7 @@
       overflow-x: auto;
       border-radius: var(--radius);
       border: 1px solid var(--border);
+      background: var(--bg);
     }
 
     .table {
@@ -290,43 +441,135 @@
 
     .table th {
       background: var(--bg-tertiary);
-      padding: 0.875rem;
+      padding: 1rem;
       text-align: left;
       font-weight: 600;
       font-size: 0.875rem;
       color: var(--text-secondary);
       border-bottom: 1px solid var(--border);
+      white-space: nowrap;
     }
 
     .table td {
-      padding: 0.875rem;
-      border-bottom: 1px solid var(--border);
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--border-light);
+      vertical-align: middle;
     }
 
-    .table tr:last-child td {
-      border-bottom: none;
+    .table tbody tr {
+      transition: var(--transition);
     }
 
-    .table tr:hover {
+    .table tbody tr:hover {
       background: var(--bg-secondary);
+    }
+
+    .table tfoot td {
+      background: var(--bg-tertiary);
+      font-weight: 600;
+      border-top: 2px solid var(--border);
     }
 
     .table input,
     .table select {
       width: 100%;
-      padding: 0.375rem 0.5rem;
+      padding: 0.5rem 0.75rem;
       border: 1px solid var(--border);
-      border-radius: 0.25rem;
+      border-radius: var(--radius-sm);
       font-size: 0.875rem;
       background: var(--bg);
       color: var(--text);
+      transition: var(--transition);
+    }
+
+    .table input:focus,
+    .table select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.1);
+    }
+
+    /* Search Dropdown */
+    .search-container {
+      position: relative;
+    }
+
+    .item-search {
+      width: 100%;
+      padding-right: 2rem;
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+      pointer-events: none;
+    }
+
+    .item-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      max-height: 300px;
+      overflow-y: auto;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-lg);
+      z-index: 100;
+      margin-top: 0.25rem;
+    }
+
+    .dropdown-item {
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dropdown-item:hover {
+      background: var(--bg-hover);
+    }
+
+    .dropdown-item:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown-item-name {
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .dropdown-item-details {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      display: flex;
+      gap: 1rem;
+    }
+
+    .dropdown-category {
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      background: var(--bg-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      position: sticky;
+      top: 0;
     }
 
     /* Stats */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
       margin-bottom: 1.5rem;
     }
 
@@ -335,19 +578,76 @@
       padding: 1.5rem;
       border-radius: var(--radius);
       border: 1px solid var(--border);
-      text-align: center;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--primary);
+      transform: translateX(-4px);
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .stat-card:hover::before {
+      transform: translateX(0);
+    }
+
+    .stat-icon {
+      width: 3rem;
+      height: 3rem;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .stat-value {
       font-size: 2rem;
       font-weight: 700;
-      color: var(--primary);
+      color: var(--text);
       margin-bottom: 0.25rem;
+      line-height: 1.2;
     }
 
     .stat-label {
       font-size: 0.875rem;
-      color: var(--text-secondary);
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+
+    .stat-change {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .stat-change.positive {
+      color: var(--success);
+      background: rgba(34, 197, 94, 0.1);
+    }
+
+    .stat-change.negative {
+      color: var(--danger);
+      background: rgba(239, 68, 68, 0.1);
     }
 
     /* Quick Actions */
@@ -355,52 +655,47 @@
       display: flex;
       gap: 0.5rem;
       margin-bottom: 1.5rem;
+      flex-wrap: wrap;
     }
 
-    /* Modal */
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
+    .quick-add-section {
+      background: var(--bg-tertiary);
+      padding: 1rem;
+      border-radius: var(--radius-sm);
+      margin-bottom: 1rem;
     }
 
-    .modal.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .modal-content {
-      background: var(--bg);
-      padding: 2rem;
-      border-radius: var(--radius);
-      max-width: 500px;
-      width: 90%;
-      transform: translateY(-20px);
-      transition: transform 0.3s ease;
-    }
-
-    .modal.active .modal-content {
-      transform: translateY(0);
-    }
-
-    .modal-header {
-      margin-bottom: 1.5rem;
-    }
-
-    .modal-title {
-      font-size: 1.5rem;
+    .quick-add-title {
+      font-size: 0.875rem;
       font-weight: 600;
-      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+
+    .quick-add-grid {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .quick-add-btn {
+      padding: 0.5rem 0.875rem;
+      font-size: 0.75rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .quick-add-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow);
     }
 
     /* Toggle Switch */
@@ -423,39 +718,104 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: var(--border);
-      transition: 0.3s;
+      background: var(--bg-tertiary);
+      transition: var(--transition);
       border-radius: 24px;
+      border: 2px solid var(--border);
     }
 
     .toggle-slider:before {
       position: absolute;
       content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
+      height: 16px;
+      width: 16px;
+      left: 2px;
+      bottom: 2px;
       background: white;
-      transition: 0.3s;
+      transition: var(--transition);
       border-radius: 50%;
+      box-shadow: var(--shadow-sm);
     }
 
     .toggle input:checked + .toggle-slider {
       background: var(--primary);
+      border-color: var(--primary);
     }
 
     .toggle input:checked + .toggle-slider:before {
       transform: translateX(24px);
     }
 
-    /* Mobile Menu Toggle */
-    .menu-toggle {
-      display: none;
-      padding: 0.5rem;
-      background: none;
-      border: none;
-      font-size: 1.5rem;
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+
+    .modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background: var(--bg);
+      padding: 2rem;
+      border-radius: var(--radius);
+      max-width: 500px;
+      width: 90%;
+      transform: translateY(-20px) scale(0.95);
+      transition: var(--transition);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .modal.active .modal-content {
+      transform: translateY(0) scale(1);
+    }
+
+    /* Chart Container */
+    .chart-container {
+      position: relative;
+      height: 300px;
+      margin-top: 1rem;
+    }
+
+    /* Category Pills */
+    .category-pills {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .category-pill {
+      padding: 0.375rem 0.875rem;
+      font-size: 0.75rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 999px;
       cursor: pointer;
+      transition: var(--transition);
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .category-pill:hover,
+    .category-pill.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
     }
 
     /* Loading State */
@@ -507,13 +867,462 @@
       .stats-grid {
         grid-template-columns: 1fr;
       }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Menu Toggle */
+    .menu-toggle {
+      display: none;
+      padding: 0.5rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    /* Chat Assistant */
+    .chat-button {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition);
+      z-index: 998;
+      animation: initialPulse 2s ease-in-out 3;
+    }
+
+    @keyframes initialPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: var(--shadow-lg);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(14, 165, 233, 0.2);
+      }
+    }
+
+    .chat-button:hover {
+      transform: scale(1.1);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .chat-button.active {
+      background: var(--danger);
+    }
+
+    .chat-hint {
+      position: fixed;
+      bottom: 2.5rem;
+      right: 6rem;
+      background: var(--text);
+      color: var(--bg);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      display: block;
+    }
+
+    .chat-button:hover + .chat-hint,
+    .chat-hint:hover {
+      opacity: 1;
+    }
+
+    .chat-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 380px;
+      height: 600px;
+      background: var(--bg);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      display: flex;
+      flex-direction: column;
+      z-index: 999;
+      transform: translateY(20px) scale(0.95);
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+
+    .chat-container.active {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .chat-header {
+      padding: 1.25rem;
+      background: var(--primary);
+      color: white;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chat-header h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .chat-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .chat-status-dot {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .chat-message {
+      display: flex;
+      gap: 0.75rem;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .chat-message.user {
+      flex-direction: row-reverse;
+    }
+
+    .chat-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .chat-avatar.ai {
+      background: var(--primary);
+      color: white;
+    }
+
+    .chat-bubble {
+      max-width: 70%;
+      padding: 0.75rem 1rem;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-lg);
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    .chat-message.user .chat-bubble {
+      background: var(--primary);
+      color: white;
+    }
+
+    .chat-time {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      margin-top: 0.25rem;
+    }
+
+    .chat-suggestions {
+      padding: 1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .chat-suggestion {
+      padding: 0.375rem 0.75rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .chat-suggestion:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .chat-input-container {
+      padding: 1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 0.625rem 0.875rem;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      background: var(--bg);
+      color: var(--text);
+      transition: var(--transition);
+    }
+
+    .chat-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .chat-send {
+      padding: 0.625rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+    }
+
+    .chat-send:hover {
+      background: var(--primary-dark);
+    }
+
+    .chat-typing {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.75rem 1rem;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-lg);
+      width: fit-content;
+    }
+
+    .chat-typing-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--text-tertiary);
+      border-radius: 50%;
+      animation: typing 1.4s infinite;
+    }
+
+    .chat-typing-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .chat-typing-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes typing {
+      0%, 60%, 100% {
+        transform: translateY(0);
+      }
+      30% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .chat-button {
+        bottom: 1rem;
+        right: 1rem;
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+      }
+      
+      .chat-hint {
+        display: none;
+      }
+      
+      .chat-container {
+        width: 100%;
+        height: 100%;
+        bottom: 0;
+        right: 0;
+        border-radius: 0;
+        max-width: 100%;
+      }
+
+      .chat-header {
+        border-radius: 0;
+      }
+      
+      .chat-messages {
+        max-height: calc(100vh - 280px);
+      }
+      
+      .chat-bubble {
+        max-width: 85%;
+      }
     }
 
     /* Utilities */
     .text-success { color: var(--success); }
     .text-danger { color: var(--danger); }
     .text-warning { color: var(--warning); }
-    .hidden { display: none; }
+    .text-primary { color: var(--primary); }
+    .hidden { display: none !important; }
+
+    /* Notification Styles */
+    .notification {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      padding: 1rem 1.5rem;
+      background: var(--bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      max-width: 400px;
+      z-index: 1001;
+      animation: slideInRight 0.3s ease;
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .notification.success {
+      border-left: 4px solid var(--success);
+    }
+
+    .notification.danger {
+      border-left: 4px solid var(--danger);
+    }
+
+    .notification.warning {
+      border-left: 4px solid var(--warning);
+    }
+
+    .notification.info {
+      border-left: 4px solid var(--info);
+    }
+
+    .notification-icon {
+      font-size: 1.25rem;
+    }
+
+    .notification-content {
+      flex: 1;
+    }
+
+    .notification-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .notification-message {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .notification-close {
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+
+    .notification-close:hover {
+      opacity: 1;
+    }
+
+    /* Page Transitions */
+    .page {
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-tertiary);
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .empty-state-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state-description {
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+    }
   </style>
 </head>
 <body data-theme="light">
@@ -534,23 +1343,31 @@
           </div>
           <div class="nav-item" data-page="estimate">
             <span class="nav-item-icon">📋</span>
-            <span>Estimate</span>
+            <span>Create Estimate</span>
           </div>
           <div class="nav-item" data-page="projects">
             <span class="nav-item-icon">📁</span>
             <span>Projects</span>
           </div>
+          <div class="nav-item" data-page="database">
+            <span class="nav-item-icon">📚</span>
+            <span>Price Database</span>
+          </div>
         </div>
         
         <div class="nav-section">
           <div class="nav-section-title">Tools</div>
+          <div class="nav-item" data-page="calculator">
+            <span class="nav-item-icon">🧮</span>
+            <span>Calculator</span>
+          </div>
+          <div class="nav-item" data-page="reports">
+            <span class="nav-item-icon">📈</span>
+            <span>Reports</span>
+          </div>
           <div class="nav-item" data-page="settings">
             <span class="nav-item-icon">⚙️</span>
             <span>Settings</span>
-          </div>
-          <div class="nav-item" data-page="sync">
-            <span class="nav-item-icon">☁️</span>
-            <span>Cloud Sync</span>
           </div>
         </div>
       </nav>
@@ -560,15 +1377,20 @@
     <main class="main-content">
       <!-- Header -->
       <header class="header">
-        <button class="menu-toggle" id="menuToggle">☰</button>
-        <h2 class="header-title" id="pageTitle">Dashboard</h2>
+        <div class="header-left">
+          <button class="menu-toggle" id="menuToggle">☰</button>
+          <h2 class="header-title" id="pageTitle">Dashboard</h2>
+        </div>
         <div class="header-actions">
+          <button class="btn btn-ghost" onclick="showNotifications()">
+            🔔
+          </button>
           <label class="toggle">
             <input type="checkbox" id="darkMode">
             <span class="toggle-slider"></span>
           </label>
           <button class="btn btn-primary" id="saveBtn">
-            💾 Save
+            💾 Save Project
           </button>
         </div>
       </header>
@@ -584,22 +1406,31 @@
             <button class="btn btn-secondary" onclick="exportData()">
               📊 Export Report
             </button>
+            <button class="btn btn-secondary" onclick="importData()">
+              📥 Import Data
+            </button>
           </div>
 
           <div class="stats-grid">
             <div class="stat-card">
+              <div class="stat-icon">📊</div>
               <div class="stat-value" id="totalProjects">0</div>
               <div class="stat-label">Total Projects</div>
+              <div class="stat-change positive">+12%</div>
             </div>
             <div class="stat-card">
+              <div class="stat-icon">💰</div>
               <div class="stat-value" id="totalValue">$0</div>
               <div class="stat-label">Total Value</div>
+              <div class="stat-change positive">+8%</div>
             </div>
             <div class="stat-card">
+              <div class="stat-icon">📈</div>
               <div class="stat-value" id="avgProject">$0</div>
               <div class="stat-label">Average Project</div>
             </div>
             <div class="stat-card">
+              <div class="stat-icon">🔨</div>
               <div class="stat-value" id="activeItems">0</div>
               <div class="stat-label">Active Items</div>
             </div>
@@ -607,10 +1438,31 @@
 
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">Cost Breakdown</h3>
+              <h3 class="card-title">
+                <span>📊</span>
+                <span>Cost Breakdown by Category</span>
+              </h3>
             </div>
             <div class="card-body">
-              <canvas id="chartCanvas" style="max-height: 300px;"></canvas>
+              <div class="chart-container">
+                <canvas id="chartCanvas"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <span>📅</span>
+                <span>Recent Projects</span>
+              </h3>
+            </div>
+            <div class="card-body">
+              <div id="recentProjects" class="empty-state">
+                <div class="empty-state-icon">📁</div>
+                <div class="empty-state-title">No recent projects</div>
+                <div class="empty-state-description">Start creating estimates to see them here</div>
+              </div>
             </div>
           </div>
         </div>
@@ -619,7 +1471,10 @@
         <div id="estimatePage" class="page hidden">
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">Project Details</h3>
+              <h3 class="card-title">
+                <span>📝</span>
+                <span>Project Information</span>
+              </h3>
             </div>
             <div class="card-body">
               <div class="form-grid">
@@ -628,21 +1483,46 @@
                   <input type="text" class="form-input" id="projectName" placeholder="Enter project name">
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Region</label>
+                  <label class="form-label">Client Name</label>
+                  <input type="text" class="form-input" id="clientName" placeholder="Enter client name">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Project Address</label>
+                  <input type="text" class="form-input" id="projectAddress" placeholder="Enter project address">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Project Type</label>
+                  <select class="form-select" id="projectType">
+                    <option value="residential">Residential</option>
+                    <option value="commercial">Commercial</option>
+                    <option value="industrial">Industrial</option>
+                    <option value="renovation">Renovation</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Regional Factor</label>
                   <select class="form-select" id="regionFactor">
                     <option value="1.00">National Average</option>
-                    <option value="0.90">Southeast</option>
-                    <option value="1.10">Northeast</option>
-                    <option value="1.25">West Coast</option>
+                    <option value="0.85">Rural (-15%)</option>
+                    <option value="0.90">Southeast (-10%)</option>
+                    <option value="0.95">Midwest (-5%)</option>
+                    <option value="1.10">Northeast (+10%)</option>
+                    <option value="1.25">West Coast (+25%)</option>
+                    <option value="1.35">NYC Metro (+35%)</option>
+                    <option value="1.40">SF Bay Area (+40%)</option>
                   </select>
                 </div>
                 <div class="form-group">
                   <label class="form-label">Tax Rate (%)</label>
-                  <input type="number" class="form-input" id="taxRate" value="8.25" step="0.01">
+                  <input type="number" class="form-input" id="taxRate" value="8.25" step="0.01" min="0" max="20">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Profit Margin (%)</label>
+                  <input type="number" class="form-input" id="profitMargin" value="15" step="0.5" min="0" max="50">
                 </div>
                 <div class="form-group">
                   <label class="form-label">Contingency (%)</label>
-                  <input type="number" class="form-input" id="contingency" value="10" step="0.5">
+                  <input type="number" class="form-input" id="contingency" value="10" step="0.5" min="0" max="30">
                 </div>
               </div>
             </div>
@@ -650,54 +1530,78 @@
 
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">Cost Items</h3>
+              <h3 class="card-title">
+                <span>🔨</span>
+                <span>Cost Items</span>
+              </h3>
               <div style="display: flex; gap: 0.5rem; align-items: center;">
                 <span style="font-size: 0.875rem; color: var(--text-secondary);">
-                  ${Object.values(itemsDB).reduce((acc, items) => acc + items.length, 0)} items available
+                  ${Object.values(itemsDB).reduce((acc, items) => acc + items.length, 0)} items
                 </span>
                 <button class="btn btn-success btn-icon" onclick="addRow()">➕</button>
               </div>
             </div>
             <div class="card-body">
-              <div style="margin-bottom: 1rem;">
-                <select class="form-select" id="categoryFilter" onchange="filterByCategory()" style="max-width: 250px;">
-                  <option value="">All Categories</option>
-                  ${Object.keys(itemsDB).map(cat => `<option value="${cat}">${cat}</option>`).join('')}
-                </select>
+              <div class="quick-add-section">
+                <div class="quick-add-title">Quick Add Common Items</div>
+                <div class="category-pills">
+                  <button class="category-pill active" onclick="filterQuickAdd('all')">All</button>
+                  <button class="category-pill" onclick="filterQuickAdd('concrete')">Concrete</button>
+                  <button class="category-pill" onclick="filterQuickAdd('framing')">Framing</button>
+                  <button class="category-pill" onclick="filterQuickAdd('electrical')">Electrical</button>
+                  <button class="category-pill" onclick="filterQuickAdd('plumbing')">Plumbing</button>
+                  <button class="category-pill" onclick="filterQuickAdd('finishes')">Finishes</button>
+                </div>
+                <div class="quick-add-grid" id="quickAddGrid">
+                  <button class="quick-add-btn" onclick="quickAddItem('Concrete (Ready Mix)')">Concrete</button>
+                  <button class="quick-add-btn" onclick="quickAddItem('Framing Lumber 2x4')">2x4 Lumber</button>
+                  <button class="quick-add-btn" onclick="quickAddItem('Drywall 1/2&quot;')">Drywall</button>
+                  <button class="quick-add-btn" onclick="quickAddItem('Interior Paint')">Paint</button>
+                  <button class="quick-add-btn" onclick="quickAddItem('Carpenter (Skilled)')">Carpenter</button>
+                  <button class="quick-add-btn" onclick="quickAddItem('Electrician (Journeyman)')">Electrician</button>
+                  <button class="quick-add-btn" onclick="quickAddItem('Plumber (Journeyman)')">Plumber</button>
+                  <button class="quick-add-btn" onclick="quickAddItem('Hardwood Flooring')">Hardwood</button>
+                </div>
               </div>
+              
               <div class="table-wrapper">
                 <table class="table" id="estimateTable">
                   <thead>
                     <tr>
-                      <th style="width: 30%;">Item</th>
+                      <th style="width: 30%;">Item Description</th>
                       <th style="width: 15%;">Category</th>
-                      <th style="width: 10%;">Qty</th>
+                      <th style="width: 10%;">Quantity</th>
                       <th style="width: 10%;">Unit</th>
-                      <th style="width: 15%;">Unit Price</th>
-                      <th style="width: 15%;">Total</th>
-                      <th style="width: 5%;">Actions</th>
+                      <th style="width: 12%;">Unit Price</th>
+                      <th style="width: 13%;">Total</th>
+                      <th style="width: 10%;">Actions</th>
                     </tr>
                   </thead>
                   <tbody id="tableBody"></tbody>
                   <tfoot>
                     <tr>
-                      <td colspan="5"><strong>Subtotal</strong></td>
+                      <td colspan="5"><strong>Materials & Labor Subtotal</strong></td>
                       <td><strong id="subtotal">$0.00</strong></td>
                       <td></td>
                     </tr>
                     <tr>
-                      <td colspan="5"><strong>Tax</strong></td>
+                      <td colspan="5"><strong>Tax (<span id="taxRateDisplay">8.25</span>%)</strong></td>
                       <td><strong id="tax">$0.00</strong></td>
                       <td></td>
                     </tr>
                     <tr>
-                      <td colspan="5"><strong>Contingency</strong></td>
-                      <td><strong id="contingencyAmount">$0.00</strong></td>
+                      <td colspan="5"><strong>Profit Margin (<span id="profitDisplay">15</span>%)</strong></td>
+                      <td><strong id="profitAmount">$0.00</strong></td>
                       <td></td>
                     </tr>
                     <tr>
+                      <td colspan="5"><strong>Contingency (<span id="contingencyDisplay">10</span>%)</strong></td>
+                      <td><strong id="contingencyAmount">$0.00</strong></td>
+                      <td></td>
+                    </tr>
+                    <tr style="background: var(--primary); color: white;">
                       <td colspan="5"><strong>Grand Total</strong></td>
-                      <td><strong id="grandTotal">$0.00</strong></td>
+                      <td><strong id="grandTotal" style="font-size: 1.125rem;">$0.00</strong></td>
                       <td></td>
                     </tr>
                   </tfoot>
@@ -711,12 +1615,54 @@
         <div id="projectsPage" class="page hidden">
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">Saved Projects</h3>
-              <button class="btn btn-primary" onclick="loadProject()">📂 Load</button>
+              <h3 class="card-title">
+                <span>📁</span>
+                <span>Saved Projects</span>
+              </h3>
+              <button class="btn btn-primary" onclick="loadProject()">📂 Load Selected</button>
             </div>
             <div class="card-body">
               <div id="projectsList">
-                <p class="text-secondary">No saved projects yet.</p>
+                <div class="empty-state">
+                  <div class="empty-state-icon">📁</div>
+                  <div class="empty-state-title">No saved projects</div>
+                  <div class="empty-state-description">Create and save an estimate to see it here</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Price Database Page -->
+        <div id="databasePage" class="page hidden">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <span>📚</span>
+                <span>Construction Price Database</span>
+              </h3>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-secondary" onclick="exportDatabase()">📊 Export</button>
+                <button class="btn btn-primary" onclick="updatePrices()">🔄 Update Prices</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="category-pills" id="dbCategoryFilter">
+                <button class="category-pill active" onclick="filterDatabase('all')">All Categories</button>
+              </div>
+              <div class="table-wrapper" style="max-height: 600px; overflow-y: auto;">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Category</th>
+                      <th>Item</th>
+                      <th>Unit</th>
+                      <th>Price</th>
+                      <th>Last Updated</th>
+                    </tr>
+                  </thead>
+                  <tbody id="databaseTable"></tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -726,13 +1672,28 @@
         <div id="settingsPage" class="page hidden">
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">Application Settings</h3>
+              <h3 class="card-title">
+                <span>⚙️</span>
+                <span>Application Settings</span>
+              </h3>
             </div>
             <div class="card-body">
               <div class="form-grid">
                 <div class="form-group">
+                  <label class="form-label">Company Name</label>
+                  <input type="text" class="form-input" id="companyName" placeholder="Your Company Name">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Company Email</label>
+                  <input type="email" class="form-input" id="companyEmail" placeholder="company@email.com">
+                </div>
+                <div class="form-group">
                   <label class="form-label">Default Tax Rate (%)</label>
                   <input type="number" class="form-input" id="defaultTaxRate" value="8.25">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Default Profit Margin (%)</label>
+                  <input type="number" class="form-input" id="defaultProfitMargin" value="15">
                 </div>
                 <div class="form-group">
                   <label class="form-label">Default Contingency (%)</label>
@@ -743,38 +1704,79 @@
                   <input type="text" class="form-input" id="currencySymbol" value="$">
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Cloud Sync Page -->
-        <div id="syncPage" class="page hidden">
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">GitHub Integration</h3>
-            </div>
-            <div class="card-body">
-              <div id="syncStatus" class="stat-card" style="margin-bottom: 1rem;">
-                <p>Not connected to GitHub</p>
-              </div>
-              <div class="form-grid">
-                <div class="form-group">
-                  <label class="form-label">GitHub Username</label>
-                  <input type="text" class="form-input" id="githubUsername">
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Personal Access Token</label>
-                  <input type="password" class="form-input" id="githubToken">
-                </div>
-              </div>
-              <button class="btn btn-primary" onclick="connectGitHub()" style="margin-top: 1rem;">
-                🔗 Connect GitHub
+              <button class="btn btn-primary" onclick="saveSettings()" style="margin-top: 1rem;">
+                💾 Save Settings
               </button>
             </div>
           </div>
         </div>
       </div>
     </main>
+  </div>
+
+  <!-- Chat Assistant -->
+  <div class="chat-button" id="chatButton" onclick="toggleChat()">
+    💬
+  </div>
+  <div class="chat-hint">Press Ctrl+/ for help</div>
+
+  <div class="chat-container" id="chatContainer">
+    <div class="chat-header">
+      <h3>
+        <span>🤖</span>
+        <span>Construction Assistant</span>
+      </h3>
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <div class="chat-status">
+          <div class="chat-status-dot"></div>
+          <span>Online</span>
+        </div>
+        <button class="btn btn-ghost" style="padding: 0.25rem; color: white;" onclick="clearChat()" title="Clear chat">
+          🗑️
+        </button>
+        <button class="btn btn-ghost" style="padding: 0.25rem; color: white;" onclick="toggleChat()" title="Close">
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-message">
+        <div class="chat-avatar ai">🤖</div>
+        <div>
+          <div class="chat-bubble">
+            Hi! I'm your construction estimation assistant. I can help you with:
+            <br><br>
+            • Finding the right materials and pricing
+            <br>• Calculating quantities and costs
+            <br>• Understanding construction terms
+            <br>• Tips for accurate estimates
+            <br>• Regional pricing adjustments
+            <br><br>
+            💡 <strong>Pro tip:</strong> Press Ctrl+/ to quickly open this chat!
+            <br><br>
+            How can I help you today?
+          </div>
+          <div class="chat-time">Just now</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-suggestions">
+      <button class="chat-suggestion" onclick="sendSuggestion('How do I calculate concrete volume?')">Calculate concrete</button>
+      <button class="chat-suggestion" onclick="sendSuggestion('What\'s the difference between lumber grades?')">Lumber grades</button>
+      <button class="chat-suggestion" onclick="sendSuggestion('Help me estimate labor costs')">Labor costs</button>
+      <button class="chat-suggestion" onclick="sendSuggestion('Regional pricing tips')">Regional pricing</button>
+    </div>
+
+    <div class="chat-input-container">
+      <input type="text" 
+             class="chat-input" 
+             id="chatInput" 
+             placeholder="Type your question..."
+             onkeypress="if(event.key==='Enter') { event.preventDefault(); sendMessage(); }">
+      <button class="chat-send" onclick="sendMessage()">➤</button>
+    </div>
   </div>
 
   <!-- Modal -->
@@ -792,245 +1794,377 @@
   </div>
 
   <script>
-    // Comprehensive Construction Items Database
+    // Comprehensive Construction Items Database with 2024-2025 pricing
     const itemsDB = {
       "Concrete & Masonry": [
-        { name: "Concrete (Ready Mix)", unit: "cubic yard", price: 166 },
-        { name: "Concrete Installation", unit: "sq ft", price: 10.50 },
-        { name: "Concrete Pump Service", unit: "hour", price: 185 },
-        { name: "Rebar #4", unit: "linear foot", price: 1.32 },
-        { name: "Rebar #5", unit: "linear foot", price: 2.05 },
-        { name: "Rebar #6", unit: "linear foot", price: 2.94 },
-        { name: "Concrete Block 8\"", unit: "each", price: 2.25 },
-        { name: "Mortar Mix", unit: "bag", price: 8.95 },
-        { name: "Brick (Standard)", unit: "1000", price: 485 },
-        { name: "Stone Veneer", unit: "sq ft", price: 18.75 }
+        { name: "Concrete (Ready Mix)", unit: "cubic yard", price: 166, updated: "2024-12" },
+        { name: "Concrete Installation", unit: "sq ft", price: 10.50, updated: "2024-12" },
+        { name: "Concrete Pump Service", unit: "hour", price: 185, updated: "2024-12" },
+        { name: "Rebar #4", unit: "linear foot", price: 1.32, updated: "2024-12" },
+        { name: "Rebar #5", unit: "linear foot", price: 2.05, updated: "2024-12" },
+        { name: "Rebar #6", unit: "linear foot", price: 2.94, updated: "2024-12" },
+        { name: "Wire Mesh (6x6)", unit: "sq ft", price: 0.35, updated: "2024-12" },
+        { name: "Concrete Block 8\"", unit: "each", price: 2.25, updated: "2024-12" },
+        { name: "Concrete Block 12\"", unit: "each", price: 3.15, updated: "2024-12" },
+        { name: "Mortar Mix", unit: "bag", price: 8.95, updated: "2024-12" },
+        { name: "Brick (Standard)", unit: "1000", price: 485, updated: "2024-12" },
+        { name: "Stone Veneer", unit: "sq ft", price: 18.75, updated: "2024-12" },
+        { name: "Concrete Sealer", unit: "gallon", price: 32.50, updated: "2024-12" }
       ],
       "Structural Steel": [
-        { name: "Structural Steel Beam", unit: "ton", price: 1650 },
-        { name: "Steel Column", unit: "ton", price: 1875 },
-        { name: "Metal Decking", unit: "sq ft", price: 3.85 },
-        { name: "Steel Studs", unit: "linear foot", price: 2.45 },
-        { name: "Welding Labor", unit: "hour", price: 85 }
+        { name: "Structural Steel Beam", unit: "ton", price: 1650, updated: "2024-12" },
+        { name: "Steel Column", unit: "ton", price: 1875, updated: "2024-12" },
+        { name: "Metal Decking", unit: "sq ft", price: 3.85, updated: "2024-12" },
+        { name: "Steel Studs 3-5/8\"", unit: "linear foot", price: 2.45, updated: "2024-12" },
+        { name: "Steel Studs 6\"", unit: "linear foot", price: 3.25, updated: "2024-12" },
+        { name: "Steel Track", unit: "linear foot", price: 2.15, updated: "2024-12" },
+        { name: "Welding Labor", unit: "hour", price: 85, updated: "2024-12" },
+        { name: "Steel Joist", unit: "linear foot", price: 18.50, updated: "2024-12" }
       ],
       "Lumber & Wood": [
-        { name: "Framing Lumber 2x4", unit: "linear foot", price: 1.65 },
-        { name: "Framing Lumber 2x6", unit: "linear foot", price: 2.80 },
-        { name: "Framing Lumber 2x8", unit: "linear foot", price: 4.25 },
-        { name: "Framing Lumber 2x10", unit: "linear foot", price: 6.15 },
-        { name: "Framing Lumber 2x12", unit: "linear foot", price: 8.90 },
-        { name: "Plywood 1/2\"", unit: "sheet", price: 35 },
-        { name: "Plywood 3/4\"", unit: "sheet", price: 52 },
-        { name: "OSB Sheathing 7/16\"", unit: "sheet", price: 28 },
-        { name: "Engineered I-Joist", unit: "linear foot", price: 4.85 },
-        { name: "Glulam Beam", unit: "linear foot", price: 22.50 }
+        { name: "Framing Lumber 2x4x8", unit: "each", price: 5.85, updated: "2024-12" },
+        { name: "Framing Lumber 2x4", unit: "linear foot", price: 1.65, updated: "2024-12" },
+        { name: "Framing Lumber 2x6", unit: "linear foot", price: 2.80, updated: "2024-12" },
+        { name: "Framing Lumber 2x8", unit: "linear foot", price: 4.25, updated: "2024-12" },
+        { name: "Framing Lumber 2x10", unit: "linear foot", price: 6.15, updated: "2024-12" },
+        { name: "Framing Lumber 2x12", unit: "linear foot", price: 8.90, updated: "2024-12" },
+        { name: "Plywood 1/2\" CDX", unit: "sheet", price: 35, updated: "2024-12" },
+        { name: "Plywood 3/4\" CDX", unit: "sheet", price: 52, updated: "2024-12" },
+        { name: "OSB Sheathing 7/16\"", unit: "sheet", price: 28, updated: "2024-12" },
+        { name: "OSB Sheathing 5/8\"", unit: "sheet", price: 36, updated: "2024-12" },
+        { name: "Engineered I-Joist 11-7/8\"", unit: "linear foot", price: 4.85, updated: "2024-12" },
+        { name: "Glulam Beam 3.5x11.5", unit: "linear foot", price: 22.50, updated: "2024-12" },
+        { name: "LVL Beam 1.75x11.875", unit: "linear foot", price: 8.75, updated: "2024-12" }
       ],
       "Roofing": [
-        { name: "Asphalt Shingles", unit: "sq ft", price: 3.75 },
-        { name: "Metal Roofing", unit: "sq ft", price: 8.50 },
-        { name: "Clay Tiles", unit: "sq ft", price: 12.00 },
-        { name: "EPDM Rubber", unit: "sq ft", price: 5.85 },
-        { name: "TPO Membrane", unit: "sq ft", price: 6.25 },
-        { name: "Roof Underlayment", unit: "sq ft", price: 0.85 },
-        { name: "Ice & Water Shield", unit: "sq ft", price: 1.25 },
-        { name: "Ridge Vents", unit: "linear foot", price: 8.50 },
-        { name: "Gutters (Aluminum)", unit: "linear foot", price: 12.50 },
-        { name: "Downspouts", unit: "each", price: 35 }
+        { name: "Asphalt Shingles (3-tab)", unit: "sq ft", price: 3.75, updated: "2024-12" },
+        { name: "Architectural Shingles", unit: "sq ft", price: 4.85, updated: "2024-12" },
+        { name: "Metal Roofing (Standing Seam)", unit: "sq ft", price: 8.50, updated: "2024-12" },
+        { name: "Metal Roofing (Corrugated)", unit: "sq ft", price: 5.25, updated: "2024-12" },
+        { name: "Clay Tiles", unit: "sq ft", price: 12.00, updated: "2024-12" },
+        { name: "Concrete Tiles", unit: "sq ft", price: 8.75, updated: "2024-12" },
+        { name: "EPDM Rubber", unit: "sq ft", price: 5.85, updated: "2024-12" },
+        { name: "TPO Membrane", unit: "sq ft", price: 6.25, updated: "2024-12" },
+        { name: "Modified Bitumen", unit: "sq ft", price: 4.95, updated: "2024-12" },
+        { name: "Roof Underlayment (Felt)", unit: "sq ft", price: 0.45, updated: "2024-12" },
+        { name: "Roof Underlayment (Synthetic)", unit: "sq ft", price: 0.85, updated: "2024-12" },
+        { name: "Ice & Water Shield", unit: "sq ft", price: 1.25, updated: "2024-12" },
+        { name: "Ridge Vents", unit: "linear foot", price: 8.50, updated: "2024-12" },
+        { name: "Gutters (5\" Aluminum)", unit: "linear foot", price: 8.75, updated: "2024-12" },
+        { name: "Gutters (6\" Aluminum)", unit: "linear foot", price: 12.50, updated: "2024-12" },
+        { name: "Downspouts", unit: "each", price: 35, updated: "2024-12" }
       ],
       "Insulation": [
-        { name: "Fiberglass Batts R-13", unit: "sq ft", price: 0.85 },
-        { name: "Fiberglass Batts R-15", unit: "sq ft", price: 0.95 },
-        { name: "Fiberglass Batts R-19", unit: "sq ft", price: 1.15 },
-        { name: "Fiberglass Batts R-30", unit: "sq ft", price: 1.45 },
-        { name: "Spray Foam (Closed Cell)", unit: "sq ft", price: 1.50 },
-        { name: "Spray Foam (Open Cell)", unit: "sq ft", price: 0.95 },
-        { name: "Rigid Foam Board 1\"", unit: "sq ft", price: 1.25 },
-        { name: "Rigid Foam Board 2\"", unit: "sq ft", price: 2.15 },
-        { name: "Blown-in Cellulose", unit: "sq ft", price: 0.75 },
-        { name: "Mineral Wool", unit: "sq ft", price: 1.35 }
+        { name: "Fiberglass Batts R-13", unit: "sq ft", price: 0.85, updated: "2024-12" },
+        { name: "Fiberglass Batts R-15", unit: "sq ft", price: 0.95, updated: "2024-12" },
+        { name: "Fiberglass Batts R-19", unit: "sq ft", price: 1.15, updated: "2024-12" },
+        { name: "Fiberglass Batts R-30", unit: "sq ft", price: 1.45, updated: "2024-12" },
+        { name: "Fiberglass Batts R-38", unit: "sq ft", price: 1.85, updated: "2024-12" },
+        { name: "Spray Foam (Closed Cell)", unit: "sq ft", price: 1.50, updated: "2024-12" },
+        { name: "Spray Foam (Open Cell)", unit: "sq ft", price: 0.95, updated: "2024-12" },
+        { name: "Rigid Foam Board 1\"", unit: "sq ft", price: 1.25, updated: "2024-12" },
+        { name: "Rigid Foam Board 2\"", unit: "sq ft", price: 2.15, updated: "2024-12" },
+        { name: "Blown-in Cellulose", unit: "sq ft", price: 0.75, updated: "2024-12" },
+        { name: "Blown-in Fiberglass", unit: "sq ft", price: 0.85, updated: "2024-12" },
+        { name: "Mineral Wool Batts", unit: "sq ft", price: 1.35, updated: "2024-12" },
+        { name: "Radiant Barrier", unit: "sq ft", price: 0.35, updated: "2024-12" }
       ],
       "Drywall & Finishes": [
-        { name: "Drywall 1/2\"", unit: "sheet", price: 16.80 },
-        { name: "Drywall 5/8\"", unit: "sheet", price: 19.25 },
-        { name: "Moisture Resistant Drywall", unit: "sheet", price: 24.50 },
-        { name: "Fire-Rated Drywall", unit: "sheet", price: 28.75 },
-        { name: "Drywall Tape & Mud", unit: "sq ft", price: 0.45 },
-        { name: "Interior Paint", unit: "sq ft", price: 0.85 },
-        { name: "Exterior Paint", unit: "sq ft", price: 1.25 },
-        { name: "Primer", unit: "gallon", price: 28 },
-        { name: "Texture Application", unit: "sq ft", price: 0.65 },
-        { name: "Crown Molding", unit: "linear foot", price: 12.50 }
+        { name: "Drywall 1/2\" Regular", unit: "sheet", price: 16.80, updated: "2024-12" },
+        { name: "Drywall 5/8\" Regular", unit: "sheet", price: 19.25, updated: "2024-12" },
+        { name: "Drywall 1/2\" Moisture Resistant", unit: "sheet", price: 24.50, updated: "2024-12" },
+        { name: "Drywall 5/8\" Fire-Rated", unit: "sheet", price: 28.75, updated: "2024-12" },
+        { name: "Drywall Tape", unit: "roll", price: 8.50, updated: "2024-12" },
+        { name: "Joint Compound", unit: "bucket", price: 18.50, updated: "2024-12" },
+        { name: "Drywall Installation", unit: "sq ft", price: 0.65, updated: "2024-12" },
+        { name: "Drywall Finishing (Level 4)", unit: "sq ft", price: 0.85, updated: "2024-12" },
+        { name: "Interior Paint (Flat)", unit: "gallon", price: 28, updated: "2024-12" },
+        { name: "Interior Paint (Eggshell)", unit: "gallon", price: 32, updated: "2024-12" },
+        { name: "Interior Paint (Semi-gloss)", unit: "gallon", price: 36, updated: "2024-12" },
+        { name: "Exterior Paint", unit: "gallon", price: 45, updated: "2024-12" },
+        { name: "Primer", unit: "gallon", price: 28, updated: "2024-12" },
+        { name: "Paint Labor", unit: "sq ft", price: 0.85, updated: "2024-12" },
+        { name: "Texture Application", unit: "sq ft", price: 0.65, updated: "2024-12" },
+        { name: "Crown Molding", unit: "linear foot", price: 12.50, updated: "2024-12" },
+        { name: "Base Molding", unit: "linear foot", price: 4.85, updated: "2024-12" }
       ],
       "Flooring": [
-        { name: "Hardwood Flooring", unit: "sq ft", price: 8.50 },
-        { name: "Engineered Wood", unit: "sq ft", price: 6.75 },
-        { name: "Luxury Vinyl Plank", unit: "sq ft", price: 4.25 },
-        { name: "Ceramic Tile", unit: "sq ft", price: 5.85 },
-        { name: "Porcelain Tile", unit: "sq ft", price: 7.25 },
-        { name: "Natural Stone", unit: "sq ft", price: 15.50 },
-        { name: "Carpet", unit: "sq ft", price: 3.85 },
-        { name: "Carpet Pad", unit: "sq ft", price: 0.65 },
-        { name: "Vinyl Sheet", unit: "sq ft", price: 2.95 },
-        { name: "Polished Concrete", unit: "sq ft", price: 7.50 }
+        { name: "Hardwood Flooring (Oak)", unit: "sq ft", price: 8.50, updated: "2024-12" },
+        { name: "Hardwood Flooring (Maple)", unit: "sq ft", price: 9.75, updated: "2024-12" },
+        { name: "Engineered Wood", unit: "sq ft", price: 6.75, updated: "2024-12" },
+        { name: "Laminate Flooring", unit: "sq ft", price: 3.85, updated: "2024-12" },
+        { name: "Luxury Vinyl Plank", unit: "sq ft", price: 4.25, updated: "2024-12" },
+        { name: "Ceramic Tile", unit: "sq ft", price: 5.85, updated: "2024-12" },
+        { name: "Porcelain Tile", unit: "sq ft", price: 7.25, updated: "2024-12" },
+        { name: "Natural Stone Tile", unit: "sq ft", price: 15.50, updated: "2024-12" },
+        { name: "Carpet (Builder Grade)", unit: "sq ft", price: 2.85, updated: "2024-12" },
+        { name: "Carpet (Mid-Grade)", unit: "sq ft", price: 3.85, updated: "2024-12" },
+        { name: "Carpet (Premium)", unit: "sq ft", price: 5.25, updated: "2024-12" },
+        { name: "Carpet Pad", unit: "sq ft", price: 0.65, updated: "2024-12" },
+        { name: "Vinyl Sheet", unit: "sq ft", price: 2.95, updated: "2024-12" },
+        { name: "Polished Concrete", unit: "sq ft", price: 7.50, updated: "2024-12" },
+        { name: "Flooring Installation", unit: "sq ft", price: 3.25, updated: "2024-12" }
       ],
       "Windows & Doors": [
-        { name: "Window (Standard)", unit: "each", price: 485 },
-        { name: "Window (Energy Star)", unit: "each", price: 725 },
-        { name: "Window (Premium)", unit: "each", price: 1250 },
-        { name: "Bay Window", unit: "each", price: 2850 },
-        { name: "Skylight", unit: "each", price: 985 },
-        { name: "Interior Door (Hollow)", unit: "each", price: 185 },
-        { name: "Interior Door (Solid)", unit: "each", price: 325 },
-        { name: "Exterior Door (Steel)", unit: "each", price: 685 },
-        { name: "Exterior Door (Fiberglass)", unit: "each", price: 875 },
-        { name: "French Doors", unit: "pair", price: 2450 },
-        { name: "Sliding Patio Door", unit: "each", price: 1850 },
-        { name: "Garage Door (16x7)", unit: "each", price: 1650 }
+        { name: "Window (Standard DH)", unit: "each", price: 485, updated: "2024-12" },
+        { name: "Window (Energy Star)", unit: "each", price: 725, updated: "2024-12" },
+        { name: "Window (Premium)", unit: "each", price: 1250, updated: "2024-12" },
+        { name: "Casement Window", unit: "each", price: 825, updated: "2024-12" },
+        { name: "Bay Window", unit: "each", price: 2850, updated: "2024-12" },
+        { name: "Bow Window", unit: "each", price: 3250, updated: "2024-12" },
+        { name: "Skylight (Fixed)", unit: "each", price: 685, updated: "2024-12" },
+        { name: "Skylight (Venting)", unit: "each", price: 985, updated: "2024-12" },
+        { name: "Interior Door (Hollow)", unit: "each", price: 185, updated: "2024-12" },
+        { name: "Interior Door (Solid)", unit: "each", price: 325, updated: "2024-12" },
+        { name: "Exterior Door (Steel)", unit: "each", price: 685, updated: "2024-12" },
+        { name: "Exterior Door (Fiberglass)", unit: "each", price: 875, updated: "2024-12" },
+        { name: "Exterior Door (Wood)", unit: "each", price: 1250, updated: "2024-12" },
+        { name: "French Doors", unit: "pair", price: 2450, updated: "2024-12" },
+        { name: "Sliding Patio Door", unit: "each", price: 1850, updated: "2024-12" },
+        { name: "Garage Door (16x7)", unit: "each", price: 1650, updated: "2024-12" },
+        { name: "Garage Door (Double)", unit: "each", price: 2850, updated: "2024-12" }
       ],
       "Siding & Exterior": [
-        { name: "Vinyl Siding", unit: "sq ft", price: 5.25 },
-        { name: "Fiber Cement Siding", unit: "sq ft", price: 8.75 },
-        { name: "Wood Siding", unit: "sq ft", price: 7.85 },
-        { name: "Aluminum Siding", unit: "sq ft", price: 6.25 },
-        { name: "Brick Veneer", unit: "sq ft", price: 15.50 },
-        { name: "Stone Veneer", unit: "sq ft", price: 18.75 },
-        { name: "Stucco System", unit: "sq ft", price: 9.25 },
-        { name: "House Wrap", unit: "sq ft", price: 0.25 },
-        { name: "Soffit & Fascia", unit: "linear foot", price: 12.85 }
+        { name: "Vinyl Siding", unit: "sq ft", price: 5.25, updated: "2024-12" },
+        { name: "Fiber Cement Siding", unit: "sq ft", price: 8.75, updated: "2024-12" },
+        { name: "Wood Siding (Cedar)", unit: "sq ft", price: 9.85, updated: "2024-12" },
+        { name: "Wood Siding (Pine)", unit: "sq ft", price: 7.25, updated: "2024-12" },
+        { name: "Aluminum Siding", unit: "sq ft", price: 6.25, updated: "2024-12" },
+        { name: "Brick Veneer", unit: "sq ft", price: 15.50, updated: "2024-12" },
+        { name: "Stone Veneer", unit: "sq ft", price: 18.75, updated: "2024-12" },
+        { name: "Stucco System (3-coat)", unit: "sq ft", price: 9.25, updated: "2024-12" },
+        { name: "EIFS System", unit: "sq ft", price: 11.50, updated: "2024-12" },
+        { name: "House Wrap", unit: "sq ft", price: 0.25, updated: "2024-12" },
+        { name: "Soffit (Vinyl)", unit: "linear foot", price: 8.50, updated: "2024-12" },
+        { name: "Fascia (Aluminum)", unit: "linear foot", price: 12.85, updated: "2024-12" },
+        { name: "Exterior Trim", unit: "linear foot", price: 8.75, updated: "2024-12" }
       ],
       "Plumbing": [
-        { name: "Copper Pipe 1/2\"", unit: "linear foot", price: 4.85 },
-        { name: "Copper Pipe 3/4\"", unit: "linear foot", price: 6.25 },
-        { name: "PEX Pipe", unit: "linear foot", price: 1.85 },
-        { name: "PVC Pipe 2\"", unit: "linear foot", price: 3.25 },
-        { name: "PVC Pipe 4\"", unit: "linear foot", price: 5.85 },
-        { name: "Water Heater (50 gal)", unit: "each", price: 1250 },
-        { name: "Tankless Water Heater", unit: "each", price: 2850 },
-        { name: "Toilet (Standard)", unit: "each", price: 285 },
-        { name: "Toilet (Premium)", unit: "each", price: 585 },
-        { name: "Sink (Kitchen)", unit: "each", price: 425 },
-        { name: "Sink (Bathroom)", unit: "each", price: 225 },
-        { name: "Shower Unit", unit: "each", price: 985 },
-        { name: "Bathtub", unit: "each", price: 785 }
+        { name: "Copper Pipe 1/2\"", unit: "linear foot", price: 4.85, updated: "2024-12" },
+        { name: "Copper Pipe 3/4\"", unit: "linear foot", price: 6.25, updated: "2024-12" },
+        { name: "Copper Pipe 1\"", unit: "linear foot", price: 8.75, updated: "2024-12" },
+        { name: "PEX Pipe 1/2\"", unit: "linear foot", price: 1.25, updated: "2024-12" },
+        { name: "PEX Pipe 3/4\"", unit: "linear foot", price: 1.85, updated: "2024-12" },
+        { name: "PVC Pipe 2\"", unit: "linear foot", price: 3.25, updated: "2024-12" },
+        { name: "PVC Pipe 3\"", unit: "linear foot", price: 4.85, updated: "2024-12" },
+        { name: "PVC Pipe 4\"", unit: "linear foot", price: 5.85, updated: "2024-12" },
+        { name: "Water Heater (40 gal)", unit: "each", price: 985, updated: "2024-12" },
+        { name: "Water Heater (50 gal)", unit: "each", price: 1250, updated: "2024-12" },
+        { name: "Tankless Water Heater", unit: "each", price: 2850, updated: "2024-12" },
+        { name: "Toilet (Standard)", unit: "each", price: 285, updated: "2024-12" },
+        { name: "Toilet (Comfort Height)", unit: "each", price: 385, updated: "2024-12" },
+        { name: "Toilet (Premium)", unit: "each", price: 585, updated: "2024-12" },
+        { name: "Sink (Kitchen SS)", unit: "each", price: 425, updated: "2024-12" },
+        { name: "Sink (Bathroom)", unit: "each", price: 225, updated: "2024-12" },
+        { name: "Shower Unit", unit: "each", price: 985, updated: "2024-12" },
+        { name: "Bathtub (Standard)", unit: "each", price: 785, updated: "2024-12" },
+        { name: "Bathtub (Whirlpool)", unit: "each", price: 2850, updated: "2024-12" }
       ],
       "Electrical": [
-        { name: "Romex Wire 12/2", unit: "linear foot", price: 0.85 },
-        { name: "Romex Wire 14/2", unit: "linear foot", price: 0.65 },
-        { name: "Conduit 1/2\"", unit: "linear foot", price: 2.15 },
-        { name: "Electrical Panel 200A", unit: "each", price: 1850 },
-        { name: "Circuit Breaker 20A", unit: "each", price: 45 },
-        { name: "Outlet (Standard)", unit: "each", price: 15 },
-        { name: "GFCI Outlet", unit: "each", price: 35 },
-        { name: "Light Switch", unit: "each", price: 12 },
-        { name: "Dimmer Switch", unit: "each", price: 28 },
-        { name: "Ceiling Fan", unit: "each", price: 185 },
-        { name: "Recessed Light", unit: "each", price: 85 },
-        { name: "EV Charger Outlet", unit: "each", price: 850 }
+        { name: "Romex Wire 12/2", unit: "linear foot", price: 0.85, updated: "2024-12" },
+        { name: "Romex Wire 14/2", unit: "linear foot", price: 0.65, updated: "2024-12" },
+        { name: "Romex Wire 10/2", unit: "linear foot", price: 1.25, updated: "2024-12" },
+        { name: "Conduit 1/2\"", unit: "linear foot", price: 2.15, updated: "2024-12" },
+        { name: "Conduit 3/4\"", unit: "linear foot", price: 2.85, updated: "2024-12" },
+        { name: "Electrical Panel 100A", unit: "each", price: 1250, updated: "2024-12" },
+        { name: "Electrical Panel 200A", unit: "each", price: 1850, updated: "2024-12" },
+        { name: "Circuit Breaker 15A", unit: "each", price: 35, updated: "2024-12" },
+        { name: "Circuit Breaker 20A", unit: "each", price: 45, updated: "2024-12" },
+        { name: "Circuit Breaker 30A", unit: "each", price: 55, updated: "2024-12" },
+        { name: "Outlet (Standard)", unit: "each", price: 15, updated: "2024-12" },
+        { name: "GFCI Outlet", unit: "each", price: 35, updated: "2024-12" },
+        { name: "USB Outlet", unit: "each", price: 45, updated: "2024-12" },
+        { name: "Light Switch", unit: "each", price: 12, updated: "2024-12" },
+        { name: "Dimmer Switch", unit: "each", price: 28, updated: "2024-12" },
+        { name: "Smart Switch", unit: "each", price: 65, updated: "2024-12" },
+        { name: "Ceiling Fan", unit: "each", price: 185, updated: "2024-12" },
+        { name: "Recessed Light", unit: "each", price: 85, updated: "2024-12" },
+        { name: "LED Bulb", unit: "each", price: 8.50, updated: "2024-12" },
+        { name: "EV Charger Outlet", unit: "each", price: 850, updated: "2024-12" }
       ],
       "HVAC": [
-        { name: "Central AC (3-ton)", unit: "each", price: 4850 },
-        { name: "Central AC (5-ton)", unit: "each", price: 6750 },
-        { name: "Heat Pump (3-ton)", unit: "each", price: 5250 },
-        { name: "Furnace (80% eff)", unit: "each", price: 2850 },
-        { name: "Furnace (95% eff)", unit: "each", price: 4250 },
-        { name: "Ductwork", unit: "sq ft", price: 12.50 },
-        { name: "Mini-Split System", unit: "each", price: 3250 },
-        { name: "Thermostat (Smart)", unit: "each", price: 285 },
-        { name: "Ventilation Fan", unit: "each", price: 185 }
+        { name: "Central AC (2-ton)", unit: "each", price: 3850, updated: "2024-12" },
+        { name: "Central AC (3-ton)", unit: "each", price: 4850, updated: "2024-12" },
+        { name: "Central AC (4-ton)", unit: "each", price: 5850, updated: "2024-12" },
+        { name: "Central AC (5-ton)", unit: "each", price: 6750, updated: "2024-12" },
+        { name: "Heat Pump (3-ton)", unit: "each", price: 5250, updated: "2024-12" },
+        { name: "Heat Pump (4-ton)", unit: "each", price: 6250, updated: "2024-12" },
+        { name: "Furnace (80% eff)", unit: "each", price: 2850, updated: "2024-12" },
+        { name: "Furnace (95% eff)", unit: "each", price: 4250, updated: "2024-12" },
+        { name: "Furnace (98% eff)", unit: "each", price: 5250, updated: "2024-12" },
+        { name: "Ductwork (Supply)", unit: "sq ft", price: 12.50, updated: "2024-12" },
+        { name: "Ductwork (Return)", unit: "sq ft", price: 10.50, updated: "2024-12" },
+        { name: "Duct Insulation", unit: "sq ft", price: 2.85, updated: "2024-12" },
+        { name: "Mini-Split System", unit: "each", price: 3250, updated: "2024-12" },
+        { name: "Thermostat (Basic)", unit: "each", price: 125, updated: "2024-12" },
+        { name: "Thermostat (Smart)", unit: "each", price: 285, updated: "2024-12" },
+        { name: "Ventilation Fan", unit: "each", price: 185, updated: "2024-12" },
+        { name: "HRV System", unit: "each", price: 2850, updated: "2024-12" }
       ],
       "Labor": [
-        { name: "General Laborer", unit: "hour", price: 18.25 },
-        { name: "Carpenter (Helper)", unit: "hour", price: 19.75 },
-        { name: "Carpenter (Skilled)", unit: "hour", price: 29.50 },
-        { name: "Carpenter (Master)", unit: "hour", price: 42.00 },
-        { name: "Electrician (Apprentice)", unit: "hour", price: 21.50 },
-        { name: "Electrician (Journeyman)", unit: "hour", price: 34.50 },
-        { name: "Electrician (Master)", unit: "hour", price: 48.75 },
-        { name: "Plumber (Journeyman)", unit: "hour", price: 34.75 },
-        { name: "Plumber (Master)", unit: "hour", price: 52.00 },
-        { name: "HVAC Technician", unit: "hour", price: 38.50 },
-        { name: "Mason", unit: "hour", price: 31.25 },
-        { name: "Roofer", unit: "hour", price: 26.50 },
-        { name: "Painter", unit: "hour", price: 23.75 },
-        { name: "Tile Setter", unit: "hour", price: 28.50 },
-        { name: "Drywall Installer", unit: "hour", price: 24.50 },
-        { name: "Flooring Installer", unit: "hour", price: 25.75 },
-        { name: "Insulation Installer", unit: "hour", price: 22.50 },
-        { name: "Concrete Finisher", unit: "hour", price: 28.75 },
-        { name: "Foreman", unit: "hour", price: 38.50 },
-        { name: "Project Manager", unit: "hour", price: 65.00 }
+        { name: "General Laborer", unit: "hour", price: 18.25, updated: "2024-12" },
+        { name: "Skilled Laborer", unit: "hour", price: 24.50, updated: "2024-12" },
+        { name: "Carpenter (Apprentice)", unit: "hour", price: 22.50, updated: "2024-12" },
+        { name: "Carpenter (Helper)", unit: "hour", price: 19.75, updated: "2024-12" },
+        { name: "Carpenter (Skilled)", unit: "hour", price: 29.50, updated: "2024-12" },
+        { name: "Carpenter (Master)", unit: "hour", price: 42.00, updated: "2024-12" },
+        { name: "Electrician (Apprentice)", unit: "hour", price: 21.50, updated: "2024-12" },
+        { name: "Electrician (Journeyman)", unit: "hour", price: 34.50, updated: "2024-12" },
+        { name: "Electrician (Master)", unit: "hour", price: 48.75, updated: "2024-12" },
+        { name: "Plumber (Apprentice)", unit: "hour", price: 22.50, updated: "2024-12" },
+        { name: "Plumber (Journeyman)", unit: "hour", price: 34.75, updated: "2024-12" },
+        { name: "Plumber (Master)", unit: "hour", price: 52.00, updated: "2024-12" },
+        { name: "HVAC Technician", unit: "hour", price: 38.50, updated: "2024-12" },
+        { name: "Mason", unit: "hour", price: 31.25, updated: "2024-12" },
+        { name: "Roofer", unit: "hour", price: 26.50, updated: "2024-12" },
+        { name: "Painter", unit: "hour", price: 23.75, updated: "2024-12" },
+        { name: "Tile Setter", unit: "hour", price: 28.50, updated: "2024-12" },
+        { name: "Drywall Installer", unit: "hour", price: 24.50, updated: "2024-12" },
+        { name: "Flooring Installer", unit: "hour", price: 25.75, updated: "2024-12" },
+        { name: "Insulation Installer", unit: "hour", price: 22.50, updated: "2024-12" },
+        { name: "Concrete Finisher", unit: "hour", price: 28.75, updated: "2024-12" },
+        { name: "Welder", unit: "hour", price: 35.50, updated: "2024-12" },
+        { name: "Foreman", unit: "hour", price: 38.50, updated: "2024-12" },
+        { name: "Project Manager", unit: "hour", price: 65.00, updated: "2024-12" }
       ],
       "Equipment": [
-        { name: "Excavator (Mini)", unit: "day", price: 285 },
-        { name: "Excavator (Mid)", unit: "day", price: 485 },
-        { name: "Excavator (Large)", unit: "day", price: 825 },
-        { name: "Bulldozer (Small)", unit: "day", price: 465 },
-        { name: "Bulldozer (Large)", unit: "day", price: 785 },
-        { name: "Backhoe Loader", unit: "day", price: 385 },
-        { name: "Skid Steer", unit: "day", price: 245 },
-        { name: "Wheel Loader", unit: "day", price: 485 },
-        { name: "Crane (25-ton)", unit: "day", price: 650 },
-        { name: "Crane (50-ton)", unit: "day", price: 950 },
-        { name: "Scissor Lift", unit: "day", price: 185 },
-        { name: "Boom Lift", unit: "day", price: 325 },
-        { name: "Concrete Mixer", unit: "day", price: 125 },
-        { name: "Concrete Pump", unit: "day", price: 1250 },
-        { name: "Generator (20kW)", unit: "day", price: 125 },
-        { name: "Generator (100kW)", unit: "day", price: 385 },
-        { name: "Air Compressor", unit: "day", price: 95 },
-        { name: "Scaffolding", unit: "day", price: 85 }
+        { name: "Excavator (Mini <5t)", unit: "day", price: 285, updated: "2024-12" },
+        { name: "Excavator (Mid 5-10t)", unit: "day", price: 485, updated: "2024-12" },
+        { name: "Excavator (Large >10t)", unit: "day", price: 825, updated: "2024-12" },
+        { name: "Bulldozer (Small)", unit: "day", price: 465, updated: "2024-12" },
+        { name: "Bulldozer (Large)", unit: "day", price: 785, updated: "2024-12" },
+        { name: "Backhoe Loader", unit: "day", price: 385, updated: "2024-12" },
+        { name: "Skid Steer", unit: "day", price: 245, updated: "2024-12" },
+        { name: "Wheel Loader", unit: "day", price: 485, updated: "2024-12" },
+        { name: "Crane (25-ton)", unit: "day", price: 650, updated: "2024-12" },
+        { name: "Crane (50-ton)", unit: "day", price: 950, updated: "2024-12" },
+        { name: "Crane (100-ton)", unit: "day", price: 1850, updated: "2024-12" },
+        { name: "Scissor Lift", unit: "day", price: 185, updated: "2024-12" },
+        { name: "Boom Lift (40ft)", unit: "day", price: 325, updated: "2024-12" },
+        { name: "Boom Lift (60ft)", unit: "day", price: 485, updated: "2024-12" },
+        { name: "Telehandler", unit: "day", price: 385, updated: "2024-12" },
+        { name: "Concrete Mixer", unit: "day", price: 125, updated: "2024-12" },
+        { name: "Concrete Pump", unit: "day", price: 1250, updated: "2024-12" },
+        { name: "Generator (20kW)", unit: "day", price: 125, updated: "2024-12" },
+        { name: "Generator (50kW)", unit: "day", price: 225, updated: "2024-12" },
+        { name: "Generator (100kW)", unit: "day", price: 385, updated: "2024-12" },
+        { name: "Air Compressor", unit: "day", price: 95, updated: "2024-12" },
+        { name: "Scaffolding", unit: "day", price: 85, updated: "2024-12" },
+        { name: "Trencher", unit: "day", price: 285, updated: "2024-12" }
       ],
       "Site Work": [
-        { name: "Excavation", unit: "cubic yard", price: 15.50 },
-        { name: "Grading", unit: "sq ft", price: 1.25 },
-        { name: "Fill Dirt", unit: "cubic yard", price: 28 },
-        { name: "Topsoil", unit: "cubic yard", price: 45 },
-        { name: "Gravel Base", unit: "ton", price: 38 },
-        { name: "Concrete Driveway", unit: "sq ft", price: 8.50 },
-        { name: "Asphalt Driveway", unit: "sq ft", price: 5.75 },
-        { name: "Retaining Wall", unit: "sq ft", price: 22.50 },
-        { name: "French Drain", unit: "linear foot", price: 18.50 },
-        { name: "Silt Fence", unit: "linear foot", price: 3.25 }
+        { name: "Excavation", unit: "cubic yard", price: 15.50, updated: "2024-12" },
+        { name: "Backfill", unit: "cubic yard", price: 12.50, updated: "2024-12" },
+        { name: "Grading", unit: "sq ft", price: 1.25, updated: "2024-12" },
+        { name: "Compaction", unit: "sq ft", price: 0.85, updated: "2024-12" },
+        { name: "Fill Dirt", unit: "cubic yard", price: 28, updated: "2024-12" },
+        { name: "Topsoil", unit: "cubic yard", price: 45, updated: "2024-12" },
+        { name: "Gravel Base", unit: "ton", price: 38, updated: "2024-12" },
+        { name: "Sand", unit: "ton", price: 35, updated: "2024-12" },
+        { name: "Crushed Stone", unit: "ton", price: 42, updated: "2024-12" },
+        { name: "Concrete Driveway", unit: "sq ft", price: 8.50, updated: "2024-12" },
+        { name: "Asphalt Driveway", unit: "sq ft", price: 5.75, updated: "2024-12" },
+        { name: "Paver Driveway", unit: "sq ft", price: 12.50, updated: "2024-12" },
+        { name: "Retaining Wall", unit: "sq ft", price: 22.50, updated: "2024-12" },
+        { name: "French Drain", unit: "linear foot", price: 18.50, updated: "2024-12" },
+        { name: "Silt Fence", unit: "linear foot", price: 3.25, updated: "2024-12" },
+        { name: "Erosion Control", unit: "sq ft", price: 1.85, updated: "2024-12" }
       ],
       "Landscaping": [
-        { name: "Sod Installation", unit: "sq ft", price: 0.85 },
-        { name: "Seed & Straw", unit: "sq ft", price: 0.25 },
-        { name: "Mulch", unit: "cubic yard", price: 45 },
-        { name: "Decorative Rock", unit: "ton", price: 125 },
-        { name: "Trees (2\" caliper)", unit: "each", price: 285 },
-        { name: "Shrubs (5 gal)", unit: "each", price: 45 },
-        { name: "Irrigation System", unit: "sq ft", price: 2.85 },
-        { name: "Landscape Lighting", unit: "each", price: 125 },
-        { name: "Edging", unit: "linear foot", price: 4.25 }
+        { name: "Sod Installation", unit: "sq ft", price: 0.85, updated: "2024-12" },
+        { name: "Seed & Straw", unit: "sq ft", price: 0.25, updated: "2024-12" },
+        { name: "Hydroseeding", unit: "sq ft", price: 0.15, updated: "2024-12" },
+        { name: "Mulch (Hardwood)", unit: "cubic yard", price: 45, updated: "2024-12" },
+        { name: "Mulch (Pine)", unit: "cubic yard", price: 35, updated: "2024-12" },
+        { name: "Mulch (Rubber)", unit: "cubic yard", price: 85, updated: "2024-12" },
+        { name: "Decorative Rock", unit: "ton", price: 125, updated: "2024-12" },
+        { name: "River Rock", unit: "ton", price: 185, updated: "2024-12" },
+        { name: "Trees (2\" caliper)", unit: "each", price: 285, updated: "2024-12" },
+        { name: "Trees (3\" caliper)", unit: "each", price: 485, updated: "2024-12" },
+        { name: "Shrubs (1 gal)", unit: "each", price: 15, updated: "2024-12" },
+        { name: "Shrubs (5 gal)", unit: "each", price: 45, updated: "2024-12" },
+        { name: "Shrubs (15 gal)", unit: "each", price: 125, updated: "2024-12" },
+        { name: "Irrigation System", unit: "sq ft", price: 2.85, updated: "2024-12" },
+        { name: "Drip Irrigation", unit: "linear foot", price: 1.85, updated: "2024-12" },
+        { name: "Landscape Lighting", unit: "each", price: 125, updated: "2024-12" },
+        { name: "Edging (Steel)", unit: "linear foot", price: 4.25, updated: "2024-12" },
+        { name: "Edging (Plastic)", unit: "linear foot", price: 2.15, updated: "2024-12" }
       ],
       "Kitchen & Bath": [
-        { name: "Kitchen Cabinets", unit: "linear foot", price: 185 },
-        { name: "Countertop (Laminate)", unit: "sq ft", price: 35 },
-        { name: "Countertop (Granite)", unit: "sq ft", price: 85 },
-        { name: "Countertop (Quartz)", unit: "sq ft", price: 95 },
-        { name: "Backsplash Tile", unit: "sq ft", price: 12.50 },
-        { name: "Range Hood", unit: "each", price: 485 },
-        { name: "Dishwasher", unit: "each", price: 685 },
-        { name: "Refrigerator", unit: "each", price: 1850 },
-        { name: "Stove/Range", unit: "each", price: 985 },
-        { name: "Microwave", unit: "each", price: 385 },
-        { name: "Vanity (48\")", unit: "each", price: 785 },
-        { name: "Medicine Cabinet", unit: "each", price: 185 }
+        { name: "Kitchen Cabinets (Stock)", unit: "linear foot", price: 125, updated: "2024-12" },
+        { name: "Kitchen Cabinets (Semi-Custom)", unit: "linear foot", price: 185, updated: "2024-12" },
+        { name: "Kitchen Cabinets (Custom)", unit: "linear foot", price: 425, updated: "2024-12" },
+        { name: "Countertop (Laminate)", unit: "sq ft", price: 35, updated: "2024-12" },
+        { name: "Countertop (Solid Surface)", unit: "sq ft", price: 65, updated: "2024-12" },
+        { name: "Countertop (Granite)", unit: "sq ft", price: 85, updated: "2024-12" },
+        { name: "Countertop (Quartz)", unit: "sq ft", price: 95, updated: "2024-12" },
+        { name: "Countertop (Marble)", unit: "sq ft", price: 125, updated: "2024-12" },
+        { name: "Backsplash (Subway Tile)", unit: "sq ft", price: 12.50, updated: "2024-12" },
+        { name: "Backsplash (Mosaic)", unit: "sq ft", price: 18.50, updated: "2024-12" },
+        { name: "Kitchen Sink (SS Single)", unit: "each", price: 285, updated: "2024-12" },
+        { name: "Kitchen Sink (SS Double)", unit: "each", price: 425, updated: "2024-12" },
+        { name: "Kitchen Faucet", unit: "each", price: 285, updated: "2024-12" },
+        { name: "Range Hood", unit: "each", price: 485, updated: "2024-12" },
+        { name: "Dishwasher", unit: "each", price: 685, updated: "2024-12" },
+        { name: "Refrigerator", unit: "each", price: 1850, updated: "2024-12" },
+        { name: "Stove/Range", unit: "each", price: 985, updated: "2024-12" },
+        { name: "Microwave", unit: "each", price: 385, updated: "2024-12" },
+        { name: "Vanity (36\")", unit: "each", price: 585, updated: "2024-12" },
+        { name: "Vanity (48\")", unit: "each", price: 785, updated: "2024-12" },
+        { name: "Vanity (60\")", unit: "each", price: 985, updated: "2024-12" },
+        { name: "Medicine Cabinet", unit: "each", price: 185, updated: "2024-12" }
       ],
       "Specialty": [
-        { name: "Solar Panel", unit: "watt", price: 0.85 },
-        { name: "Solar Inverter", unit: "each", price: 1250 },
-        { name: "Battery Storage", unit: "kWh", price: 850 },
-        { name: "Smart Home Hub", unit: "each", price: 485 },
-        { name: "Security System", unit: "each", price: 1250 },
-        { name: "Fire Sprinkler", unit: "head", price: 85 },
-        { name: "Elevator (Residential)", unit: "each", price: 28500 },
-        { name: "Pool (In-ground)", unit: "each", price: 45000 },
-        { name: "Hot Tub", unit: "each", price: 8500 },
-        { name: "Deck (Composite)", unit: "sq ft", price: 35 },
-        { name: "Pergola", unit: "sq ft", price: 45 },
-        { name: "Fence (Wood)", unit: "linear foot", price: 28 },
-        { name: "Fence (Vinyl)", unit: "linear foot", price: 35 }
+        { name: "Solar Panel (400W)", unit: "each", price: 285, updated: "2024-12" },
+        { name: "Solar Installation", unit: "watt", price: 0.85, updated: "2024-12" },
+        { name: "Solar Inverter", unit: "each", price: 1250, updated: "2024-12" },
+        { name: "Battery Storage (10kWh)", unit: "each", price: 8500, updated: "2024-12" },
+        { name: "Smart Home Hub", unit: "each", price: 485, updated: "2024-12" },
+        { name: "Security System", unit: "each", price: 1250, updated: "2024-12" },
+        { name: "Security Camera", unit: "each", price: 185, updated: "2024-12" },
+        { name: "Fire Sprinkler", unit: "head", price: 85, updated: "2024-12" },
+        { name: "Elevator (Residential)", unit: "each", price: 28500, updated: "2024-12" },
+        { name: "Pool (In-ground)", unit: "each", price: 45000, updated: "2024-12" },
+        { name: "Pool (Above-ground)", unit: "each", price: 8500, updated: "2024-12" },
+        { name: "Hot Tub", unit: "each", price: 8500, updated: "2024-12" },
+        { name: "Sauna (Indoor)", unit: "each", price: 12500, updated: "2024-12" },
+        { name: "Deck (Wood)", unit: "sq ft", price: 25, updated: "2024-12" },
+        { name: "Deck (Composite)", unit: "sq ft", price: 35, updated: "2024-12" },
+        { name: "Pergola", unit: "sq ft", price: 45, updated: "2024-12" },
+        { name: "Gazebo", unit: "each", price: 8500, updated: "2024-12" },
+        { name: "Fence (Wood)", unit: "linear foot", price: 28, updated: "2024-12" },
+        { name: "Fence (Vinyl)", unit: "linear foot", price: 35, updated: "2024-12" },
+        { name: "Fence (Chain Link)", unit: "linear foot", price: 18, updated: "2024-12" },
+        { name: "Fence (Aluminum)", unit: "linear foot", price: 42, updated: "2024-12" }
+      ]
+    };
+
+    // Quick add items by category
+    const quickAddItems = {
+      all: [
+        "Concrete (Ready Mix)", "Framing Lumber 2x4", "Drywall 1/2\" Regular",
+        "Interior Paint (Eggshell)", "Carpenter (Skilled)", "Electrician (Journeyman)",
+        "Plumber (Journeyman)", "Hardwood Flooring (Oak)"
+      ],
+      concrete: [
+        "Concrete (Ready Mix)", "Concrete Installation", "Rebar #4",
+        "Concrete Block 8\"", "Wire Mesh (6x6)", "Concrete Finisher"
+      ],
+      framing: [
+        "Framing Lumber 2x4", "Framing Lumber 2x6", "Plywood 1/2\" CDX",
+        "OSB Sheathing 7/16\"", "Engineered I-Joist 11-7/8\"", "Carpenter (Skilled)"
+      ],
+      electrical: [
+        "Romex Wire 12/2", "Electrical Panel 200A", "Outlet (Standard)",
+        "Light Switch", "Recessed Light", "Electrician (Journeyman)"
+      ],
+      plumbing: [
+        "PEX Pipe 1/2\"", "Water Heater (50 gal)", "Toilet (Standard)",
+        "Sink (Kitchen SS)", "Plumber (Journeyman)", "Shower Unit"
+      ],
+      finishes: [
+        "Interior Paint (Eggshell)", "Hardwood Flooring (Oak)", "Ceramic Tile",
+        "Crown Molding", "Kitchen Cabinets (Semi-Custom)", "Painter"
       ]
     };
 
@@ -1047,15 +2181,23 @@
 
     function initializeApp() {
       // Event Listeners
-      document.getElementById('darkMode').addEventListener('change', toggleTheme);
-      document.getElementById('menuToggle').addEventListener('click', toggleSidebar);
-      document.getElementById('saveBtn').addEventListener('click', saveProject);
+      document.getElementById('darkMode').addEventListener('change', window.toggleTheme);
+      document.getElementById('menuToggle').addEventListener('click', window.toggleSidebar);
+      document.getElementById('saveBtn').addEventListener('click', window.saveProject);
       
       // Navigation
       document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => {
           const page = item.getAttribute('data-page');
-          switchPage(page);
+          window.switchPage(page);
+        });
+      });
+
+      // Form inputs
+      ['taxRate', 'profitMargin', 'contingency'].forEach(id => {
+        document.getElementById(id).addEventListener('input', () => {
+          updateDisplayValues();
+          calculateTotals();
         });
       });
 
@@ -1067,11 +2209,17 @@
         addRow();
       }
       
+      // Initialize database page
+      initializeDatabasePage();
+      
+      // Load chat history
+      loadChatHistory();
+      
       updateDashboard();
     }
 
-    // Page Navigation
-    function switchPage(page) {
+    // Page Navigation (make global for onclick handlers)
+    window.switchPage = function(page) {
       // Update navigation
       document.querySelectorAll('.nav-item').forEach(item => {
         item.classList.remove('active');
@@ -1096,8 +2244,10 @@
         dashboard: 'Dashboard',
         estimate: 'Cost Estimate',
         projects: 'Projects',
-        settings: 'Settings',
-        sync: 'Cloud Sync'
+        database: 'Price Database',
+        calculator: 'Calculator',
+        reports: 'Reports',
+        settings: 'Settings'
       };
       document.getElementById('pageTitle').textContent = titles[page] || 'Dashboard';
       
@@ -1110,18 +2260,26 @@
         addRow();
       } else if (page === 'projects') {
         displayProjects();
+      } else if (page === 'database') {
+        displayDatabase();
+      }
+      
+      // Update chat suggestions for new page
+      if (typeof updateChatSuggestions === 'function') {
+        updateChatSuggestions();
       }
     }
 
     // Theme Toggle
-    function toggleTheme() {
+    window.toggleTheme = function() {
       const isDark = document.getElementById('darkMode').checked;
       document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
       saveToStorage();
+      if (chart) updateChart();
     }
 
     // Sidebar Toggle (Mobile)
-    function toggleSidebar() {
+    window.toggleSidebar = function() {
       document.getElementById('sidebar').classList.toggle('open');
     }
 
@@ -1133,7 +2291,7 @@
       
       row.innerHTML = `
         <td>
-          <div style="position: relative;">
+          <div class="search-container">
             <input type="text" 
                    class="form-input item-search" 
                    placeholder="Search items..." 
@@ -1142,13 +2300,13 @@
                    onfocus="showDropdown(this)"
                    onblur="hideDropdown(this)"
                    data-row-id="${rowId}">
-            <select class="form-select item-select" 
-                    id="select_${rowId}"
-                    style="position: absolute; top: 100%; left: 0; right: 0; max-height: 300px; overflow-y: auto; display: none; z-index: 100;"
-                    onchange="selectItem(this, '${rowId}')"
-                    size="10">
-              ${generateOptions()}
-            </select>
+            <span class="search-icon">🔍</span>
+            <div class="item-dropdown" 
+                 id="dropdown_${rowId}"
+                 style="display: none;"
+                 onmousedown="event.preventDefault()">
+              ${generateDropdownContent()}
+            </div>
           </div>
         </td>
         <td class="category">${data.category || ''}</td>
@@ -1157,7 +2315,8 @@
         <td><input type="number" value="${data.unitPrice || 0}" min="0" step="0.01" onchange="calculateRow(this)"></td>
         <td class="total">$0.00</td>
         <td>
-          <button class="btn btn-danger btn-icon" onclick="deleteRow(this)">🗑️</button>
+          <button class="btn btn-ghost btn-icon" onclick="duplicateRow(this)" title="Duplicate">📋</button>
+          <button class="btn btn-danger btn-icon" onclick="deleteRow(this)" title="Delete">🗑️</button>
         </td>
       `;
       
@@ -1168,10 +2327,10 @@
       }
     }
 
-    // Generate options for select
-    function generateOptions(filter = '') {
+    // Generate dropdown content
+    function generateDropdownContent(filter = '') {
       const lowerFilter = filter.toLowerCase();
-      let options = '<option value="">-- Select Item --</option>';
+      let html = '';
       
       Object.entries(itemsDB).forEach(([category, items]) => {
         const filteredItems = items.filter(item => 
@@ -1181,72 +2340,112 @@
         );
         
         if (filteredItems.length > 0) {
-          options += `<optgroup label="${category}">`;
+          html += `<div class="dropdown-category">${category}</div>`;
           filteredItems.forEach(item => {
-            options += `<option value="${item.name}" 
-                               data-unit="${item.unit}" 
-                               data-price="${item.price}" 
-                               data-category="${category}">
-                          ${item.name} (${item.unit} - ${item.price})
-                        </option>`;
+            html += `
+              <div class="dropdown-item" onclick="selectItem(this)" 
+                   data-name="${item.name}" 
+                   data-category="${category}" 
+                   data-unit="${item.unit}" 
+                   data-price="${item.price}">
+                <div>
+                  <div class="dropdown-item-name">${item.name}</div>
+                  <div class="dropdown-item-details">
+                    <span>${item.unit}</span>
+                    <span>${item.price}</span>
+                  </div>
+                </div>
+              </div>`;
           });
-          options += '</optgroup>';
         }
       });
       
-      return options;
+      return html || '<div class="dropdown-item">No items found</div>';
     }
 
     // Filter items in dropdown
     function filterItems(input) {
       const rowId = input.getAttribute('data-row-id');
-      const select = document.getElementById('select_' + rowId);
-      select.innerHTML = generateOptions(input.value);
+      const dropdown = document.getElementById('dropdown_' + rowId);
+      dropdown.innerHTML = generateDropdownContent(input.value);
       if (input.value.length > 0) {
-        select.style.display = 'block';
+        dropdown.style.display = 'block';
       }
     }
 
     // Show dropdown
     function showDropdown(input) {
       const rowId = input.getAttribute('data-row-id');
-      const select = document.getElementById('select_' + rowId);
-      setTimeout(() => {
-        select.style.display = 'block';
-      }, 100);
+      const dropdown = document.getElementById('dropdown_' + rowId);
+      dropdown.style.display = 'block';
     }
 
     // Hide dropdown
     function hideDropdown(input) {
       const rowId = input.getAttribute('data-row-id');
-      const select = document.getElementById('select_' + rowId);
+      const dropdown = document.getElementById('dropdown_' + rowId);
       setTimeout(() => {
-        if (!select.matches(':hover')) {
-          select.style.display = 'none';
-        }
+        dropdown.style.display = 'none';
       }, 200);
     }
 
     // Select item from dropdown
-    function selectItem(select, rowId) {
-      const option = select.selectedOptions[0];
-      const row = select.closest('tr');
+    function selectItem(element) {
+      const row = element.closest('tr');
       const input = row.querySelector('.item-search');
       
-      if (option && option.value) {
-        input.value = option.value;
-        row.querySelector('.category').textContent = option.getAttribute('data-category');
-        row.querySelector('.unit').textContent = option.getAttribute('data-unit');
-        row.querySelector('input[type="number"]:nth-of-type(2)').value = option.getAttribute('data-price');
+      input.value = element.getAttribute('data-name');
+      row.querySelector('.category').textContent = element.getAttribute('data-category');
+      row.querySelector('.unit').textContent = element.getAttribute('data-unit');
+      row.cells[4].querySelector('input').value = element.getAttribute('data-price');
+      
+      calculateRow(input);
+      element.closest('.item-dropdown').style.display = 'none';
+    }
+
+    // Quick add item
+    function quickAddItem(itemName) {
+      // Find the item in the database
+      let foundItem = null;
+      let foundCategory = null;
+      
+      Object.entries(itemsDB).forEach(([category, items]) => {
+        const item = items.find(i => i.name === itemName);
+        if (item) {
+          foundItem = item;
+          foundCategory = category;
+        }
+      });
+      
+      if (foundItem) {
+        addRow({
+          item: foundItem.name,
+          category: foundCategory,
+          quantity: 1,
+          unit: foundItem.unit,
+          unitPrice: foundItem.price
+        });
         
-        calculateRow(input);
-        select.style.display = 'none';
+        // Calculate the new row
+        const rows = document.querySelectorAll('#tableBody tr');
+        const lastRow = rows[rows.length - 1];
+        calculateRow(lastRow.querySelector('input[type="number"]'));
       }
     }
 
-    // Update Item Selection (modified to work with search)
-    function updateItem(element) {
-      calculateRow(element);
+    // Filter quick add items
+    function filterQuickAdd(category) {
+      const pills = document.querySelectorAll('.category-pill');
+      pills.forEach(pill => pill.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      const grid = document.getElementById('quickAddGrid');
+      grid.innerHTML = '';
+      
+      const items = quickAddItems[category] || quickAddItems.all;
+      items.forEach(itemName => {
+        grid.innerHTML += `<button class="quick-add-btn" onclick="quickAddItem('${itemName}')">${itemName}</button>`;
+      });
     }
 
     // Calculate Row Total
@@ -1254,9 +2453,11 @@
       const row = element.closest('tr');
       const quantity = parseFloat(row.cells[2].querySelector('input').value) || 0;
       const unitPrice = parseFloat(row.cells[4].querySelector('input').value) || 0;
-      const total = quantity * unitPrice;
+      const regionFactor = parseFloat(document.getElementById('regionFactor').value) || 1;
       
-      row.querySelector('.total').textContent = `$${total.toFixed(2)}`;
+      const total = quantity * unitPrice * regionFactor;
+      
+      row.querySelector('.total').textContent = `${total.toFixed(2)}`;
       
       calculateTotals();
     }
@@ -1268,20 +2469,44 @@
       
       rows.forEach(row => {
         const totalText = row.querySelector('.total').textContent;
-        subtotal += parseFloat(totalText.replace('$', '')) || 0;
+        subtotal += parseFloat(totalText.replace(', '')) || 0;
       });
       
       const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+      const profitRate = parseFloat(document.getElementById('profitMargin').value) || 0;
       const contingencyRate = parseFloat(document.getElementById('contingency').value) || 0;
       
       const tax = subtotal * (taxRate / 100);
+      const profit = subtotal * (profitRate / 100);
       const contingency = subtotal * (contingencyRate / 100);
-      const grandTotal = subtotal + tax + contingency;
+      const grandTotal = subtotal + tax + profit + contingency;
       
-      document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
-      document.getElementById('tax').textContent = `$${tax.toFixed(2)}`;
-      document.getElementById('contingencyAmount').textContent = `$${contingency.toFixed(2)}`;
-      document.getElementById('grandTotal').textContent = `$${grandTotal.toFixed(2)}`;
+      document.getElementById('subtotal').textContent = `${subtotal.toFixed(2)}`;
+      document.getElementById('tax').textContent = `${tax.toFixed(2)}`;
+      document.getElementById('profitAmount').textContent = `${profit.toFixed(2)}`;
+      document.getElementById('contingencyAmount').textContent = `${contingency.toFixed(2)}`;
+      document.getElementById('grandTotal').textContent = `${grandTotal.toFixed(2)}`;
+    }
+
+    // Update display values
+    function updateDisplayValues() {
+      document.getElementById('taxRateDisplay').textContent = document.getElementById('taxRate').value;
+      document.getElementById('profitDisplay').textContent = document.getElementById('profitMargin').value;
+      document.getElementById('contingencyDisplay').textContent = document.getElementById('contingency').value;
+    }
+
+    // Duplicate Row
+    function duplicateRow(button) {
+      const row = button.closest('tr');
+      const data = {
+        item: row.querySelector('.item-search').value,
+        category: row.querySelector('.category').textContent,
+        quantity: row.cells[2].querySelector('input').value,
+        unit: row.querySelector('.unit').textContent,
+        unitPrice: row.cells[4].querySelector('input').value
+      };
+      addRow(data);
+      calculateTotals();
     }
 
     // Delete Row
@@ -1298,7 +2523,7 @@
       const projectId = currentProject || 'project_' + Date.now();
       
       const rows = Array.from(document.querySelectorAll('#tableBody tr')).map(row => ({
-        item: row.cells[0].querySelector('select').value,
+        item: row.querySelector('.item-search').value,
         category: row.cells[1].textContent,
         quantity: row.cells[2].querySelector('input').value,
         unit: row.cells[3].textContent,
@@ -1308,11 +2533,16 @@
       projects[projectId] = {
         id: projectId,
         name: projectName,
+        clientName: document.getElementById('clientName').value,
+        projectAddress: document.getElementById('projectAddress').value,
+        projectType: document.getElementById('projectType').value,
         regionFactor: document.getElementById('regionFactor').value,
         taxRate: document.getElementById('taxRate').value,
+        profitMargin: document.getElementById('profitMargin').value,
         contingency: document.getElementById('contingency').value,
         rows: rows,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        total: document.getElementById('grandTotal').textContent
       };
       
       currentProject = projectId;
@@ -1321,31 +2551,57 @@
       // Show confirmation
       const saveBtn = document.getElementById('saveBtn');
       saveBtn.textContent = '✅ Saved!';
+      saveBtn.classList.add('btn-success');
       setTimeout(() => {
-        saveBtn.textContent = '💾 Save';
+        saveBtn.textContent = '💾 Save Project';
+        saveBtn.classList.remove('btn-success');
       }, 2000);
     }
 
     // Load from Storage
     function loadFromStorage() {
-      const saved = localStorage.getItem('constructionEstimator');
+      const saved = localStorage.getItem('constructionEstimatorPro');
       if (saved) {
         const data = JSON.parse(saved);
         projects = data.projects || {};
         currentProject = data.currentProject;
         document.getElementById('darkMode').checked = data.darkMode || false;
-        toggleTheme();
+        window.toggleTheme();
+        
+        // Load settings
+        if (data.settings) {
+          Object.entries(data.settings).forEach(([key, value]) => {
+            const element = document.getElementById(key);
+            if (element) element.value = value;
+          });
+        }
       }
     }
 
     // Save to Storage
     function saveToStorage() {
+      const settings = {
+        companyName: document.getElementById('companyName')?.value || '',
+        companyEmail: document.getElementById('companyEmail')?.value || '',
+        defaultTaxRate: document.getElementById('defaultTaxRate')?.value || '8.25',
+        defaultProfitMargin: document.getElementById('defaultProfitMargin')?.value || '15',
+        defaultContingency: document.getElementById('defaultContingency')?.value || '10',
+        currencySymbol: document.getElementById('currencySymbol')?.value || '
+      };
+      
       const data = {
         projects: projects,
         currentProject: currentProject,
-        darkMode: document.getElementById('darkMode').checked
+        darkMode: document.getElementById('darkMode').checked,
+        settings: settings
       };
-      localStorage.setItem('constructionEstimator', JSON.stringify(data));
+      localStorage.setItem('constructionEstimatorPro', JSON.stringify(data));
+    }
+
+    // Save Settings
+    function saveSettings() {
+      saveToStorage();
+      showNotification('Settings saved successfully!', 'success');
     }
 
     // Update Dashboard
@@ -1354,23 +2610,56 @@
       let totalValue = 0;
       let totalItems = 0;
       const categoryTotals = {};
+      const recentProjectsHtml = [];
+      
+      // Get recent projects (last 5)
+      const sortedProjects = Object.values(projects)
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+        .slice(0, 5);
       
       Object.values(projects).forEach(project => {
+        const projectTotal = parseFloat(project.total?.replace(/[$,]/g, '') || 0);
+        totalValue += projectTotal;
+        totalItems += project.rows.length;
+        
         project.rows.forEach(row => {
           const total = parseFloat(row.quantity) * parseFloat(row.unitPrice);
-          totalValue += total;
-          totalItems++;
-          
           const category = row.category || 'Other';
           categoryTotals[category] = (categoryTotals[category] || 0) + total;
         });
       });
       
+      // Update stats
       document.getElementById('totalProjects').textContent = projectCount;
-      document.getElementById('totalValue').textContent = `$${totalValue.toFixed(0)}`;
+      document.getElementById('totalValue').textContent = `${totalValue.toFixed(0)}`;
       document.getElementById('avgProject').textContent = projectCount > 0 ? 
-        `$${(totalValue / projectCount).toFixed(0)}` : '$0';
+        `${(totalValue / projectCount).toFixed(0)}` : '$0';
       document.getElementById('activeItems').textContent = totalItems;
+      
+      // Update recent projects
+      if (sortedProjects.length > 0) {
+        const recentHtml = sortedProjects.map(project => `
+          <div style="padding: 0.75rem; border-bottom: 1px solid var(--border); cursor: pointer;"
+               onclick="loadProjectData('${project.id}')"
+               onmouseover="this.style.background='var(--bg-hover)'"
+               onmouseout="this.style.background='transparent'">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-weight: 600;">${project.name}</div>
+                <div style="font-size: 0.875rem; color: var(--text-secondary);">
+                  ${project.clientName || 'No client'} • ${new Date(project.timestamp).toLocaleDateString()}
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-weight: 600; color: var(--primary);">${project.total || '$0.00'}</div>
+                <div style="font-size: 0.75rem; color: var(--text-tertiary);">${project.rows.length} items</div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+        
+        document.getElementById('recentProjects').innerHTML = recentHtml;
+      }
       
       // Update Chart
       updateChart(categoryTotals);
@@ -1394,12 +2683,10 @@
           datasets: [{
             data: Object.values(data),
             backgroundColor: [
-              '#3b82f6',
-              '#10b981',
-              '#f59e0b',
-              '#ef4444',
-              '#8b5cf6'
-            ]
+              '#0ea5e9', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6',
+              '#6366f1', '#14b8a6', '#f97316', '#ec4899', '#84cc16'
+            ],
+            borderWidth: 0
           }]
         },
         options: {
@@ -1409,8 +2696,20 @@
             legend: {
               position: 'bottom',
               labels: {
-                color: isDark ? '#f9fafb' : '#111827',
-                padding: 15
+                color: isDark ? '#f8fafc' : '#0f172a',
+                padding: 15,
+                font: {
+                  size: 12
+                }
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                  const percentage = ((context.parsed / total) * 100).toFixed(1);
+                  return `${context.label}: ${context.parsed.toFixed(2)} (${percentage}%)`;
+                }
               }
             }
           }
@@ -1423,23 +2722,43 @@
       const container = document.getElementById('projectsList');
       
       if (Object.keys(projects).length === 0) {
-        container.innerHTML = '<p class="text-secondary">No saved projects yet.</p>';
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📁</div>
+            <div class="empty-state-title">No saved projects</div>
+            <div class="empty-state-description">Create and save an estimate to see it here</div>
+          </div>
+        `;
         return;
       }
       
-      container.innerHTML = Object.entries(projects).map(([id, project]) => `
-        <div class="card" style="margin-bottom: 0.5rem;">
-          <div class="card-body" style="padding: 1rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div>
-                <strong>${project.name}</strong>
-                <p style="font-size: 0.875rem; color: var(--text-secondary); margin: 0;">
-                  ${new Date(project.timestamp).toLocaleDateString()} - ${project.rows.length} items
-                </p>
+      const sortedProjects = Object.entries(projects)
+        .sort(([,a], [,b]) => new Date(b.timestamp) - new Date(a.timestamp));
+      
+      container.innerHTML = sortedProjects.map(([id, project]) => `
+        <div class="card" style="margin-bottom: 1rem;">
+          <div class="card-body" style="padding: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+              <div style="flex: 1;">
+                <h4 style="margin-bottom: 0.5rem; font-weight: 600;">${project.name}</h4>
+                <div style="color: var(--text-secondary); font-size: 0.875rem;">
+                  ${project.clientName ? `Client: ${project.clientName}<br>` : ''}
+                  ${project.projectAddress ? `Address: ${project.projectAddress}<br>` : ''}
+                  Type: ${project.projectType || 'N/A'} • 
+                  ${new Date(project.timestamp).toLocaleDateString()} • 
+                  ${project.rows.length} items
+                </div>
               </div>
-              <div style="display: flex; gap: 0.5rem;">
-                <button class="btn btn-primary btn-icon" onclick="loadProjectData('${id}')">📂</button>
-                <button class="btn btn-danger btn-icon" onclick="deleteProject('${id}')">🗑️</button>
+              <div style="text-align: right;">
+                <div style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">
+                  ${project.total || '$0.00'}
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                  <button class="btn btn-primary btn-icon" onclick="loadProjectData('${id}')" title="Load">📂</button>
+                  <button class="btn btn-secondary btn-icon" onclick="duplicateProject('${id}')" title="Duplicate">📋</button>
+                  <button class="btn btn-secondary btn-icon" onclick="exportProject('${id}')" title="Export">📊</button>
+                  <button class="btn btn-danger btn-icon" onclick="deleteProject('${id}')" title="Delete">🗑️</button>
+                </div>
               </div>
             </div>
           </div>
@@ -1459,20 +2778,25 @@
       
       // Load project data
       document.getElementById('projectName').value = project.name;
+      document.getElementById('clientName').value = project.clientName || '';
+      document.getElementById('projectAddress').value = project.projectAddress || '';
+      document.getElementById('projectType').value = project.projectType || 'residential';
       document.getElementById('regionFactor').value = project.regionFactor;
       document.getElementById('taxRate').value = project.taxRate;
+      document.getElementById('profitMargin').value = project.profitMargin || 15;
       document.getElementById('contingency').value = project.contingency;
       
       // Clear and load rows
       document.getElementById('tableBody').innerHTML = '';
       project.rows.forEach(row => addRow(row));
       
+      updateDisplayValues();
       calculateTotals();
     }
 
     // Delete Project
     function deleteProject(projectId) {
-      if (confirm('Delete this project?')) {
+      if (confirm('Delete this project permanently?')) {
         delete projects[projectId];
         if (currentProject === projectId) {
           currentProject = null;
@@ -1483,11 +2807,50 @@
       }
     }
 
-    // Export Data
+    // Duplicate Project
+    function duplicateProject(projectId) {
+      const original = projects[projectId];
+      if (!original) return;
+      
+      const newId = 'project_' + Date.now();
+      projects[newId] = {
+        ...original,
+        id: newId,
+        name: original.name + ' (Copy)',
+        timestamp: new Date().toISOString()
+      };
+      
+      saveToStorage();
+      displayProjects();
+      showNotification('Project duplicated successfully!', 'success');
+    }
+
+    // Export Project
+    function exportProject(projectId) {
+      const project = projects[projectId];
+      if (!project) return;
+      
+      const data = {
+        project: project,
+        exportDate: new Date().toISOString(),
+        version: '1.0'
+      };
+      
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${project.name.replace(/[^a-z0-9]/gi, '_')}_estimate.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Export All Data
     function exportData() {
       const data = {
         projects: projects,
-        exportDate: new Date().toISOString()
+        exportDate: new Date().toISOString(),
+        version: '1.0'
       };
       
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -1497,6 +2860,583 @@
       a.download = `construction_estimates_${new Date().toISOString().split('T')[0]}.json`;
       a.click();
       URL.revokeObjectURL(url);
+    }
+
+    // Import Data
+    function importData() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            try {
+              const data = JSON.parse(event.target.result);
+              if (data.project) {
+                // Single project import
+                const newId = 'project_' + Date.now();
+                projects[newId] = {
+                  ...data.project,
+                  id: newId,
+                  timestamp: new Date().toISOString()
+                };
+              } else if (data.projects) {
+                // Multiple projects import
+                Object.assign(projects, data.projects);
+              }
+              saveToStorage();
+              updateDashboard();
+              showNotification('Data imported successfully!', 'success');
+            } catch (err) {
+              showNotification('Error importing file. Please check the format.', 'danger');
+            }
+          };
+          reader.readAsText(file);
+        }
+      };
+      input.click();
+    }
+
+    // Database Functions
+    function initializeDatabasePage() {
+      // Generate category pills for database
+      const categories = Object.keys(itemsDB);
+      const filterContainer = document.getElementById('dbCategoryFilter');
+      if (filterContainer) {
+        categories.forEach(cat => {
+          filterContainer.innerHTML += `<button class="category-pill" onclick="filterDatabase('${cat}')">${cat}</button>`;
+        });
+      }
+    }
+
+    function displayDatabase(category = 'all') {
+      const tbody = document.getElementById('databaseTable');
+      if (!tbody) return;
+      
+      tbody.innerHTML = '';
+      
+      Object.entries(itemsDB).forEach(([cat, items]) => {
+        if (category === 'all' || category === cat) {
+          items.forEach(item => {
+            tbody.innerHTML += `
+              <tr>
+                <td>${cat}</td>
+                <td>${item.name}</td>
+                <td>${item.unit}</td>
+                <td>${item.price}</td>
+                <td>${item.updated || '2024-12'}</td>
+              </tr>
+            `;
+          });
+        }
+      });
+    }
+
+    function filterDatabase(category) {
+      const pills = document.querySelectorAll('#dbCategoryFilter .category-pill');
+      pills.forEach(pill => pill.classList.remove('active'));
+      if (category === 'all') {
+        pills[0].classList.add('active');
+      } else {
+        event.target.classList.add('active');
+      }
+      displayDatabase(category);
+    }
+
+    function exportDatabase() {
+      const data = {
+        database: itemsDB,
+        exportDate: new Date().toISOString(),
+        version: '1.0'
+      };
+      
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `construction_price_database_${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function updatePrices() {
+      showNotification('Price database is up to date!', 'success');
+    }
+
+    // Chat Assistant Functions
+    let chatOpen = false;
+    let chatHistory = [];
+
+    window.toggleChat = function() {
+      chatOpen = !chatOpen;
+      const button = document.getElementById('chatButton');
+      const container = document.getElementById('chatContainer');
+      const hint = document.querySelector('.chat-hint');
+      
+      if (chatOpen) {
+        button.classList.add('active');
+        container.classList.add('active');
+        button.innerHTML = '✕';
+        hint.style.display = 'none';
+        document.getElementById('chatInput').focus();
+      } else {
+        button.classList.remove('active');
+        container.classList.remove('active');
+        button.innerHTML = '💬';
+        hint.style.display = 'block';
+      }
+    }
+
+    window.sendMessage = function() {
+      const input = document.getElementById('chatInput');
+      const message = input.value.trim();
+      
+      if (!message) return;
+      
+      // Add user message
+      addChatMessage(message, 'user');
+      input.value = '';
+      
+      // Show typing indicator
+      showTypingIndicator();
+      
+      // Simulate AI response
+      setTimeout(() => {
+        removeTypingIndicator();
+        const response = generateAIResponse(message);
+        addChatMessage(response, 'ai');
+      }, 1000 + Math.random() * 1000);
+    }
+
+    window.sendSuggestion = function(suggestion) {
+      document.getElementById('chatInput').value = suggestion;
+      window.sendMessage();
+    }
+
+    // Initialize chat history from storage
+    function loadChatHistory() {
+      const saved = localStorage.getItem('constructionChatHistory');
+      if (saved) {
+        chatHistory = JSON.parse(saved);
+        // Only show last 5 messages
+        const recentMessages = chatHistory.slice(-5);
+        recentMessages.forEach(msg => {
+          if (msg.sender !== 'system') {
+            addChatMessage(msg.message, msg.sender, false);
+          }
+        });
+      }
+    }
+
+    // Save chat history
+    function saveChatHistory() {
+      // Keep only last 20 messages
+      if (chatHistory.length > 20) {
+        chatHistory = chatHistory.slice(-20);
+      }
+      localStorage.setItem('constructionChatHistory', JSON.stringify(chatHistory));
+    }
+
+    function addChatMessage(message, sender = 'ai', save = true) {
+      const messagesContainer = document.getElementById('chatMessages');
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      
+      const messageHtml = `
+        <div class="chat-message ${sender}">
+          <div class="chat-avatar ${sender}">${sender === 'ai' ? '🤖' : '👤'}</div>
+          <div>
+            <div class="chat-bubble">${message}</div>
+            <div class="chat-time">${time}</div>
+          </div>
+        </div>
+      `;
+      
+      messagesContainer.insertAdjacentHTML('beforeend', messageHtml);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      
+      // Store in history
+      if (save) {
+        chatHistory.push({ message, sender, time });
+        saveChatHistory();
+      }
+    }
+
+    function showTypingIndicator() {
+      const messagesContainer = document.getElementById('chatMessages');
+      const typingHtml = `
+        <div class="chat-message typing-indicator">
+          <div class="chat-avatar ai">🤖</div>
+          <div class="chat-typing">
+            <div class="chat-typing-dot"></div>
+            <div class="chat-typing-dot"></div>
+            <div class="chat-typing-dot"></div>
+          </div>
+        </div>
+      `;
+      messagesContainer.insertAdjacentHTML('beforeend', typingHtml);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+      const typingIndicator = document.querySelector('.typing-indicator');
+      if (typingIndicator) {
+        typingIndicator.remove();
+      }
+    }
+
+    function generateAIResponse(message) {
+      const lowerMessage = message.toLowerCase();
+      
+      // Context-aware responses based on current page
+      const contextResponses = {
+        estimate: {
+          keywords: ['add', 'item', 'calculate', 'total'],
+          response: `I see you're working on an estimate. To add items:
+          <br>1. Click the green ➕ button or use Quick Add buttons
+          <br>2. Search for items by typing in the search box
+          <br>3. Adjust quantities and prices as needed
+          <br>4. The total updates automatically!
+          <br><br>Need help with specific materials or calculations?`
+        },
+        dashboard: {
+          keywords: ['project', 'overview', 'summary'],
+          response: `From the dashboard, you can:
+          <br>• View all your projects and total values
+          <br>• See cost breakdowns by category
+          <br>• Access recent projects quickly
+          <br>• Create new estimates
+          <br><br>Click "New Estimate" to start a new project!`
+        }
+      };
+
+      // Specific topic responses
+      const responses = {
+        concrete: {
+          keywords: ['concrete', 'cement', 'foundation'],
+          response: `For concrete calculations:
+          <br><br>📏 Volume = Length × Width × Depth
+          <br>📦 1 cubic yard = 27 cubic feet
+          <br>💰 Current price: ~$166/cubic yard
+          <br><br>Tips:
+          <br>• Add 5-10% for waste
+          <br>• Consider pump truck costs for large pours
+          <br>• Don't forget rebar and wire mesh!
+          <br><br><button class="chat-suggestion" onclick="quickAddFromChat('Concrete (Ready Mix)')">Add Concrete to Estimate</button>`
+        },
+        lumber: {
+          keywords: ['lumber', 'wood', 'framing', '2x4', '2x6'],
+          response: `Lumber pricing info:
+          <br><br>Common sizes (per linear foot):
+          <br>• 2x4: $1.65
+          <br>• 2x6: $2.80
+          <br>• 2x8: $4.25
+          <br>• 2x10: $6.15
+          <br><br>💡 Pro tip: Order 10-15% extra for cuts and waste!
+          <br><br><button class="chat-suggestion" onclick="quickAddFromChat('Framing Lumber 2x4')">Add 2x4 Lumber</button>`
+        },
+        labor: {
+          keywords: ['labor', 'worker', 'cost', 'hourly'],
+          response: `Labor rates vary by skill level:
+          <br><br>👷 General: $18-24/hr
+          <br>🔨 Skilled trades:
+          <br>• Carpenter: $20-42/hr
+          <br>• Electrician: $21-49/hr
+          <br>• Plumber: $22-52/hr
+          <br><br>Remember to factor in:
+          <br>• Overtime rates
+          <br>• Benefits & insurance
+          <br>• Regional differences
+          <br><br><button class="chat-suggestion" onclick="quickAddFromChat('Carpenter (Skilled)')">Add Carpenter</button>`
+        },
+        regional: {
+          keywords: ['regional', 'location', 'area', 'adjustment'],
+          response: `Regional pricing adjustments:
+          <br><br>📍 Rural areas: -15%
+          <br>📍 Southeast: -10%
+          <br>📍 Midwest: -5%
+          <br>📍 Northeast: +10%
+          <br>📍 West Coast: +25%
+          <br>📍 NYC Metro: +35%
+          <br>📍 SF Bay Area: +40%
+          <br><br>These reflect labor and material cost differences.`
+        },
+        roofing: {
+          keywords: ['roof', 'shingle', 'roofing'],
+          response: `Roofing materials and costs:
+          <br><br>🏠 Asphalt shingles: $3.75/sq ft
+          <br>🏠 Metal roofing: $8.50/sq ft
+          <br>🏠 Clay tiles: $12.00/sq ft
+          <br><br>Don't forget:
+          <br>• Underlayment: $0.85/sq ft
+          <br>• Ice & water shield: $1.25/sq ft
+          <br>• Ridge vents & flashing
+          <br><br><button class="chat-suggestion" onclick="quickAddFromChat('Asphalt Shingles (3-tab)')">Add Asphalt Shingles</button>`
+        },
+        electrical: {
+          keywords: ['electrical', 'wire', 'outlet', 'panel'],
+          response: `Electrical components:
+          <br><br>⚡ Romex wire: $0.65-1.25/ft
+          <br>⚡ 200A panel: $1,850
+          <br>⚡ Outlets: $15-45 each
+          <br>⚡ Switches: $12-65 each
+          <br><br>Always use licensed electricians for safety!
+          <br><br><button class="chat-suggestion" onclick="quickAddFromChat('Electrical Panel 200A')">Add 200A Panel</button>`
+        },
+        plumbing: {
+          keywords: ['plumbing', 'pipe', 'water', 'bathroom'],
+          response: `Plumbing costs:
+          <br><br>🚿 Copper pipe: $4.85-8.75/ft
+          <br>🚿 PEX pipe: $1.25-1.85/ft
+          <br>🚿 PVC pipe: $3.25-5.85/ft
+          <br><br>Fixtures:
+          <br>• Toilet: $285-585
+          <br>• Sink: $225-425
+          <br>• Water heater: $985-2,850
+          <br><br><button class="chat-suggestion" onclick="quickAddFromChat('PEX Pipe 1/2&quot;')">Add PEX Pipe</button>`
+        },
+        help: {
+          keywords: ['help', 'how', 'guide', 'tutorial'],
+          response: `I can help you with:
+          <br><br>📋 Creating estimates
+          <br>💰 Understanding pricing
+          <br>📏 Calculating quantities
+          <br>🏗️ Construction terms
+          <br>📍 Regional adjustments
+          <br><br>Just ask me anything about construction estimating!`
+        },
+        square: {
+          keywords: ['square foot', 'sq ft', 'area', 'square footage'],
+          response: `To calculate square footage:
+          <br><br>📐 Area = Length × Width
+          <br><br>Common conversions:
+          <br>• 1 square = 100 sq ft (roofing term)
+          <br>• 1 sq yard = 9 sq ft
+          <br>• 1 acre = 43,560 sq ft
+          <br><br>For irregular shapes, break into rectangles and add them up!`
+        },
+        drywall: {
+          keywords: ['drywall', 'sheetrock', 'gypsum'],
+          response: `Drywall estimating:
+          <br><br>📏 Standard sheet: 4' × 8' = 32 sq ft
+          <br>💰 Prices:
+          <br>• 1/2" Regular: $16.80/sheet
+          <br>• 5/8" Regular: $19.25/sheet
+          <br>• Moisture resistant: $24.50/sheet
+          <br><br>Add 10% for waste and cuts!
+          <br><br><button class="chat-suggestion" onclick="quickAddFromChat('Drywall 1/2&quot; Regular')">Add 1/2" Drywall</button>`
+        },
+        formulas: {
+          keywords: ['formula', 'calculate', 'how many', 'equation'],
+          response: `Common construction formulas:
+          <br><br>📐 <strong>Area calculations:</strong>
+          <br>• Square/Rectangle: Length × Width
+          <br>• Triangle: (Base × Height) ÷ 2
+          <br>• Circle: π × Radius²
+          <br><br>📦 <strong>Volume calculations:</strong>
+          <br>• Cubic yards: (L × W × H in feet) ÷ 27
+          <br>• Concrete: Add 10% for waste
+          <br><br>🏠 <strong>Material estimates:</strong>
+          <br>• Drywall: Room area ÷ 32 (per sheet)
+          <br>• Paint: Area ÷ 350 (sq ft per gallon)
+          <br>• Flooring: Area + 10% waste
+          <br><br>What would you like to calculate?`
+        },
+        assistant: {
+          keywords: ['ai', 'assistant', 'chat', 'bot', 'help'],
+          response: `I'm your AI construction assistant! 🤖
+          <br><br>I can help you with:
+          <br>✓ Real-time pricing for 300+ items
+          <br>✓ Construction calculations
+          <br>✓ Material recommendations
+          <br>✓ Cost-saving tips
+          <br>✓ Regional adjustments
+          <br><br>💡 Quick tips:
+          <br>• Type any material name to get prices
+          <br>• Ask about formulas for calculations
+          <br>• I can add items directly to your estimate
+          <br>• Press Ctrl+/ to open/close this chat
+          <br><br>What construction question can I answer for you?`
+        }
+      };
+
+      // Check for specific responses
+      for (const [topic, data] of Object.entries(responses)) {
+        if (data.keywords.some(keyword => lowerMessage.includes(keyword))) {
+          return data.response;
+        }
+      }
+
+      // Check for estimate summary request
+      if (lowerMessage.includes('summary') || lowerMessage.includes('total') || lowerMessage.includes('estimate')) {
+        if (currentPage === 'estimate') {
+          const rows = document.querySelectorAll('#tableBody tr');
+          const total = document.getElementById('grandTotal').textContent;
+          const projectName = document.getElementById('projectName').value || 'Current Project';
+          
+          if (rows.length > 0) {
+            const categories = {};
+            rows.forEach(row => {
+              const category = row.cells[1].textContent || 'Other';
+              const itemTotal = parseFloat(row.cells[5].textContent.replace('
+      if (currentPage && contextResponses[currentPage]) {
+        const context = contextResponses[currentPage];
+        if (context.keywords.some(keyword => lowerMessage.includes(keyword))) {
+          return context.response;
+        }
+      }
+
+      // Calculate specific items
+      if (lowerMessage.includes('calculate') || lowerMessage.includes('how much')) {
+        return `To calculate costs:
+        <br><br>1. Add the item from our database
+        <br>2. Enter the quantity needed
+        <br>3. Adjust unit price if needed
+        <br>4. The system calculates automatically!
+        <br><br>What specific material do you need to calculate?`;
+      }
+
+      // Price lookup
+      if (lowerMessage.includes('price') || lowerMessage.includes('cost')) {
+        return `I can help you find prices! Our database includes:
+        <br><br>• ${Object.keys(itemsDB).length} categories
+        <br>• ${Object.values(itemsDB).reduce((acc, items) => acc + items.length, 0)} items
+        <br><br>Use the search box to find specific items, or browse by category. What are you looking for?`;
+      }
+
+      // Greeting responses
+      const greetings = ['hello', 'hi', 'hey', 'good morning', 'good afternoon', 'good evening'];
+      if (greetings.some(greeting => lowerMessage.includes(greeting))) {
+        const responses = [
+          `Hello! Ready to help with your construction estimate. What are you working on today?`,
+          `Hi there! I can help you find materials, calculate costs, or answer construction questions. What do you need?`,
+          `Hey! Let's build something great together. What can I help you estimate today?`
+        ];
+        return responses[Math.floor(Math.random() * responses.length)];
+      }
+
+      // Thank you responses
+      if (lowerMessage.includes('thank') || lowerMessage.includes('thanks')) {
+        return `You're welcome! Feel free to ask if you need anything else. I'm here to help make your construction estimates easier! 😊`;
+      }
+
+      // Default response
+      return `I'm here to help with construction estimating! I can assist with:
+      <br><br>• Material pricing and calculations
+      <br>• Labor cost estimates
+      <br>• Understanding construction terms
+      <br>• Regional price adjustments
+      <br>• Project planning tips
+      <br><br>What would you like to know more about?`;
+    }
+
+    // Add item from chat (make global for onclick handlers)
+    window.quickAddFromChat = function(itemName) {
+      // Switch to estimate page if not already there
+      if (currentPage !== 'estimate') {
+        window.switchPage('estimate');
+      }
+      
+      // Add the item
+      window.quickAddItem(itemName);
+      
+      // Close chat and show confirmation
+      window.toggleChat();
+      window.showNotification(`Added "${itemName}" to your estimate!`, 'success');
+    }
+
+    // Clear chat history
+    window.clearChat = function() {
+      if (confirm('Clear all chat messages?')) {
+        const messagesContainer = document.getElementById('chatMessages');
+        messagesContainer.innerHTML = `
+          <div class="chat-message">
+            <div class="chat-avatar ai">🤖</div>
+            <div>
+              <div class="chat-bubble">
+                Chat cleared! How can I help you with your construction estimate?
+              </div>
+              <div class="chat-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+            </div>
+          </div>
+        `;
+        chatHistory = [];
+        localStorage.removeItem('constructionChatHistory');
+        updateChatSuggestions();
+      }
+    }
+
+    // Add keyboard shortcut for chat
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === '/') {
+        toggleChat();
+      }
+    });
+
+    // Auto-suggestions based on page
+    function updateChatSuggestions() {
+      const suggestionsContainer = document.querySelector('.chat-suggestions');
+      if (!suggestionsContainer) return;
+      
+      const pageSuggestions = {
+        estimate: [
+          'How do I add multiple items quickly?',
+          'What\'s included in labor costs?',
+          'How do I apply regional pricing?',
+          'Tips for accurate estimates'
+        ],
+        dashboard: [
+          'How do I start a new project?',
+          'Can I export my data?',
+          'How do I view past projects?',
+          'What do the charts show?'
+        ],
+        database: [
+          'How often are prices updated?',
+          'Can I add custom items?',
+          'How do I export the database?',
+          'What categories are available?'
+        ]
+      };
+
+      const suggestions = pageSuggestions[currentPage] || pageSuggestions.estimate;
+      
+      suggestionsContainer.innerHTML = suggestions.map(suggestion => 
+        `<button class="chat-suggestion" onclick="sendSuggestion('${suggestion}')">${suggestion.split('?')[0]}...</button>`
+      ).join('');
+    }
+
+    // Utility Functions
+    function showNotification(message, type = 'info', duration = 3000) {
+      const icons = {
+        success: '✅',
+        danger: '❌',
+        warning: '⚠️',
+        info: 'ℹ️'
+      };
+
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.innerHTML = `
+        <span class="notification-icon">${icons[type]}</span>
+        <div class="notification-content">
+          <div class="notification-message">${message}</div>
+        </div>
+        <button class="notification-close" onclick="this.parentElement.remove()">×</button>
+      `;
+
+      document.body.appendChild(notification);
+
+      // Auto-remove after duration
+      setTimeout(() => {
+        notification.style.animation = 'slideInRight 0.3s ease reverse';
+        setTimeout(() => notification.remove(), 300);
+      }, duration);
+    }
+
+    function showNotifications() {
+      showNotification('No new notifications', 'info');
     }
 
     // Modal Functions
@@ -1513,18 +3453,195 @@
     function closeModal() {
       document.getElementById('modal').classList.remove('active');
     }
-
-    // GitHub Connection (Placeholder)
-    function connectGitHub() {
-      const username = document.getElementById('githubUsername').value;
-      const token = document.getElementById('githubToken').value;
-      
-      if (username && token) {
-        document.getElementById('syncStatus').innerHTML = `
-          <p class="text-success">✅ Connected to GitHub</p>
-          <p style="font-size: 0.875rem;">User: ${username}</p>
-        `;
+  </script>
+</body>
+</html>, '')) || 0;
+              categories[category] = (categories[category] || 0) + itemTotal;
+            });
+            
+            let categoryBreakdown = Object.entries(categories)
+              .map(([cat, total]) => `• ${cat}: ${total.toFixed(2)}`)
+              .join('<br>');
+            
+            return `📊 <strong>Estimate Summary: ${projectName}</strong>
+              <br><br>Items: ${rows.length}
+              <br>Grand Total: <strong>${total}</strong>
+              <br><br>Breakdown by category:
+              <br>${categoryBreakdown}
+              <br><br>This includes tax, profit margin, and contingency.`;
+          } else {
+            return `Your estimate is currently empty. Start by adding some items!
+              <br><br>      <button class="chat-suggestion" onclick="switchPage('estimate')">Go to Estimate</button>`;
+          }
+        } else {
+          return `Would you like to see your current estimate?
+            <br><br><button class="chat-suggestion" onclick="switchPage('estimate')">View Estimate</button>`;
+        }
       }
+
+      // Check context-based responses
+      if (currentPage && contextResponses[currentPage]) {
+        const context = contextResponses[currentPage];
+        if (context.keywords.some(keyword => lowerMessage.includes(keyword))) {
+          return context.response;
+        }
+      }
+
+      // Calculate specific items
+      if (lowerMessage.includes('calculate') || lowerMessage.includes('how much')) {
+        return `To calculate costs:
+        <br><br>1. Add the item from our database
+        <br>2. Enter the quantity needed
+        <br>3. Adjust unit price if needed
+        <br>4. The system calculates automatically!
+        <br><br>What specific material do you need to calculate?`;
+      }
+
+      // Price lookup
+      if (lowerMessage.includes('price') || lowerMessage.includes('cost')) {
+        return `I can help you find prices! Our database includes:
+        <br><br>• ${Object.keys(itemsDB).length} categories
+        <br>• ${Object.values(itemsDB).reduce((acc, items) => acc + items.length, 0)} items
+        <br><br>Use the search box to find specific items, or browse by category. What are you looking for?`;
+      }
+
+      // Default response
+      return `I'm here to help with construction estimating! I can assist with:
+      <br><br>• Material pricing and calculations
+      <br>• Labor cost estimates
+      <br>• Understanding construction terms
+      <br>• Regional price adjustments
+      <br>• Project planning tips
+      <br><br>What would you like to know more about?`;
+    }
+
+    // Add item from chat
+    function quickAddFromChat(itemName) {
+      // Switch to estimate page if not already there
+      if (currentPage !== 'estimate') {
+        switchPage('estimate');
+      }
+      
+      // Add the item
+      quickAddItem(itemName);
+      
+      // Close chat and show confirmation
+      toggleChat();
+      showNotification(`Added "${itemName}" to your estimate!`, 'success');
+    }
+
+    // Clear chat history
+    function clearChat() {
+      if (confirm('Clear all chat messages?')) {
+        const messagesContainer = document.getElementById('chatMessages');
+        messagesContainer.innerHTML = `
+          <div class="chat-message">
+            <div class="chat-avatar ai">🤖</div>
+            <div>
+              <div class="chat-bubble">
+                Chat cleared! How can I help you with your construction estimate?
+              </div>
+              <div class="chat-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+            </div>
+          </div>
+        `;
+        chatHistory = [];
+        updateChatSuggestions();
+      }
+    }
+
+    // Add keyboard shortcut for chat
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === '/') {
+        toggleChat();
+      }
+    });
+
+    // Auto-suggestions based on page
+    function updateChatSuggestions() {
+      const suggestionsContainer = document.querySelector('.chat-suggestions');
+      if (!suggestionsContainer) return;
+      
+      const pageSuggestions = {
+        estimate: [
+          'How do I add multiple items quickly?',
+          'What\'s included in labor costs?',
+          'How do I apply regional pricing?',
+          'Tips for accurate estimates'
+        ],
+        dashboard: [
+          'How do I start a new project?',
+          'Can I export my data?',
+          'How do I view past projects?',
+          'What do the charts show?'
+        ],
+        database: [
+          'How often are prices updated?',
+          'Can I add custom items?',
+          'How do I export the database?',
+          'What categories are available?'
+        ]
+      };
+
+      const suggestions = pageSuggestions[currentPage] || pageSuggestions.estimate;
+      
+      suggestionsContainer.innerHTML = suggestions.map(suggestion => 
+        `<button class="chat-suggestion" onclick="sendSuggestion('${suggestion}')">${suggestion.split('?')[0]}...</button>`
+      ).join('');
+    }
+
+    // Update suggestions when page changes
+    const originalSwitchPage = switchPage;
+    switchPage = function(page) {
+      originalSwitchPage(page);
+      updateChatSuggestions();
+    };
+
+    // Utility Functions
+    function showNotification(message, type = 'info', duration = 3000) {
+      const icons = {
+        success: '✅',
+        danger: '❌',
+        warning: '⚠️',
+        info: 'ℹ️'
+      };
+
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.innerHTML = `
+        <span class="notification-icon">${icons[type]}</span>
+        <div class="notification-content">
+          <div class="notification-message">${message}</div>
+        </div>
+        <button class="notification-close" onclick="this.parentElement.remove()">×</button>
+      `;
+
+      document.body.appendChild(notification);
+
+      // Auto-remove after duration
+      setTimeout(() => {
+        notification.style.animation = 'slideInRight 0.3s ease reverse';
+        setTimeout(() => notification.remove(), 300);
+      }, duration);
+    }
+
+    function showNotifications() {
+      showNotification('No new notifications', 'info');
+    }
+
+    // Modal Functions
+    function showModal(title, body, onConfirm) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalBody').innerHTML = body;
+      document.getElementById('modalConfirm').onclick = () => {
+        onConfirm();
+        closeModal();
+      };
+      document.getElementById('modal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
     }
   </script>
 </body>
