@@ -94,7 +94,7 @@
     .table tfoot td { background: var(--bg-tertiary); font-weight: 600; border-top: 2px solid var(--border); }
     .table input, .table select { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.875rem; background: var(--bg); color: var(--text); }
     .search-container { position: relative; }
-    .item-dropdown { position: absolute; top: 100%; left: 0; right: 0; max-height: 300px; overflow-y: auto; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); z-index: 100; margin-top: 0.25rem; }
+    .item-dropdown { position: absolute; top: 100%; left: 0; right: 0; max-height: 300px; overflow-y: auto; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); z-index: 1010; margin-top: 0.25rem; }
     .dropdown-item { padding: 0.75rem 1rem; cursor: pointer; transition: var(--transition); border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
     .dropdown-item:hover { background: var(--bg-hover); }
     .dropdown-category { padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; color: var(--text-tertiary); background: var(--bg-tertiary); text-transform: uppercase; letter-spacing: 0.05em; position: sticky; top: 0; }
@@ -116,7 +116,7 @@
     /* Modal & Notifications */
     .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
     .modal.active { opacity: 1; visibility: visible; }
-    .modal-content { background: var(--bg); border-radius: var(--radius); max-width: 500px; width: 90%; box-shadow: var(--shadow-xl); transform: translateY(-20px) scale(0.95); transition: transform 0.3s ease; }
+    .modal-content { background: var(--bg); border-radius: var(--radius); max-width: 600px; width: 90%; box-shadow: var(--shadow-xl); transform: translateY(-20px) scale(0.95); transition: transform 0.3s ease; }
     .modal.active .modal-content { transform: translateY(0) scale(1); }
     .modal-header { padding: 1.5rem 1.5rem 1rem; border-bottom: 1px solid var(--border); }
     .modal-title { font-size: 1.25rem; font-weight: 600; }
@@ -145,6 +145,25 @@
     .chat-message.user .chat-bubble { background: var(--primary); color: white; }
     .chat-input-container { padding: 1rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem; }
     .chat-input { flex: 1; }
+     /* Advanced Calculator Styles */
+    .calculator-container { max-width: 800px; margin: auto; }
+    .calculator-tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 1.5rem; }
+    .calculator-tab { padding: 0.75rem 1.5rem; cursor: pointer; font-weight: 600; color: var(--text-tertiary); position: relative; }
+    .calculator-tab.active { color: var(--primary); }
+    .calculator-tab.active::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: var(--primary); }
+    .calculator-content { display: none; }
+    .calculator-content.active { display: block; }
+    .calculator-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+    .calculator-display { background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 1rem; text-align: right; font-size: 2.5rem; font-weight: 300; margin-bottom: 1rem; overflow-x: auto; }
+    .calculator-btn { padding: 1.25rem; font-size: 1.125rem; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+    .calculator-btn.operator { background: var(--bg-secondary); color: var(--primary); font-weight: 500; }
+    .calculator-btn.equals { background: var(--primary); color: white; grid-column: span 2; }
+    .shape-selector { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .shape-btn { padding: 1rem; border: 2px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; text-align: center; }
+    .shape-btn.active { border-color: var(--primary); background: var(--bg-tertiary); }
+    .shape-btn svg { width: 40px; height: 40px; margin-bottom: 0.5rem; }
+    .shape-inputs { display: none; }
+    .shape-inputs.active { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
     /* Utilities & Responsive */
     .hidden { display: none !important; }
     @media (max-width: 768px) {
@@ -228,7 +247,7 @@
       </div>
   </div>
 
-  <!-- Modal -->
+  <!-- Confirmation Modal -->
   <div class="modal" id="confirmationModal">
     <div class="modal-content">
         <div class="modal-header"><h3 class="modal-title" id="modalTitle"></h3></div>
@@ -240,23 +259,58 @@
     </div>
   </div>
 
+  <!-- Add Item Modal -->
+    <div class="modal" id="addItemModal">
+        <div class="modal-content">
+            <form id="addItemForm">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add New Cost Item</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label" for="item-search-modal">Search for an item</label>
+                        <div class="search-container">
+                           <input type="text" id="item-search-modal" class="form-input item-search-modal" placeholder="Search or type item..." autocomplete="off">
+                           <div class="item-dropdown hidden"></div>
+                        </div>
+                    </div>
+                    <div class="form-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+                         <div class="form-group">
+                            <label class="form-label" for="quantity-modal">Quantity</label>
+                            <input type="number" id="quantity-modal" class="form-input" value="1" min="0" step="any">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Unit</label>
+                            <input type="text" id="unit-modal" class="form-input" readonly>
+                        </div>
+                         <div class="form-group">
+                            <label class="form-label" for="price-modal">Unit Price</label>
+                            <input type="number" id="price-modal" class="form-input" min="0" step="any">
+                        </div>
+                    </div>
+                    <input type="hidden" id="category-modal">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="modalCloseAddItem">Close</button>
+                    <button type="submit" class="btn btn-success" id="modalAddAndNext">Add & Next</button>
+                    <button type="button" class="btn btn-primary" id="modalAddAndClose">Add & Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
   <!-- Notifications -->
   <div id="notificationContainer"></div>
   
   <!-- HTML Template for Estimate Row -->
   <template id="estimateRowTemplate">
     <tr>
-      <td>
-        <div class="search-container">
-          <input type="text" class="form-input item-search" placeholder="Search or type item..." autocomplete="off">
-          <div class="item-dropdown hidden"></div>
-        </div>
-      </td>
+      <td class="item-cell"></td>
       <td class="category-cell"></td>
-      <td><input type="number" class="form-input quantity-input" value="1" min="0" step="0.01"></td>
+      <td class="quantity-cell"></td>
       <td class="unit-cell"></td>
-      <td><input type="number" class="form-input price-input" value="0" min="0" step="0.01"></td>
-      <td class="total-cell">$0.00</td>
+      <td class="price-cell"></td>
+      <td class="total-cell"></td>
       <td>
         <button class="btn btn-ghost btn-icon duplicate-row-btn" title="Duplicate">📋</button>
         <button class="btn btn-danger btn-icon delete-row-btn" title="Delete">🗑️</button>
@@ -266,6 +320,14 @@
 
 
 <script>
+// Mock remote database for price updates. In a real application, this would be a URL to a JSON file.
+const REMOTE_ITEMS_DB_SOURCE = {
+    "Concrete & Masonry":[{"name":"Concrete (Ready Mix)","unit":"cubic yard","price":172.50,"updated":"2025-06"}, {"name":"Rebar #4","unit":"linear foot","price":1.40,"updated":"2025-06"}],
+    "Lumber & Wood":[{"name":"Framing Lumber 2x4","unit":"linear foot","price":1.75,"updated":"2025-06"}, {"name":"Plywood 1/2\" CDX","unit":"sheet","price":38.00,"updated":"2025-06"}],
+    "Electrical":[{"name":"Romex Wire 12/2","unit":"linear foot","price":0.90,"updated":"2025-06"}, {"name":"Outlet (Standard)","unit":"each","price":15.50,"updated":"2025-06"}]
+};
+
+
 const EstimatorApp = {
     // --- Application State & Data ---
     currentPage: 'dashboard',
@@ -276,6 +338,13 @@ const EstimatorApp = {
     currencySymbol: '$',
     modalCallback: null,
     chatHistory: [],
+    debounceTimer: null,
+    calculatorState: {
+        display: '0',
+        currentValue: null,
+        operator: null,
+        waitingForOperand: false
+    },
     itemsDB: {"Concrete & Masonry":[{name:"Concrete (Ready Mix)",unit:"cubic yard",price:166,updated:"2024-12"},{name:"Concrete Installation",unit:"sq ft",price:10.5,updated:"2024-12"},{name:"Concrete Pump Service",unit:"hour",price:185,updated:"2024-12"},{name:"Rebar #4",unit:"linear foot",price:1.32,updated:"2024-12"},{name:"Rebar #5",unit:"linear foot",price:2.05,updated:"2024-12"},{name:"Rebar #6",unit:"linear foot",price:2.94,updated:"2024-12"},{name:"Wire Mesh (6x6)",unit:"sq ft",price:0.35,updated:"2024-12"},{name:"Concrete Block 8\"",unit:"each",price:2.25,updated:"2024-12"},{name:"Concrete Block 12\"",unit:"each",price:3.15,updated:"2024-12"},{name:"Mortar Mix",unit:"bag",price:8.95,updated:"2024-12"},{name:"Brick (Standard)",unit:"1000",price:485,updated:"2024-12"},{name:"Stone Veneer",unit:"sq ft",price:18.75,updated:"2024-12"},{name:"Concrete Sealer",unit:"gallon",price:32.5,updated:"2024-12"}],
     "Structural Steel":[{name:"Structural Steel Beam",unit:"ton",price:1650,updated:"2024-12"},{name:"Steel Column",unit:"ton",price:1875,updated:"2024-12"},{name:"Metal Decking",unit:"sq ft",price:3.85,updated:"2024-12"},{name:"Steel Studs 3-5/8\"",unit:"linear foot",price:2.45,updated:"2024-12"},{name:"Steel Studs 6\"",unit:"linear foot",price:3.25,updated:"2024-12"},{name:"Steel Track",unit:"linear foot",price:2.15,updated:"2024-12"},{name:"Welding Labor",unit:"hour",price:85,updated:"2024-12"},{name:"Steel Joist",unit:"linear foot",price:18.5,updated:"2024-12"}],
     "Lumber & Wood":[{name:"Framing Lumber 2x4x8",unit:"each",price:5.85,updated:"2024-12"},{name:"Framing Lumber 2x4",unit:"linear foot",price:1.65,updated:"2024-12"},{name:"Framing Lumber 2x6",unit:"linear foot",price:2.8,updated:"2024-12"},{name:"Framing Lumber 2x8",unit:"linear foot",price:4.25,updated:"2024-12"},{name:"Framing Lumber 2x10",unit:"linear foot",price:6.15,updated:"2024-12"},{name:"Framing Lumber 2x12",unit:"linear foot",price:8.9,updated:"2024-12"},{name:"Plywood 1/2\" CDX",unit:"sheet",price:35,updated:"2024-12"},{name:"Plywood 3/4\" CDX",unit:"sheet",price:52,updated:"2024-12"},{name:"OSB Sheathing 7/16\"",unit:"sheet",price:28,updated:"2024-12"},{name:"OSB Sheathing 5/8\"",unit:"sheet",price:36,updated:"2024-12"},{name:"Engineered I-Joist 11-7/8\"",unit:"linear foot",price:4.85,updated:"2024-12"},{name:"Glulam Beam 3.5x11.5",unit:"linear foot",price:22.5,updated:"2024-12"},{name:"LVL Beam 1.75x11.875",unit:"linear foot",price:8.75,updated:"2024-12"}],
@@ -295,7 +364,6 @@ const EstimatorApp = {
     "Kitchen & Bath":[{name:"Kitchen Cabinets (Stock)",unit:"linear foot",price:125,updated:"2024-12"},{name:"Kitchen Cabinets (Semi-Custom)",unit:"linear foot",price:185,updated:"2024-12"},{name:"Kitchen Cabinets (Custom)",unit:"linear foot",price:425,updated:"2024-12"},{name:"Countertop (Laminate)",unit:"sq ft",price:35,updated:"2024-12"},{name:"Countertop (Solid Surface)",unit:"sq ft",price:65,updated:"2024-12"},{name:"Countertop (Granite)",unit:"sq ft",price:85,updated:"2024-12"},{name:"Countertop (Quartz)",unit:"sq ft",price:95,updated:"2024-12"},{name:"Countertop (Marble)",unit:"sq ft",price:125,updated:"2024-12"},{name:"Backsplash (Subway Tile)",unit:"sq ft",price:12.5,updated:"2024-12"},{name:"Backsplash (Mosaic)",unit:"sq ft",price:18.5,updated:"2024-12"},{name:"Kitchen Sink (SS Single)",unit:"each",price:285,updated:"2024-12"},{name:"Kitchen Sink (SS Double)",unit:"each",price:425,updated:"2024-12"},{name:"Kitchen Faucet",unit:"each",price:285,updated:"2024-12"},{name:"Range Hood",unit:"each",price:485,updated:"2024-12"},{name:"Dishwasher",unit:"each",price:685,updated:"2024-12"},{name:"Refrigerator",unit:"each",price:1850,updated:"2024-12"},{name:"Stove/Range",unit:"each",price:985,updated:"2024-12"},{name:"Microwave",unit:"each",price:385,updated:"2024-12"},{name:"Vanity (36\")",unit:"each",price:585,updated:"2024-12"},{name:"Vanity (48\")",unit:"each",price:785,updated:"2024-12"},{name:"Vanity (60\")",unit:"each",price:985,updated:"2024-12"},{name:"Medicine Cabinet",unit:"each",price:185,updated:"2024-12"}],
     "Specialty":[{name:"Solar Panel (400W)",unit:"each",price:285,updated:"2024-12"},{name:"Solar Installation",unit:"watt",price:0.85,updated:"2024-12"},{name:"Solar Inverter",unit:"each",price:1250,updated:"2024-12"},{name:"Battery Storage (10kWh)",unit:"each",price:8500,updated:"2024-12"},{name:"Smart Home Hub",unit:"each",price:485,updated:"2024-12"},{name:"Security System",unit:"each",price:1250,updated:"2024-12"},{name:"Security Camera",unit:"each",price:185,updated:"2024-12"},{name:"Fire Sprinkler",unit:"head",price:85,updated:"2024-12"},{name:"Elevator (Residential)",unit:"each",price:28500,updated:"2024-12"},{name:"Pool (In-ground)",unit:"each",price:45000,updated:"2024-12"},{name:"Pool (Above-ground)",unit:"each",price:8500,updated:"2024-12"},{name:"Hot Tub",unit:"each",price:8500,updated:"2024-12"},{name:"Sauna (Indoor)",unit:"each",price:12500,updated:"2024-12"},{name:"Deck (Wood)",unit:"sq ft",price:25,updated:"2024-12"},{name:"Deck (Composite)",unit:"sq ft",price:35,updated:"2024-12"},{name:"Pergola",unit:"sq ft",price:45,updated:"2024-12"},{name:"Gazebo",unit:"each",price:8500,updated:"2024-12"},{name:"Fence (Wood)",unit:"linear foot",price:28,updated:"2024-12"},{name:"Fence (Vinyl)",unit:"linear foot",price:35,updated:"2024-12"},{name:"Fence (Chain Link)",unit:"linear foot",price:18,updated:"2024-12"},{name:"Fence (Aluminum)",unit:"linear foot",price:42,updated:"2024-12"}]
     },
-    quickAddItems: { "all": ["Concrete (Ready Mix)","Framing Lumber 2x4","Drywall 1/2\" Regular","Interior Paint (Eggshell)","Carpenter (Skilled)","Electrician (Journeyman)","Plumber (Journeyman)","Hardwood Flooring (Oak)"], "concrete": ["Concrete (Ready Mix)","Concrete Installation","Rebar #4","Concrete Block 8\"","Wire Mesh (6x6)","Concrete Finisher"], "framing": ["Framing Lumber 2x4","Framing Lumber 2x6","Plywood 1/2\" CDX","OSB Sheathing 7/16\"","Engineered I-Joist 11-7/8\"","Carpenter (Skilled)"], "electrical": ["Romex Wire 12/2","Electrical Panel 200A","Outlet (Standard)","Light Switch","Recessed Light","Electrician (Journeyman)"], "plumbing": ["PEX Pipe 1/2\"","Water Heater (50 gal)","Toilet (Standard)","Sink (Kitchen SS)","Plumber (Journeyman)","Shower Unit"], "finishes": ["Interior Paint (Eggshell)","Hardwood Flooring (Oak)","Ceramic Tile","Crown Molding","Kitchen Cabinets (Semi-Custom)","Painter"] },
 
     elements: {},
 
@@ -317,11 +385,17 @@ const EstimatorApp = {
             content: document.getElementById('content'),
             darkModeToggle: document.getElementById('darkMode'),
             saveBtn: document.getElementById('saveBtn'),
+            // Modals
             confirmationModal: document.getElementById('confirmationModal'),
             modalTitle: document.getElementById('modalTitle'),
             modalBody: document.getElementById('modalBody'),
             modalConfirm: document.getElementById('modalConfirm'),
             modalCancel: document.getElementById('modalCancel'),
+            addItemModal: document.getElementById('addItemModal'),
+            addItemForm: document.getElementById('addItemForm'),
+            modalCloseAddItem: document.getElementById('modalCloseAddItem'),
+            modalAddAndClose: document.getElementById('modalAddAndClose'),
+            
             notificationContainer: document.getElementById('notificationContainer'),
             chatButton: document.getElementById('chatButton'),
             chatContainer: document.getElementById('chatContainer'),
@@ -332,24 +406,63 @@ const EstimatorApp = {
         };
     },
     bindEventListeners() {
+        // Main navigation
         this.elements.sidebarNav.addEventListener('click', e => {
             const navItem = e.target.closest('.nav-item');
-            if (navItem) this.switchPage(navItem.dataset.page, true); // Pass true for manual navigation
+            if (navItem) this.switchPage(navItem.dataset.page, true);
         });
         this.elements.menuToggle.addEventListener('click', () => this.elements.sidebar.classList.toggle('open'));
         this.elements.darkModeToggle.addEventListener('change', this.toggleTheme.bind(this));
         this.elements.saveBtn.addEventListener('click', this.saveProject.bind(this));
+
+        // Generic Confirmation Modal
         this.elements.modalConfirm.addEventListener('click', () => {
             if (typeof this.modalCallback === 'function') this.modalCallback();
             this.hideModal();
         });
-        this.elements.modalCancel.addEventListener('click', this.hideModal.bind(this));
+        this.elements.modalCancel.addEventListener('click', () => this.hideModal());
         this.elements.confirmationModal.addEventListener('click', (e) => {
             if (e.target.id === 'confirmationModal') this.hideModal();
         });
+
+        // Add Item Modal Listeners
+        this.elements.addItemForm.addEventListener('submit', e => {
+            e.preventDefault();
+            this.handleAddItem(true); // true for 'Add & Next'
+        });
+        this.elements.modalCloseAddItem.addEventListener('click', () => this.hideAddItemModal());
+        this.elements.modalAddAndClose.addEventListener('click', () => this.handleAddItem(false)); // false for 'Add & Close'
+        
+        // Dynamic content listeners
         this.elements.content.addEventListener('click', this.handleContentClick.bind(this));
         this.elements.content.addEventListener('input', this.handleContentInput.bind(this));
-        this.elements.content.addEventListener('focusin', this.handleContentFocus.bind(this));
+        
+        // Global listeners for dynamic elements (like modal search)
+        document.body.addEventListener('input', e => {
+             if (e.target.matches('.item-search-modal')) {
+                // Debounce the search filter to improve performance
+                clearTimeout(this.debounceTimer);
+                this.debounceTimer = setTimeout(() => {
+                    this.filterItems(e.target);
+                }, 300);
+            }
+        });
+         document.body.addEventListener('click', e => {
+            if (e.target.closest('.dropdown-item')) {
+                 this.selectItem(e.target.closest('.dropdown-item'));
+            } else {
+                 // Hide dropdown if clicking outside of it
+                const allDropdowns = document.querySelectorAll('.item-dropdown');
+                allDropdowns.forEach(dropdown => {
+                    if (!dropdown.parentElement.contains(e.target)) {
+                        dropdown.classList.add('hidden');
+                    }
+                });
+            }
+        });
+
+
+        // Chat listeners
         this.elements.chatButton.addEventListener('click', this.toggleChat.bind(this));
         this.elements.closeChatBtn.addEventListener('click', this.toggleChat.bind(this));
         this.elements.chatSendBtn.addEventListener('click', this.sendChatMessage.bind(this));
@@ -363,13 +476,7 @@ const EstimatorApp = {
         const target = e.target;
         if (target.closest('.delete-row-btn')) this.deleteRow(target.closest('tr'));
         else if (target.closest('.duplicate-row-btn')) this.duplicateRow(target.closest('tr'));
-        else if (target.closest('.add-item-btn')) this.addRow();
-        else if (target.closest('.dropdown-item')) this.selectItem(target.closest('.dropdown-item'));
-        else if (target.closest('.quick-add-btn')) this.quickAddItemToTable(target.dataset.item);
-        else if (target.closest('.category-pill')) {
-             if(target.closest('#dbCategoryFilter')) this.displayDatabase(target.dataset.category, target);
-             else if(target.closest('#quickAddCategoryFilter')) this.filterQuickAdd(target.dataset.category, target);
-        }
+        else if (target.closest('.add-item-btn')) this.showAddItemModal();
         else if (target.closest('.load-project-btn')) this.loadProject(target.dataset.id);
         else if (target.closest('.delete-project-btn')) this.deleteProject(target.dataset.id);
         else if (target.closest('#settingsSaveBtn')) this.saveSettings();
@@ -377,25 +484,19 @@ const EstimatorApp = {
         else if (target.closest('#importAllBtn')) this.importData();
         else if (target.closest('#exportDbBtn')) this.exportDatabase();
         else if (target.closest('#updateDbBtn')) this.updatePrices();
+        else if (target.matches('.calculator-btn')) this.handleCalculatorInput(target.dataset.key);
+        else if (target.matches('.calculator-tab')) this.switchCalculatorTab(target);
+        else if (target.matches('.shape-btn')) this.selectShape(target);
     },
     handleContentInput(e) {
         const target = e.target;
-        if (target.matches('.quantity-input, .price-input')) this.calculateRow(target.closest('tr'));
-        else if (target.matches('#taxRate, #profitMargin, #contingency, #regionFactor')) {
+        if (target.matches('#taxRate, #profitMargin, #contingency, #regionFactor')) {
             this.updateDisplayValues();
             this.calculateTotals();
         }
-        else if(target.matches('.item-search')) this.filterItems(target);
-        else if (target.matches('.calculator-input')) {
-            const type = target.dataset.calculator;
-            if (type === 'area') this.calculateArea();
-            if (type === 'volume') this.calculateVolume();
-        }
+        else if (target.matches('.shape-input')) this.calculateShape();
     },
-    handleContentFocus(e) {
-        if(e.target.matches('.item-search')) this.showDropdown(e.target);
-    },
-
+   
     // --- Page Navigation & Rendering ---
     switchPage(page, isManualNav = false) {
         if (!page) return;
@@ -461,13 +562,8 @@ const EstimatorApp = {
                     <button class="btn btn-success add-item-btn">➕ Add Item</button>
                 </div>
                 <div class="card-body">
-                    <div class="quick-add-section">
-                        <div class="quick-add-title">Quick Add Common Items</div>
-                        <div class="category-pills" id="quickAddCategoryFilter"></div>
-                        <div class="quick-add-grid" id="quickAddGrid"></div>
-                    </div>
-                    <div class="table-wrapper"><table class="table" id="estimateTable">
-                        <thead><tr><th style="width: 30%;">Item Description</th><th style="width: 15%;">Category</th><th style="width: 10%;">Quantity</th><th style="width: 10%;">Unit</th><th style="width: 12%;">Unit Price</th><th style="width: 13%;">Total</th><th style="width: 10%;">Actions</th></tr></thead>
+                     <div class="table-wrapper"><table class="table" id="estimateTable">
+                        <thead><tr><th>Item Description</th><th>Category</th><th>Qty</th><th>Unit</th><th>Unit Price</th><th>Total</th><th>Actions</th></tr></thead>
                         <tbody id="tableBody"></tbody>
                         <tfoot>
                             <tr><td colspan="5"><strong>Subtotal</strong></td><td id="subtotal">$0.00</td><td></td></tr>
@@ -479,9 +575,6 @@ const EstimatorApp = {
                     </table></div>
                 </div>
             </div>`;
-            if (document.getElementById('tableBody').children.length === 0) this.addRow();
-            this.renderQuickAddPills();
-            this.filterQuickAdd('all', document.querySelector('#quickAddCategoryFilter .active'));
     },
     renderProjectsPage() {
         this.elements.content.querySelector('#projectsPage').innerHTML = `
@@ -537,105 +630,244 @@ const EstimatorApp = {
     },
     renderCalculatorPage() {
         this.elements.content.querySelector('#calculatorPage').innerHTML = `
-        <div class="form-grid">
-            <!-- Area Calculator Card -->
-            <div class="card">
-                <div class="card-header"><h3 class="card-title"><span>📐</span><span>Area Calculator</span></h3></div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label class="form-label" for="areaLength">Length</label>
-                        <input type="number" id="areaLength" class="form-input calculator-input" data-calculator="area" placeholder="0">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="areaWidth">Width</label>
-                        <input type="number" id="areaWidth" class="form-input calculator-input" data-calculator="area" placeholder="0">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="areaUnit">Units</label>
-                        <select id="areaUnit" class="form-select calculator-input" data-calculator="area">
-                            <option value="ft">Feet (ft)</option>
-                            <option value="in">Inches (in)</option>
-                            <option value="m">Meters (m)</option>
-                            <option value="cm">Centimeters (cm)</option>
-                        </select>
-                    </div>
-                    <div style="margin-top: 1.5rem; background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm);">
-                        <div class="stat-label">Result</div>
-                        <div id="areaResult" class="stat-value" style="font-size: 1.75rem;">0 sq ft</div>
+        <div class="card calculator-container">
+            <div class="card-body">
+                <div class="calculator-tabs">
+                    <div class="calculator-tab active" data-tab="normal">Normal</div>
+                    <div class="calculator-tab" data-tab="scientific">Scientific</div>
+                    <div class="calculator-tab" data-tab="area">Area</div>
+                    <div class="calculator-tab" data-tab="volume">Volume</div>
+                </div>
+
+                <!-- Normal & Scientific Calculator Content -->
+                <div id="calculatorNormal" class="calculator-content active">
+                    <div class="calculator-display">0</div>
+                    <div class="calculator-grid">
+                        <button class="calculator-btn operator" data-key="clear">AC</button>
+                        <button class="calculator-btn operator" data-key="sign">+/-</button>
+                        <button class="calculator-btn operator" data-key="%">%</button>
+                        <button class="calculator-btn operator" data-key="/">÷</button>
+                        <button class="calculator-btn" data-key="7">7</button>
+                        <button class="calculator-btn" data-key="8">8</button>
+                        <button class="calculator-btn" data-key="9">9</button>
+                        <button class="calculator-btn operator" data-key="*">×</button>
+                        <button class="calculator-btn" data-key="4">4</button>
+                        <button class="calculator-btn" data-key="5">5</button>
+                        <button class="calculator-btn" data-key="6">6</button>
+                        <button class="calculator-btn operator" data-key="-">−</button>
+                        <button class="calculator-btn" data-key="1">1</button>
+                        <button class="calculator-btn" data-key="2">2</button>
+                        <button class="calculator-btn" data-key="3">3</button>
+                        <button class="calculator-btn operator" data-key="+">+</button>
+                        <button class="calculator-btn" data-key="0" style="grid-column: span 2;">0</button>
+                        <button class="calculator-btn" data-key=".">.</button>
+                        <button class="calculator-btn equals" data-key="=">=</button>
                     </div>
                 </div>
-            </div>
+                <div id="calculatorScientific" class="calculator-content">
+                     <div class="calculator-display">0</div>
+                     <div class="calculator-grid" style="grid-template-columns: repeat(5, 1fr);">
+                        <button class="calculator-btn operator" data-key="sqrt">√</button>
+                        <button class="calculator-btn operator" data-key="sq">x²</button>
+                        <button class="calculator-btn operator" data-key="^">xʸ</button>
+                        <button class="calculator-btn operator" data-key="sin">sin</button>
+                        <button class="calculator-btn operator" data-key="cos">cos</button>
+                        <button class="calculator-btn operator" data-key="tan">tan</button>
+                        <button class="calculator-btn operator" data-key="pi">π</button>
+                        <button class="calculator-btn operator" data-key="clear">AC</button>
+                        <button class="calculator-btn operator" data-key="sign">+/-</button>
+                        <button class="calculator-btn operator" data-key="%">%</button>
+                        <button class="calculator-btn" data-key="7">7</button>
+                        <button class="calculator-btn" data-key="8">8</button>
+                        <button class="calculator-btn" data-key="9">9</button>
+                        <button class="calculator-btn operator" data-key="/">÷</button>
+                        <button class="calculator-btn operator" data-key="*">×</button>
+                        <button class="calculator-btn" data-key="4">4</button>
+                        <button class="calculator-btn" data-key="5">5</button>
+                        <button class="calculator-btn" data-key="6">6</button>
+                        <button class="calculator-btn operator" data-key="-">−</button>
+                        <button class="calculator-btn operator" data-key="+">+</button>
+                        <button class="calculator-btn" data-key="1">1</button>
+                        <button class="calculator-btn" data-key="2">2</button>
+                        <button class="calculator-btn" data-key="3">3</button>
+                        <button class="calculator-btn" data-key="0" style="grid-row: 5 / 7; grid-column: 1 / 2;"></button>
+                        <button class="calculator-btn" data-key="." style="grid-row: 6; grid-column: 2;"></button>
+                        <button class="calculator-btn equals" data-key="=" style="grid-row: 5 / 7; grid-column: 4 / 6;"></button>
+                     </div>
+                </div>
 
-            <!-- Volume Calculator Card -->
-            <div class="card">
-                <div class="card-header"><h3 class="card-title"><span>📦</span><span>Volume Calculator</span></h3></div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label class="form-label" for="volLength">Length</label>
-                        <input type="number" id="volLength" class="form-input calculator-input" data-calculator="volume" placeholder="0">
+                <!-- Area & Volume Calculator Content -->
+                <div id="calculatorArea" class="calculator-content">
+                    <div class="shape-selector" id="areaShapeSelector">
+                        <button class="shape-btn active" data-shape="rectangle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6v12h16V6H4zm14 10H6V8h12v8z"></path></svg>Rectangle</button>
+                        <button class="shape-btn" data-shape="circle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>Circle</button>
+                        <button class="shape-btn" data-shape="triangle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 4.55L18.63 19H5.37L12 6.55z"></path></svg>Triangle</button>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label" for="volWidth">Width</label>
-                        <input type="number" id="volWidth" class="form-input calculator-input" data-calculator="volume" placeholder="0">
+                    <div id="area-rectangle-inputs" class="shape-inputs active">
+                        <div class="form-group"><label class="form-label">Length</label><input type="number" class="form-input shape-input" data-shape="rectangle" placeholder="0"></div>
+                        <div class="form-group"><label class="form-label">Width</label><input type="number" class="form-input shape-input" data-shape="rectangle" placeholder="0"></div>
                     </div>
-                     <div class="form-group">
-                        <label class="form-label" for="volHeight">Height / Depth</label>
-                        <input type="number" id="volHeight" class="form-input calculator-input" data-calculator="volume" placeholder="0">
+                    <div id="area-circle-inputs" class="shape-inputs">
+                        <div class="form-group"><label class="form-label">Radius</label><input type="number" class="form-input shape-input" data-shape="circle" placeholder="0"></div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label" for="volUnit">Units</label>
-                        <select id="volUnit" class="form-select calculator-input" data-calculator="volume">
-                            <option value="ft">Feet (ft)</option>
-                            <option value="in">Inches (in)</option>
-                             <option value="yd">Yards (yd)</option>
-                            <option value="m">Meters (m)</option>
-                            <option value="cm">Centimeters (cm)</option>
-                        </select>
+                    <div id="area-triangle-inputs" class="shape-inputs">
+                        <div class="form-group"><label class="form-label">Base</label><input type="number" class="form-input shape-input" data-shape="triangle" placeholder="0"></div>
+                        <div class="form-group"><label class="form-label">Height</label><input type="number" class="form-input shape-input" data-shape="triangle" placeholder="0"></div>
                     </div>
-                    <div style="margin-top: 1.5rem; background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm);">
-                        <div class="stat-label">Result</div>
-                        <div id="volumeResult" class="stat-value" style="font-size: 1.75rem;">0 cu ft</div>
+                    <div style="margin-top: 1.5rem; background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm);"><div class="stat-label">Area</div><div id="areaResult" class="stat-value">0</div></div>
+                </div>
+                <div id="calculatorVolume" class="calculator-content">
+                    <div class="shape-selector" id="volumeShapeSelector">
+                        <button class="shape-btn active" data-shape="cuboid"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 5.47L12 10.47L3 5.47L12 1L21 5.47zM21 18.53V9.47l-9 5-9-5v9.06L12 23l9-4.47zM3 7.53l9 5v9l-9-5v-9z"></path></svg>Cuboid</button>
+                        <button class="shape-btn" data-shape="cylinder"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 9v6c0 1.66-4.03 3-9 3s-9-1.34-9-3V9c0 1.66 4.03 3 9 3s9-1.34 9-3zm0-4v1c0 1.66-4.03 3-9 3s-9-1.34-9-3V5c0 1.66 4.03 3 9 3s9-1.34 9-3zM12 2C7.03 2 3 3.34 3 5v6c0 1.66 4.03 3 9 3s9-1.34 9-3V5c0-1.66-4.03-3-9-3z"></path></svg>Cylinder</button>
+                        <button class="shape-btn" data-shape="sphere"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path></svg>Sphere</button>
                     </div>
+                     <div id="volume-cuboid-inputs" class="shape-inputs active">
+                        <div class="form-group"><label class="form-label">Length</label><input type="number" class="form-input shape-input" data-shape="cuboid" placeholder="0"></div>
+                        <div class="form-group"><label class="form-label">Width</label><input type="number" class="form-input shape-input" data-shape="cuboid" placeholder="0"></div>
+                        <div class="form-group"><label class="form-label">Height</label><input type="number" class="form-input shape-input" data-shape="cuboid" placeholder="0"></div>
+                    </div>
+                    <div id="volume-cylinder-inputs" class="shape-inputs">
+                        <div class="form-group"><label class="form-label">Radius</label><input type="number" class="form-input shape-input" data-shape="cylinder" placeholder="0"></div>
+                        <div class="form-group"><label class="form-label">Height</label><input type="number" class="form-input shape-input" data-shape="cylinder" placeholder="0"></div>
+                    </div>
+                    <div id="volume-sphere-inputs" class="shape-inputs">
+                        <div class="form-group"><label class="form-label">Radius</label><input type="number" class="form-input shape-input" data-shape="sphere" placeholder="0"></div>
+                    </div>
+                    <div style="margin-top: 1.5rem; background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm);"><div class="stat-label">Volume</div><div id="volumeResult" class="stat-value">0</div></div>
                 </div>
             </div>
         </div>
         `;
+        this.updateCalculatorDisplay();
     },
     renderReportsPage() { this.elements.content.querySelector('#reportsPage').innerHTML = `<div class="card"><div class="card-body" style="text-align: center;">📈 Reports coming soon...</div></div>`},
     
     // --- Calculator Methods ---
-    calculateArea() {
-        const length = parseFloat(document.getElementById('areaLength').value) || 0;
-        const width = parseFloat(document.getElementById('areaWidth').value) || 0;
-        const unit = document.getElementById('areaUnit').value;
-        const result = length * width;
-        document.getElementById('areaResult').textContent = `${result.toLocaleString()} sq ${unit}`;
+    handleCalculatorInput(key) {
+        const { display, waitingForOperand } = this.calculatorState;
+        
+        if (/\d/.test(key)) { // It's a digit
+            if (waitingForOperand) {
+                this.calculatorState.display = key;
+                this.calculatorState.waitingForOperand = false;
+            } else {
+                this.calculatorState.display = display === '0' ? key : display + key;
+            }
+        } else if (key === '.') {
+            if (!display.includes('.')) {
+                this.calculatorState.display = display + '.';
+            }
+        } else if (key === 'clear') {
+            this.calculatorState = { display: '0', currentValue: null, operator: null, waitingForOperand: false };
+        } else if (key === 'sign') {
+            this.calculatorState.display = (parseFloat(display) * -1).toString();
+        } else if (key === '%') {
+             this.calculatorState.display = (parseFloat(display) / 100).toString();
+        } else if (key === '=') {
+            if (this.calculatorState.operator && this.calculatorState.currentValue !== null) {
+                const result = this.performCalculation(this.calculatorState.currentValue, parseFloat(this.calculatorState.display), this.calculatorState.operator);
+                this.calculatorState.display = String(result);
+                this.calculatorState.currentValue = null;
+                this.calculatorState.operator = null;
+                this.calculatorState.waitingForOperand = true;
+            }
+        } else { // It's an operator
+            if (this.calculatorState.operator && this.calculatorState.currentValue !== null && !this.calculatorState.waitingForOperand) {
+                 const result = this.performCalculation(this.calculatorState.currentValue, parseFloat(this.calculatorState.display), this.calculatorState.operator);
+                 this.calculatorState.display = String(result);
+                 this.calculatorState.currentValue = result;
+            } else {
+                 this.calculatorState.currentValue = parseFloat(this.calculatorState.display);
+            }
+
+            this.calculatorState.operator = key;
+            this.calculatorState.waitingForOperand = true;
+        }
+        this.updateCalculatorDisplay();
     },
-    calculateVolume() {
-        const length = parseFloat(document.getElementById('volLength').value) || 0;
-        const width = parseFloat(document.getElementById('volWidth').value) || 0;
-        const height = parseFloat(document.getElementById('volHeight').value) || 0;
-        const unit = document.getElementById('volUnit').value;
-        const result = length * width * height;
-        document.getElementById('volumeResult').textContent = `${result.toLocaleString()} cu ${unit}`;
+    performCalculation(val1, val2, op) {
+        switch(op) {
+            case '+': return val1 + val2;
+            case '-': return val1 - val2;
+            case '*': return val1 * val2;
+            case '/': return val1 / val2;
+            case '^': return Math.pow(val1, val2);
+            default: return val2;
+        }
+    },
+    updateCalculatorDisplay() {
+        const displayElement = this.elements.content.querySelector('.calculator-display');
+        if (displayElement) {
+             displayElement.textContent = this.calculatorState.display.toLocaleString();
+        }
+    },
+    switchCalculatorTab(tabElement) {
+        const tab = tabElement.dataset.tab;
+        document.querySelectorAll('.calculator-tab').forEach(t => t.classList.remove('active'));
+        tabElement.classList.add('active');
+
+        document.querySelectorAll('.calculator-content').forEach(c => c.classList.remove('active'));
+        document.getElementById(`calculator${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
+    },
+    selectShape(shapeElement) {
+        const shape = shapeElement.dataset.shape;
+        const type = shapeElement.closest('.calculator-content').id.includes('Area') ? 'area' : 'volume';
+        
+        document.querySelectorAll(`#${type}ShapeSelector .shape-btn`).forEach(s => s.classList.remove('active'));
+        shapeElement.classList.add('active');
+
+        document.querySelectorAll(`#calculator${type.charAt(0).toUpperCase() + type.slice(1)} .shape-inputs`).forEach(i => i.classList.remove('active'));
+        document.getElementById(`${type}-${shape}-inputs`).classList.add('active');
+        this.calculateShape();
+    },
+    calculateShape() {
+        // Area Calculations
+        const areaShape = document.querySelector('#areaShapeSelector .active')?.dataset.shape;
+        if (areaShape) {
+            const inputs = Array.from(document.querySelectorAll(`#area-${areaShape}-inputs .shape-input`)).map(i => parseFloat(i.value) || 0);
+            let area = 0;
+            if (areaShape === 'rectangle') area = inputs[0] * inputs[1];
+            else if (areaShape === 'circle') area = Math.PI * Math.pow(inputs[0], 2);
+            else if (areaShape === 'triangle') area = 0.5 * inputs[0] * inputs[1];
+            document.getElementById('areaResult').textContent = area.toLocaleString(undefined, {maximumFractionDigits: 2});
+        }
+        
+        // Volume Calculations
+        const volumeShape = document.querySelector('#volumeShapeSelector .active')?.dataset.shape;
+        if (volumeShape) {
+            const inputs = Array.from(document.querySelectorAll(`#volume-${volumeShape}-inputs .shape-input`)).map(i => parseFloat(i.value) || 0);
+            let volume = 0;
+            if (volumeShape === 'cuboid') volume = inputs[0] * inputs[1] * inputs[2];
+            else if (volumeShape === 'cylinder') volume = Math.PI * Math.pow(inputs[0], 2) * inputs[1];
+            else if (volumeShape === 'sphere') volume = (4/3) * Math.PI * Math.pow(inputs[0], 3);
+            document.getElementById('volumeResult').textContent = volume.toLocaleString(undefined, {maximumFractionDigits: 2});
+        }
     },
 
     // --- Estimate Table Methods ---
     addRow(data = {}) {
         const tableBody = document.getElementById('tableBody');
-        if (!tableBody) return;
+        if (!tableBody) { return; }
+        
+        const placeholder = tableBody.querySelector('.placeholder-row');
+        if (placeholder) {
+            placeholder.remove();
+        }
+
         const template = document.getElementById('estimateRowTemplate');
         const newRow = template.content.cloneNode(true);
         const tr = newRow.querySelector('tr');
         
-        tr.querySelector('.item-search').value = data.item || '';
+        tr.querySelector('.item-cell').textContent = data.item || '';
         tr.querySelector('.category-cell').textContent = data.category || '';
-        tr.querySelector('.quantity-input').value = data.quantity || 1;
+        tr.querySelector('.quantity-cell').textContent = data.quantity || 1;
         tr.querySelector('.unit-cell').textContent = data.unit || '';
-        tr.querySelector('.price-input').value = data.unitPrice || 0;
+        tr.querySelector('.price-cell').textContent = this.formatCurrency(data.unitPrice);
         
         tableBody.appendChild(tr);
-        if (data.item) this.calculateRow(tr);
+        this.calculateRowTotal(tableBody.lastElementChild);
+        this.calculateTotals();
     },
     deleteRow(rowElement) {
         this.showModal('Delete Item', '<p>Are you sure you want to permanently delete this item?</p>', () => {
@@ -643,52 +875,57 @@ const EstimatorApp = {
             this.calculateTotals();
             this.showNotification('Item deleted.', 'info');
             if (document.getElementById('tableBody').children.length === 0) {
-                this.addRow();
+                 document.getElementById('tableBody').innerHTML = '<tr class="placeholder-row"><td colspan="7" style="text-align:center;color:var(--text-tertiary);padding:2rem;">No items yet. Click "Add Item" to begin.</td></tr>';
+                 this.calculateTotals(); // Recalculate to zero out footer
             }
         });
     },
     duplicateRow(rowElement) {
         const data = {
-            item: rowElement.querySelector('.item-search').value,
+            item: rowElement.querySelector('.item-cell').textContent,
             category: rowElement.querySelector('.category-cell').textContent,
-            quantity: rowElement.querySelector('.quantity-input').value,
+            quantity: parseFloat(rowElement.querySelector('.quantity-cell').textContent) || 1,
             unit: rowElement.querySelector('.unit-cell').textContent,
-            unitPrice: rowElement.querySelector('.price-input').value
+            unitPrice: parseFloat(rowElement.querySelector('.price-cell').textContent.replace(/[^0-9.-]+/g, '')) || 0,
         };
         this.addRow(data);
         this.showNotification('Item duplicated.', 'success');
     },
-    calculateRow(row) {
-        if (!row) return;
-        const quantity = parseFloat(row.querySelector('.quantity-input').value) || 0;
-        const unitPrice = parseFloat(row.querySelector('.price-input').value) || 0;
+    calculateRowTotal(row) {
+        if (!row || !row.querySelector('.quantity-cell')) return;
+        const quantity = parseFloat(row.querySelector('.quantity-cell').textContent) || 0;
+        const unitPrice = parseFloat(row.querySelector('.price-cell').textContent.replace(/[^0-9.-]+/g, '')) || 0;
         const regionFactor = parseFloat(document.getElementById('regionFactor').value) || 1;
         
         const total = quantity * unitPrice * regionFactor;
         row.querySelector('.total-cell').textContent = this.formatCurrency(total);
-        this.calculateTotals();
     },
     calculateTotals() {
         const tableBody = document.getElementById('tableBody');
         if (!tableBody) return;
-        const rows = tableBody.querySelectorAll('tr');
+        const rows = tableBody.querySelectorAll('tr:not(.placeholder-row)');
         let subtotal = 0;
         rows.forEach(row => {
-            const totalText = row.querySelector('.total-cell').textContent;
-            subtotal += parseFloat(totalText.replace(/[^0-9.-]+/g, '')) || 0;
+            if (row.querySelector('.total-cell')) {
+                const totalText = row.querySelector('.total-cell').textContent;
+                subtotal += parseFloat(totalText.replace(/[^0-9.-]+/g, '')) || 0;
+            }
         });
-        const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
-        const profitRate = parseFloat(document.getElementById('profitMargin').value) || 0;
-        const contingencyRate = parseFloat(document.getElementById('contingency').value) || 0;
-        const tax = subtotal * (taxRate / 100);
-        const profit = subtotal * (profitRate / 100);
-        const contingency = subtotal * (contingencyRate / 100);
-        const grandTotal = subtotal + tax + profit + contingency;
-        document.getElementById('subtotal').textContent = this.formatCurrency(subtotal);
-        document.getElementById('tax').textContent = this.formatCurrency(tax);
-        document.getElementById('profitAmount').textContent = this.formatCurrency(profit);
-        document.getElementById('contingencyAmount').textContent = this.formatCurrency(contingency);
-        document.getElementById('grandTotal').textContent = this.formatCurrency(grandTotal);
+
+        if (this.currentPage === 'estimate') {
+            const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+            const profitRate = parseFloat(document.getElementById('profitMargin').value) || 0;
+            const contingencyRate = parseFloat(document.getElementById('contingency').value) || 0;
+            const tax = subtotal * (taxRate / 100);
+            const profit = subtotal * (profitRate / 100);
+            const contingency = subtotal * (contingencyRate / 100);
+            const grandTotal = subtotal + tax + profit + contingency;
+            document.getElementById('subtotal').textContent = this.formatCurrency(subtotal);
+            document.getElementById('tax').textContent = this.formatCurrency(tax);
+            document.getElementById('profitAmount').textContent = this.formatCurrency(profit);
+            document.getElementById('contingencyAmount').textContent = this.formatCurrency(contingency);
+            document.getElementById('grandTotal').textContent = this.formatCurrency(grandTotal);
+        }
     },
     updateDisplayValues() {
         if(this.currentPage !== 'estimate') return;
@@ -700,22 +937,24 @@ const EstimatorApp = {
     // --- Project Data Management ---
     saveToStorage() {
         try {
-            localStorage.setItem('estimatorProjects_v2', JSON.stringify(this.projects));
-            localStorage.setItem('estimatorSettings_v2', JSON.stringify(this.settings));
-            localStorage.setItem('estimatorChatHistory_v2', JSON.stringify(this.chatHistory));
+            localStorage.setItem('estimatorApp_projects', JSON.stringify(this.projects));
+            localStorage.setItem('estimatorApp_settings', JSON.stringify(this.settings));
+            localStorage.setItem('estimatorApp_itemsDB', JSON.stringify(this.itemsDB));
         } catch (e) {
             this.showNotification('Storage Error', 'danger', 'Could not save data. Local storage might be full.');
         }
     },
     loadFromStorage() {
         try {
-            this.projects = JSON.parse(localStorage.getItem('estimatorProjects_v2')) || {};
-            this.settings = JSON.parse(localStorage.getItem('estimatorSettings_v2')) || {};
-            this.chatHistory = JSON.parse(localStorage.getItem('estimatorChatHistory_v2')) || [];
+            this.projects = JSON.parse(localStorage.getItem('estimatorApp_projects')) || {};
+            this.settings = JSON.parse(localStorage.getItem('estimatorApp_settings')) || {};
+            // Load the default DB first, then overwrite with saved version if it exists
+            const savedDB = JSON.parse(localStorage.getItem('estimatorApp_itemsDB'));
+            if(savedDB) this.itemsDB = savedDB;
+
         } catch (e) {
             this.projects = {};
             this.settings = {};
-            this.chatHistory = [];
         }
     },
     saveProject() {
@@ -735,13 +974,16 @@ const EstimatorApp = {
                 grandTotal: document.getElementById('grandTotal').textContent,
                 lastModified: new Date().toISOString()
             },
-            items: Array.from(document.querySelectorAll('#tableBody tr')).map(row => ({
-                item: row.querySelector('.item-search').value,
-                category: row.querySelector('.category-cell').textContent,
-                quantity: row.querySelector('.quantity-input').value,
-                unit: row.querySelector('.unit-cell').textContent,
-                unitPrice: row.querySelector('.price-input').value
-            }))
+            items: Array.from(document.querySelectorAll('#tableBody tr:not(.placeholder-row)')).map(row => {
+                if(!row.querySelector('.item-cell')) return null;
+                return {
+                    item: row.querySelector('.item-cell').textContent,
+                    category: row.querySelector('.category-cell').textContent,
+                    quantity: row.querySelector('.quantity-cell').textContent,
+                    unit: row.querySelector('.unit-cell').textContent,
+                    unitPrice: parseFloat(row.querySelector('.price-cell').textContent.replace(/[^0-9.-]+/g, ''))
+                }
+            }).filter(item => item)
         };
         const id = this.currentProjectId || 'proj_' + Date.now();
         this.projects[id] = projectData;
@@ -754,13 +996,11 @@ const EstimatorApp = {
         const project = this.projects[id];
         if (!project) return;
         
-        // Temporarily clear current project to bypass confirmation modal in switchPage
         this.currentProjectId = null;
-        this.switchPage('estimate'); // This renders the empty estimate page
+        this.switchPage('estimate');
 
-        // Use a small timeout to allow the DOM to render before populating fields
         setTimeout(() => {
-            this.currentProjectId = id; // Now set the actual project ID
+            this.currentProjectId = id;
             
             const info = project.info || {};
             Object.keys(info).forEach(key => {
@@ -772,11 +1012,11 @@ const EstimatorApp = {
             
             const tableBody = document.getElementById('tableBody');
             if (tableBody) {
-                tableBody.innerHTML = ''; // Clear any default rows
+                tableBody.innerHTML = '';
                 if (project.items && project.items.length > 0) {
                     project.items.forEach(item => this.addRow(item));
                 } else {
-                    this.addRow(); // Add a blank row if loaded project has no items
+                     tableBody.innerHTML = '<tr class="placeholder-row"><td colspan="7" style="text-align:center;color:var(--text-tertiary);padding:2rem;">No items in this project.</td></tr>';
                 }
             }
             
@@ -792,18 +1032,20 @@ const EstimatorApp = {
             if (this.currentProjectId === id) this.clearEstimateForm();
             this.saveToStorage();
             if (this.currentPage === 'projects') this.displayProjects();
-            this.updateDashboard();
+            if (this.currentPage === 'dashboard') this.updateDashboard();
             this.showNotification(`Project "${projectName}" deleted.`, 'info');
         });
     },
     clearEstimateForm() {
         this.currentProjectId = null;
         if(this.currentPage === 'estimate') {
-            this.renderEstimatePage(); // Rerender to reset the form
+            this.renderEstimatePage();
             setTimeout(() => {
                   document.getElementById('taxRate').value = this.settings.defaultTaxRate || 8.25;
                   document.getElementById('profitMargin').value = this.settings.defaultProfitMargin || 15;
                   document.getElementById('contingency').value = this.settings.defaultContingency || 10;
+                   const tableBody = document.getElementById('tableBody');
+                   tableBody.innerHTML = '<tr class="placeholder-row"><td colspan="7" style="text-align:center;color:var(--text-tertiary);padding:2rem;">No items yet. Click "Add Item" to begin.</td></tr>';
                   this.updateDisplayValues();
                   this.calculateTotals();
             }, 0);
@@ -860,70 +1102,62 @@ const EstimatorApp = {
         this.modalCallback = null;
     },
 
+    // --- Add Item Modal ---
+    showAddItemModal() {
+        this.elements.addItemForm.reset(); 
+        document.getElementById('quantity-modal').value = 1; 
+        this.elements.addItemModal.classList.add('active');
+        setTimeout(() => document.getElementById('item-search-modal').focus(), 50);
+    },
+    hideAddItemModal() {
+        this.elements.addItemModal.classList.remove('active');
+    },
+    handleAddItem(addAndNext) {
+        const form = this.elements.addItemForm;
+        const itemData = {
+            item: form.querySelector('#item-search-modal').value,
+            category: form.querySelector('#category-modal').value,
+            quantity: parseFloat(form.querySelector('#quantity-modal').value) || 0,
+            unit: form.querySelector('#unit-modal').value,
+            unitPrice: parseFloat(form.querySelector('#price-modal').value) || 0
+        };
+
+        if (!itemData.item || itemData.quantity <= 0) {
+            this.showNotification('Invalid Item', 'danger', 'Please select a valid item and enter a quantity.');
+            return;
+        }
+
+        this.addRow(itemData);
+        this.showNotification('Item Added', 'success', `Added ${itemData.quantity} x ${itemData.item}`);
+
+        if (addAndNext) {
+            form.reset();
+            document.getElementById('quantity-modal').value = 1;
+            form.querySelector('#item-search-modal').focus();
+        } else {
+            this.hideAddItemModal();
+        }
+    },
+
+
     // --- Item Search & Quick Add ---
-    renderQuickAddPills() {
-        const filterContainer = document.getElementById('quickAddCategoryFilter');
-        if (!filterContainer) return;
-        const categories = Object.keys(this.quickAddItems);
-        let pillsHTML = categories.map(cat => `<button class="category-pill ${cat === 'all' ? 'active' : ''}" data-category="${cat}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</button>`).join('');
-        filterContainer.innerHTML = pillsHTML;
-    },
-    filterQuickAdd(category, pillElement) {
-        const grid = document.getElementById('quickAddGrid');
-        if(!grid) return;
-        if (pillElement) {
-            document.querySelectorAll('#quickAddCategoryFilter .category-pill').forEach(p => p.classList.remove('active'));
-            pillElement.classList.add('active');
-        }
-        const items = this.quickAddItems[category] || [];
-        grid.innerHTML = items.map(item => `<button class="quick-add-btn" data-item="${item}">${item}</button>`).join('');
-    },
-    quickAddItemToTable(itemName) {
-        let foundItem = null;
-        let itemCategory = '';
-        for (const [category, items] of Object.entries(this.itemsDB)) {
-            foundItem = items.find(i => i.name === itemName);
-            if(foundItem) {
-                itemCategory = category;
-                break;
-            }
-        }
-        if(foundItem) {
-            this.addRow({
-                item: foundItem.name,
-                category: itemCategory,
-                unit: foundItem.unit,
-                unitPrice: foundItem.price,
-                quantity: 1
-            });
-            this.showNotification(`Added ${itemName}`, 'success');
-        }
-    },
-    filterItems(input) {
-        const dropdown = input.nextElementSibling;
+    filterItems(inputElement) {
+        const dropdown = inputElement.nextElementSibling;
         if (dropdown) {
-            dropdown.innerHTML = this.generateDropdownContent(input.value);
+            dropdown.innerHTML = this.generateDropdownContent(inputElement.value);
             dropdown.classList.remove('hidden');
         }
     },
-    showDropdown(input) {
-        // Hide other dropdowns
-        document.querySelectorAll('.item-dropdown').forEach(d => d.classList.add('hidden'));
-        const dropdown = input.nextElementSibling;
-        if(dropdown) {
-            dropdown.innerHTML = this.generateDropdownContent(input.value);
-            dropdown.classList.remove('hidden');
-        }
-    },
-    selectItem(element) {
-        const row = element.closest('tr');
-        const { name, category, unit, price } = element.dataset;
-        row.querySelector('.item-search').value = name;
-        row.querySelector('.category-cell').textContent = category;
-        row.querySelector('.unit-cell').textContent = unit;
-        row.querySelector('.price-input').value = price;
-        this.calculateRow(row);
-        element.parentElement.classList.add('hidden');
+    selectItem(itemElement) {
+        const { name, category, unit, price } = itemElement.dataset;
+        const form = this.elements.addItemForm;
+        form.querySelector('#item-search-modal').value = name;
+        form.querySelector('#category-modal').value = category;
+        form.querySelector('#unit-modal').value = unit;
+        form.querySelector('#price-modal').value = price;
+        
+        itemElement.closest('.item-dropdown').classList.add('hidden');
+        form.querySelector('#quantity-modal').focus();
     },
     generateDropdownContent(filter = '') {
         const lowerFilter = filter.toLowerCase();
@@ -1089,7 +1323,48 @@ const EstimatorApp = {
     exportData(){ this.showNotification('Export coming soon.', 'info'); },
     importData(){ this.showNotification('Import coming soon.', 'info'); },
     exportDatabase(){ this.showNotification('Export coming soon.', 'info'); },
-    updatePrices(){ this.showNotification('Price updates coming soon.', 'info'); },
+    updatePrices() {
+        this.showNotification('Checking for updates...', 'info');
+        
+        // Simulate a network request
+        setTimeout(() => {
+            const updates = [];
+            // Compare local DB with the remote source
+            for (const category in REMOTE_ITEMS_DB_SOURCE) {
+                if (this.itemsDB[category]) {
+                    REMOTE_ITEMS_DB_SOURCE[category].forEach(remoteItem => {
+                        const localItem = this.itemsDB[category].find(item => item.name === remoteItem.name);
+                        if (localItem && localItem.price !== remoteItem.price) {
+                            updates.push({ ...remoteItem, oldPrice: localItem.price, category });
+                        }
+                    });
+                }
+            }
+
+            if (updates.length > 0) {
+                let updateListHTML = updates.map(u => 
+                    `<li><strong>${u.name}</strong>: ${this.formatCurrency(u.oldPrice)} → <strong style="color:var(--success)">${this.formatCurrency(u.price)}</strong></li>`
+                ).join('');
+                this.showModal('Price Updates Available', `<p>The following price updates were found. Do you want to apply them?</p><ul style="margin-top:1rem; padding-left:1.5rem;">${updateListHTML}</ul>`, () => {
+                    // Apply updates on confirmation
+                    updates.forEach(update => {
+                        const localItem = this.itemsDB[update.category].find(item => item.name === update.name);
+                        if (localItem) {
+                            localItem.price = update.price;
+                            localItem.updated = update.updated;
+                        }
+                    });
+                    this.saveToStorage();
+                    this.showNotification('Database updated!', 'success');
+                    if(this.currentPage === 'database') {
+                        this.displayDatabase('all', document.querySelector('#dbCategoryFilter .active'));
+                    }
+                });
+            } else {
+                this.showNotification('No updates found', 'success', 'Your price database is already up to date.');
+            }
+        }, 1500); // 1.5 second delay to simulate fetch
+    },
     saveSettings(){ 
         this.settings.companyName = document.getElementById('companyName').value;
         this.settings.companyEmail = document.getElementById('companyEmail').value;
