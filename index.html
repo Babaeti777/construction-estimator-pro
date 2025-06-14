@@ -38,10 +38,10 @@
     }
     /* Base & Layout */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-secondary); color: var(--text); line-height: 1.6; transition: var(--transition); font-size: 15px; }
-    .app-container { display: flex; height: 100vh; overflow: hidden; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-secondary); color: var(--text); line-height: 1.6; transition: var(--transition); font-size: 16px; }
+    .app-container { display: flex; height: 100vh; overflow-x: hidden; }
     /* Sidebar */
-    .sidebar { width: 260px; background: var(--bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; transition: var(--transition); box-shadow: var(--shadow-sm); }
+    .sidebar { width: 260px; background: var(--bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; transition: var(--transition); box-shadow: var(--shadow-sm); flex-shrink: 0; }
     .sidebar-header { padding: 1.5rem; border-bottom: 1px solid var(--border); background: var(--bg-secondary); }
     .sidebar-header h1 { font-size: 1.125rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 0.5rem; }
     .sidebar-header h1::before { content: "🏗️"; font-size: 1.5rem; }
@@ -70,10 +70,10 @@
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
     .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
     .form-label { font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); }
-    .form-input, .form-select { padding: 0.625rem 0.875rem; border: 2px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); color: var(--text); font-size: 0.875rem; transition: var(--transition); font-weight: 400; }
+    .form-input, .form-select { padding: 0.75rem 0.875rem; border: 2px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); color: var(--text); font-size: 1rem; transition: var(--transition); font-weight: 400; }
     .form-input:focus, .form-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1); }
     /* Buttons */
-    .btn { padding: 0.625rem 1.25rem; border: none; border-radius: var(--radius-sm); font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .btn { padding: 0.75rem 1.25rem; border: none; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 500; cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
     .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
     .btn:active { transform: translateY(0); }
     .btn-primary { background: var(--primary); color: white; }
@@ -84,7 +84,7 @@
     .btn-danger { background: var(--danger); color: white; }
     .btn-ghost { background: transparent; color: var(--text-secondary); padding: 0.5rem; }
     .btn-ghost:hover { background: var(--bg-hover); color: var(--text); }
-    .btn-icon { padding: 0.625rem; width: 2.5rem; height: 2.5rem; }
+    .btn-icon { padding: 0.75rem; width: 3rem; height: 3rem; font-size: 1.25rem; }
     /* Table & Item Search */
     .table-wrapper { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg); }
     .table { width: 100%; border-collapse: collapse; }
@@ -99,20 +99,11 @@
     .dropdown-item:hover { background: var(--bg-hover); }
     .dropdown-category { padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; color: var(--text-tertiary); background: var(--bg-tertiary); text-transform: uppercase; letter-spacing: 0.05em; position: sticky; top: 0; }
     /* Dashboard & Stats */
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem; }
     .stat-card { background: var(--bg); padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border); }
     .stat-icon { width: 3rem; height: 3rem; background: var(--bg-tertiary); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; }
     .stat-value { font-size: 2rem; font-weight: 700; color: var(--text); margin-bottom: 0.25rem; }
     .stat-label { font-size: 0.875rem; color: var(--text-tertiary); font-weight: 500; }
-    /* Quick Add */
-    .quick-add-section { background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1rem; }
-    .quick-add-title { font-size: 0.875rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.75rem; }
-    .category-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
-    .category-pill { padding: 0.375rem 0.875rem; font-size: 0.75rem; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 999px; cursor: pointer; font-weight: 500; color: var(--text-secondary); }
-    .category-pill:hover, .category-pill.active { background: var(--primary); color: white; border-color: var(--primary); }
-    .quick-add-grid { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    .quick-add-btn { padding: 0.5rem 0.875rem; font-size: 0.75rem; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; }
-    .quick-add-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
     /* Modal & Notifications */
     .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
     .modal.active { opacity: 1; visibility: visible; }
@@ -120,7 +111,7 @@
     .modal.active .modal-content { transform: translateY(0) scale(1); }
     .modal-header { padding: 1.5rem 1.5rem 1rem; border-bottom: 1px solid var(--border); }
     .modal-title { font-size: 1.25rem; font-weight: 600; }
-    .modal-body { padding: 1.5rem; }
+    .modal-body { padding: 1.5rem; max-height: 60vh; overflow-y: auto; }
     .modal-footer { padding: 1rem 1.5rem; display: flex; justify-content: flex-end; gap: 0.75rem; background: var(--bg-tertiary); border-radius: 0 0 var(--radius) var(--radius); }
     #notificationContainer { position: fixed; top: 1rem; right: 1rem; z-index: 1001; display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end; }
     .notification { padding: 1rem 1.5rem; background: var(--bg); border-radius: var(--radius); box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 0.75rem; max-width: 400px; animation: slideInRight 0.3s ease forwards; }
@@ -137,18 +128,10 @@
     .chat-header { padding: 1.25rem; background: var(--primary); color: white; border-radius: var(--radius-lg) var(--radius-lg) 0 0; display: flex; align-items: center; justify-content: space-between; }
     .chat-header h3 { font-size: 1.125rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
     .chat-messages { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 1rem; }
-    .chat-message { display: flex; gap: 0.75rem; }
-    .chat-message.user { flex-direction: row-reverse; }
-    .chat-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--bg-tertiary); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; }
-    .chat-avatar.ai { background: var(--primary); color: white; }
-    .chat-bubble { max-width: 80%; padding: 0.75rem 1rem; background: var(--bg-tertiary); border-radius: var(--radius-lg); font-size: 0.875rem; line-height: 1.5; }
-    .chat-message.user .chat-bubble { background: var(--primary); color: white; }
-    .chat-input-container { padding: 1rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem; }
-    .chat-input { flex: 1; }
-     /* Advanced Calculator Styles */
+    /* Advanced Calculator Styles */
     .calculator-container { max-width: 800px; margin: auto; }
-    .calculator-tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 1.5rem; }
-    .calculator-tab { padding: 0.75rem 1.5rem; cursor: pointer; font-weight: 600; color: var(--text-tertiary); position: relative; }
+    .calculator-tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 1.5rem; overflow-x: auto; }
+    .calculator-tab { padding: 0.75rem 1.5rem; cursor: pointer; font-weight: 600; color: var(--text-tertiary); position: relative; white-space: nowrap; }
     .calculator-tab.active { color: var(--primary); }
     .calculator-tab.active::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: var(--primary); }
     .calculator-content { display: none; }
@@ -164,23 +147,33 @@
     .shape-btn svg { width: 40px; height: 40px; margin-bottom: 0.5rem; }
     .shape-inputs { display: none; }
     .shape-inputs.active { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
-    /* Utilities & Responsive */
+    /* Mobile-Specific Styles */
+    .menu-toggle { display: none; background: transparent; border: none; font-size: 1.75rem; color: var(--text); cursor: pointer; }
+    .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 998; display: none; opacity: 0; transition: opacity 0.3s ease; }
+    .overlay.active { display: block; opacity: 1; }
     .hidden { display: none !important; }
+    
     @media (max-width: 768px) {
       .app-container { flex-direction: column; }
-      .sidebar { position: fixed; top: 0; left: 0; height: 100vh; z-index: 999; transform: translateX(-100%); }
+      .sidebar { position: fixed; top: 0; left: 0; height: 100vh; z-index: 999; transform: translateX(-100%); box-shadow: var(--shadow-lg); }
       .sidebar.open { transform: translateX(0); }
       .menu-toggle { display: block; }
-      .header { padding: 1rem; }
+      .header { padding: 0.75rem 1rem; }
+      .header-title { font-size: 1.25rem; }
       .content { padding: 1rem; }
       .stats-grid, .form-grid { grid-template-columns: 1fr; }
-      .chat-container { width: 100%; height: 100%; bottom: 0; right: 0; border-radius: 0; }
+      .chat-button { bottom: 1rem; right: 1rem; }
+      .chat-container.active { width: 100vw; height: 100vh; bottom: 0; right: 0; border-radius: 0; }
+      .modal-content { width: 95%; }
+      .calculator-grid { gap: 0.5rem; }
+      .calculator-btn { padding: 1rem; }
     }
   </style>
 </head>
 
 <body data-theme="light">
   <div class="app-container">
+    <div class="overlay" id="overlay"></div>
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -379,6 +372,7 @@ const EstimatorApp = {
     cacheDOMElements() {
         this.elements = {
             sidebar: document.getElementById('sidebar'),
+            overlay: document.getElementById('overlay'),
             sidebarNav: document.getElementById('sidebarNav'),
             menuToggle: document.getElementById('menuToggle'),
             pageTitle: document.getElementById('pageTitle'),
@@ -409,9 +403,14 @@ const EstimatorApp = {
         // Main navigation
         this.elements.sidebarNav.addEventListener('click', e => {
             const navItem = e.target.closest('.nav-item');
-            if (navItem) this.switchPage(navItem.dataset.page, true);
+            if (navItem) {
+                this.switchPage(navItem.dataset.page, true);
+                this.closeSidebar();
+            }
         });
-        this.elements.menuToggle.addEventListener('click', () => this.elements.sidebar.classList.toggle('open'));
+        this.elements.menuToggle.addEventListener('click', () => this.toggleSidebar());
+        this.elements.overlay.addEventListener('click', () => this.closeSidebar());
+
         this.elements.darkModeToggle.addEventListener('change', this.toggleTheme.bind(this));
         this.elements.saveBtn.addEventListener('click', this.saveProject.bind(this));
 
@@ -444,7 +443,7 @@ const EstimatorApp = {
                 clearTimeout(this.debounceTimer);
                 this.debounceTimer = setTimeout(() => {
                     this.filterItems(e.target);
-                }, 300);
+                }, 250);
             }
         });
          document.body.addEventListener('click', e => {
@@ -743,6 +742,16 @@ const EstimatorApp = {
     },
     renderReportsPage() { this.elements.content.querySelector('#reportsPage').innerHTML = `<div class="card"><div class="card-body" style="text-align: center;">📈 Reports coming soon...</div></div>`},
     
+    // --- Mobile Sidebar ---
+    toggleSidebar() {
+        this.elements.sidebar.classList.toggle('open');
+        this.elements.overlay.classList.toggle('active');
+    },
+    closeSidebar() {
+        this.elements.sidebar.classList.remove('open');
+        this.elements.overlay.classList.remove('active');
+    },
+
     // --- Calculator Methods ---
     handleCalculatorInput(key) {
         const { display, waitingForOperand } = this.calculatorState;
