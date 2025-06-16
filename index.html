@@ -869,24 +869,34 @@
     }
 
     // --- DATABASE MANAGEMENT ---
-    function loadDatabase() {
+    async function loadDatabase() {
         const savedDB = localStorage.getItem('constructionDatabase');
         if (savedDB) {
             databaseItems = JSON.parse(savedDB);
         } else {
-             const defaultDatabase = [
-                {item: "Concrete 3000 PSI", category: "Concrete & Masonry", unit: "cubic yard", price: 175.00},
-                {item: "Rebar #4", category: "Concrete & Masonry", unit: "linear foot", price: 1.35},
-                {item: "8\" CMU Block", category: "Concrete & Masonry", unit: "each", price: 2.50},
-                {item: "Framing Lumber 2x4x8", category: "Lumber & Wood", unit: "each", price: 6.20},
-                {item: "1/2\" CDX Plywood", category: "Lumber & Wood", unit: "sheet", price: 38.00},
-                {item: "General Labor", category: "Labor", unit: "hour", price: 25.00},
-                {item: "Skilled Carpenter", category: "Labor", unit: "hour", price: 45.00},
-                {item: "1/2\" Drywall", category: "Finishes", unit: "sheet", price: 15.00},
-                {item: "Interior Latex Paint", category: "Finishes", unit: "gallon", price: 40.00}
-            ];
-            databaseItems = defaultDatabase;
-            showAlert("Default database loaded. You can import your own from the Database page.");
+            try {
+                // Use the full raw URL for the items.json file from your GitHub repository
+                const response = await fetch('https://raw.githubusercontent.com/Babaeti777/construction-estimator-pro/main/items.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                databaseItems = await response.json();
+                showAlert("Default database loaded from items.json. Your changes will be saved locally.");
+            } catch (error) {
+                console.error("Could not fetch items.json, using hardcoded default.", error);
+                databaseItems = [
+                    {item: "Concrete 3000 PSI", category: "Concrete & Masonry", unit: "cubic yard", price: 175.00},
+                    {item: "Rebar #4", category: "Concrete & Masonry", unit: "linear foot", price: 1.35},
+                    {item: "8\" CMU Block", category: "Concrete & Masonry", unit: "each", price: 2.50},
+                    {item: "Framing Lumber 2x4x8", category: "Lumber & Wood", unit: "each", price: 6.20},
+                    {item: "1/2\" CDX Plywood", category: "Lumber & Wood", unit: "sheet", price: 38.00},
+                    {item: "General Labor", category: "Labor", unit: "hour", price: 25.00},
+                    {item: "Skilled Carpenter", category: "Labor", unit: "hour", price: 45.00},
+                    {item: "1/2\" Drywall", category: "Finishes", unit: "sheet", price: 15.00},
+                    {item: "Interior Latex Paint", category: "Finishes", unit: "gallon", price: 40.00}
+                ];
+                showAlert("Could not load items.json from the repository. Using a default database. Your changes will be saved locally.");
+            }
         }
         finishDatabaseLoad();
     }
@@ -899,13 +909,16 @@
 
     function saveDatabase() {
         localStorage.setItem('constructionDatabase', JSON.stringify(databaseItems));
-        generateDbFilters();
-        displayDatabase();
-        updateDashboardStats();
+        if (document.getElementById('db-filter-tabs')) {
+            generateDbFilters();
+            displayDatabase();
+            updateDashboardStats();
+        }
     }
     
     function displayDatabase() {
         const tbody = document.getElementById('database-tbody');
+        if(!tbody) return;
         tbody.innerHTML = '';
         
         let filteredItems = databaseItems;
@@ -944,6 +957,7 @@
     function generateDbFilters() {
         const categories = ['All', ...new Set(databaseItems.map(item => item.category))];
         const filterContainer = document.getElementById('db-filter-tabs');
+        if (!filterContainer) return;
         filterContainer.innerHTML = '';
         categories.forEach(cat => {
             const btn = document.createElement('button');
