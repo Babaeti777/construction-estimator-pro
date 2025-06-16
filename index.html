@@ -811,19 +811,6 @@
     let editingItemIndex = -1;
     let confirmCallback = null;
 
-    // Default database items
-    const defaultDatabase = [
-        {item: "Concrete 3000 PSI", category: "Concrete & Masonry", unit: "cubic yard", price: 175.00},
-        {item: "Rebar #4", category: "Concrete & Masonry", unit: "linear foot", price: 1.35},
-        {item: "8\" CMU Block", category: "Concrete & Masonry", unit: "each", price: 2.50},
-        {item: "Framing Lumber 2x4x8", category: "Lumber & Wood", unit: "each", price: 6.20},
-        {item: "1/2\" CDX Plywood", category: "Lumber & Wood", unit: "sheet", price: 38.00},
-        {item: "General Labor", category: "Labor", unit: "hour", price: 25.00},
-        {item: "Skilled Carpenter", category: "Labor", unit: "hour", price: 45.00},
-        {item: "1/2\" Drywall", category: "Finishes", unit: "sheet", price: 15.00},
-        {item: "Interior Latex Paint", category: "Finishes", unit: "gallon", price: 40.00}
-    ];
-
     // DOM Element Caching
     const pageElements = {
         dashboard: document.getElementById('dashboard'),
@@ -883,10 +870,24 @@
     }
 
     // --- DATABASE MANAGEMENT ---
-    function loadDatabase() {
+    async function loadDatabase() {
         const savedDB = localStorage.getItem('constructionDatabase');
-        databaseItems = savedDB ? JSON.parse(savedDB) : [...defaultDatabase];
-        saveDatabase();
+        if (savedDB) {
+            databaseItems = JSON.parse(savedDB);
+        } else {
+            try {
+                const response = await fetch('items.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                databaseItems = await response.json();
+            } catch (error) {
+                console.error("Could not load items.json. Using empty database.", error);
+                showAlert("Could not load default database from items.json. Starting with an empty database.", true);
+                databaseItems = [];
+            }
+        }
+        saveDatabase(); // This will save the fetched data to localStorage for future use
         generateDbFilters();
     }
 
@@ -989,10 +990,9 @@
     }
 
     function resetDatabase() {
-        showConfirm('This will delete all your custom items and restore the default database. Are you sure?', () => {
-            databaseItems = [...defaultDatabase];
-            currentFilter = 'All';
-            saveDatabase();
+        showConfirm('This will delete all your local changes and restore the database from the original items.json file. Are you sure?', () => {
+            localStorage.removeItem('constructionDatabase');
+            loadDatabase();
             showAlert('Database has been reset to default.');
         });
     }
