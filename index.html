@@ -465,6 +465,7 @@
             <button class="nav-btn active" onclick="showPage('dashboard', this)">🏠 Dashboard</button>
             <button class="nav-btn" onclick="showPage('calculator', this)">🧮 Calculator</button>
             <button class="nav-btn" onclick="showPage('estimate', this)">📋 Estimate</button>
+            <button class="nav-btn" onclick="showPage('projects', this)">📁 Projects</button>
             <button class="nav-btn" onclick="showPage('database', this)">📚 Database</button>
             <button class="nav-btn" onclick="showPage('settings', this)">⚙️ Settings</button>
         </nav>
@@ -475,8 +476,12 @@
                 <h2>Welcome to Your Dashboard</h2>
                  <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-value" id="total-estimates-stat">0</div>
-                        <div class="stat-label">Total Estimates</div>
+                        <div class="stat-value" id="total-projects-stat">0</div>
+                        <div class="stat-label">Total Projects</div>
+                    </div>
+                     <div class="stat-card">
+                        <div class="stat-value" id="total-value-stat">$0</div>
+                        <div class="stat-label">Total Project Value</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="database-items-stat">0</div>
@@ -494,10 +499,10 @@
                         <h3>New Estimate</h3>
                         <p>Create a detailed cost estimate for your next project.</p>
                     </div>
-                    <div class="card" onclick="showPage('database')">
-                        <div class="card-icon">📚</div>
-                        <h3>Price Database</h3>
-                        <p>Manage your materials, labor, and equipment costs.</p>
+                    <div class="card" onclick="showPage('projects')">
+                        <div class="card-icon">📁</div>
+                        <h3>Manage Projects</h3>
+                        <p>View, load, and duplicate your saved project estimates.</p>
                     </div>
                      <div class="card" onclick="showPage('settings')">
                         <div class="card-icon">⚙️</div>
@@ -644,9 +649,11 @@
                 </div>
                 
                 <div>
+                    <button class="btn btn-info" onclick="showKickstartModal()">✨ AI Kickstart</button>
                     <button class="btn btn-success" onclick="addEstimateItem()">➕ Add Item</button>
-                    <button class="btn btn-danger" onclick="clearEstimate()">🗑️ Clear All</button>
-                    <button class="btn btn-info" onclick="exportProposal()">📄 Generate Proposal</button>
+                    <button class="btn btn-warning" onclick="saveEstimate()">💾 Save as Project</button>
+                    <button class="btn btn-danger" onclick="clearEstimate()">🗑️ Clear Estimate</button>
+                    <button class="btn" onclick="exportProposal()">📄 Generate Proposal</button>
                     <button class="btn" onclick="exportEstimateCSV()">📄 Export CSV</button>
                 </div>
                 
@@ -690,6 +697,29 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Projects Page -->
+            <div id="projects" class="page">
+                <h2>Project Management</h2>
+                <div class="db-controls">
+                     <input type="text" class="search-bar" id="project-search" placeholder="🔍 Search projects..." onkeyup="displayProjects()">
+                </div>
+                <div class="table-wrapper">
+                    <table class="table" id="projects-table">
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>Client</th>
+                                <th>Date</th>
+                                <th>Total</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="projects-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
 
             <!-- Database Page -->
             <div id="database" class="page">
@@ -806,6 +836,25 @@
             </div>
         </div>
     </div>
+    
+    <!-- AI Kickstart Modal -->
+    <div id="kickstartModal" class="modal">
+        <div class="modal-content">
+            <h3>✨ AI Project Kickstart</h3>
+            <p>Describe your project in plain English, and the AI will suggest a list of items for your estimate.</p>
+            <div class="form">
+                <div class="form-group">
+                    <label class="form-label">Project Description</label>
+                    <textarea class="form-input" id="kickstart-description" rows="4" placeholder="e.g., Build a 10x12 foot composite deck with railings and a staircase."></textarea>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button id="kickstart-cancel" class="btn btn-secondary">Cancel</button>
+                <button id="kickstart-generate" class="btn btn-info">Generate Items</button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Confirmation Modal -->
     <div id="confirmModal" class="modal">
@@ -833,7 +882,7 @@
     <script>
     // --- GLOBAL VARIABLES & STATE ---
     let databaseItems = [];
-    let estimates = [];
+    let projects = [];
     let currentFilter = 'All';
     let editingItemIndex = -1;
     let confirmCallback = null;
@@ -847,18 +896,20 @@
             dashboard: document.getElementById('dashboard'),
             calculator: document.getElementById('calculator'),
             estimate: document.getElementById('estimate'),
+            projects: document.getElementById('projects'),
             database: document.getElementById('database'),
             settings: document.getElementById('settings'),
         };
         modalElements = {
             item: document.getElementById('itemModal'),
+            kickstart: document.getElementById('kickstartModal'),
             confirm: document.getElementById('confirmModal'),
             alert: document.getElementById('alertModal'),
         };
 
         loadSettings();
         loadDatabase();
-        loadEstimates();
+        loadProjects();
         
         showPage('dashboard', document.querySelector('.nav-btn'));
         updateDashboardStats();
@@ -880,6 +931,7 @@
         }
         
         if (pageId === 'database') displayDatabase();
+        if (pageId === 'projects') displayProjects();
         if (pageId === 'dashboard') updateDashboardStats();
     }
 
@@ -891,7 +943,9 @@
     }
     
     function updateDashboardStats() {
-        document.getElementById('total-estimates-stat').textContent = estimates.length;
+        document.getElementById('total-projects-stat').textContent = projects.length;
+        const totalValue = projects.reduce((sum, p) => sum + p.total, 0);
+        document.getElementById('total-value-stat').textContent = `$${totalValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
         document.getElementById('database-items-stat').textContent = databaseItems.length;
     }
 
@@ -902,7 +956,7 @@
             databaseItems = JSON.parse(savedDB);
             finishDatabaseLoad();
         } else {
-             const defaultDatabase = [
+            const defaultDatabase = [
                 {item: "Concrete 3000 PSI", category: "Concrete & Masonry", unit: "cubic yard", price: 175.00},
                 {item: "Rebar #4", category: "Concrete & Masonry", unit: "linear foot", price: 1.35},
                 {item: "8\" CMU Block", category: "Concrete & Masonry", unit: "each", price: 2.50},
@@ -1037,8 +1091,8 @@
 
     // --- ESTIMATE MANAGEMENT ---
     function loadEstimates() {
-        const saved = localStorage.getItem('constructionEstimates');
-        estimates = saved ? JSON.parse(saved) : [];
+        const saved = localStorage.getItem('constructionProjects');
+        projects = saved ? JSON.parse(saved) : [];
     }
 
     function addEstimateItem() {
@@ -1123,6 +1177,125 @@
         showConfirm('Are you sure you want to clear all estimate items?', () => {
             document.getElementById('estimate-tbody').innerHTML = '';
             updateEstimateTotal();
+        });
+    }
+    
+    // --- PROJECT MANAGEMENT ---
+    function saveEstimate() {
+        const projectName = document.getElementById('project-name').value;
+        if (!projectName) {
+            showAlert("Please enter a project name before saving.", true);
+            return;
+        }
+
+        const estimateData = {
+            id: Date.now(),
+            name: projectName,
+            client: document.getElementById('client-name').value,
+            date: document.getElementById('project-date').value,
+            markupRate: document.getElementById('markup-rate').value,
+            taxRate: document.getElementById('tax-rate').value,
+            regionalFactor: document.getElementById('regional-factor').value,
+            total: parseFloat(document.getElementById('estimate-total').textContent.replace('$', '').replace(/,/g, '')),
+            items: []
+        };
+
+        document.querySelectorAll('#estimate-tbody tr').forEach(row => {
+            estimateData.items.push({
+                item: row.cells[0].querySelector('input').value,
+                category: row.cells[1].querySelector('input').value,
+                quantity: row.cells[2].querySelector('input').value,
+                unit: row.cells[3].querySelector('input').value,
+                unitPrice: row.cells[4].querySelector('input').value
+            });
+        });
+
+        projects.push(estimateData);
+        localStorage.setItem('constructionProjects', JSON.stringify(projects));
+        updateDashboardStats();
+        showAlert(`Project "${projectName}" has been saved successfully!`);
+    }
+
+    function loadProjects() {
+        const saved = localStorage.getItem('constructionProjects');
+        projects = saved ? JSON.parse(saved) : [];
+    }
+
+    function displayProjects() {
+        const tbody = document.getElementById('projects-tbody');
+        const searchTerm = document.getElementById('project-search').value.toLowerCase();
+        
+        tbody.innerHTML = '';
+        
+        const filteredProjects = projects.filter(p => p.name.toLowerCase().includes(searchTerm) || p.client.toLowerCase().includes(searchTerm));
+        
+        filteredProjects.forEach((project, index) => {
+            const originalIndex = projects.indexOf(project);
+            const row = tbody.insertRow();
+            row.innerHTML = `
+                <td>${project.name}</td>
+                <td>${project.client}</td>
+                <td>${project.date}</td>
+                <td>$${project.total.toFixed(2)}</td>
+                <td>
+                    <button class="btn" onclick="loadProject(${originalIndex})">📂 Load</button>
+                    <button class="btn btn-secondary" onclick="duplicateProject(${originalIndex})">📄 Duplicate</button>
+                    <button class="btn btn-danger" onclick="deleteProject(${originalIndex})">🗑️ Delete</button>
+                </td>
+            `;
+        });
+    }
+
+    function loadProject(index) {
+        const project = projects[index];
+        
+        document.getElementById('project-name').value = project.name;
+        document.getElementById('client-name').value = project.client;
+        document.getElementById('project-date').value = project.date;
+        document.getElementById('markup-rate').value = project.markupRate;
+        document.getElementById('tax-rate').value = project.taxRate;
+        document.getElementById('regional-factor').value = project.regionalFactor;
+        
+        const tbody = document.getElementById('estimate-tbody');
+        tbody.innerHTML = '';
+
+        project.items.forEach(item => {
+            const newRow = tbody.insertRow();
+            newRow.innerHTML = `
+                <td><div class="search-container"><input type="text" class="form-input searchable" value="${item.item}" oninput="showSuggestions(this, 'item')" onfocus="showSuggestions(this, 'item')" autocomplete="off"><div class="suggestions"></div></div></td>
+                <td><div class="search-container"><input type="text" class="form-input searchable" value="${item.category}" oninput="showSuggestions(this, 'category')" onfocus="showSuggestions(this, 'category')" autocomplete="off"><div class="suggestions"></div></div></td>
+                <td><input type="number" class="form-input" value="${item.quantity}" step="0.01" oninput="updateEstimateRow(this.closest('tr'))"></td>
+                <td><input type="text" class="form-input" value="${item.unit}" oninput="updateEstimateRow(this.closest('tr'))"></td>
+                <td><input type="number" class="form-input" value="${item.unitPrice}" step="0.01" oninput="updateEstimateRow(this.closest('tr'))"></td>
+                <td class="regional-price">$0.00</td>
+                <td class="item-total">$0.00</td>
+                <td><button class="btn btn-danger" onclick="removeEstimateItem(this)">🗑️</button></td>
+            `;
+            updateEstimateRow(newRow);
+        });
+        
+        showPage('estimate', document.querySelector('.nav-btn[onclick*="estimate"]'));
+        showAlert(`Project "${project.name}" loaded.`);
+    }
+
+    function duplicateProject(index) {
+        const projectToCopy = JSON.parse(JSON.stringify(projects[index])); // Deep copy
+        projectToCopy.name += " (Copy)";
+        projectToCopy.id = Date.now();
+        projects.push(projectToCopy);
+        localStorage.setItem('constructionProjects', JSON.stringify(projects));
+        displayProjects();
+        showAlert('Project duplicated successfully.');
+    }
+
+    function deleteProject(index) {
+        const projectName = projects[index].name;
+        showConfirm(`Are you sure you want to delete the project "${projectName}"?`, () => {
+            projects.splice(index, 1);
+            localStorage.setItem('constructionProjects', JSON.stringify(projects));
+            displayProjects();
+            updateDashboardStats();
+            showAlert(`Project "${projectName}" deleted.`);
         });
     }
 
@@ -1536,6 +1709,11 @@
         };
         modalElements.item.querySelector('#modal-cancel').onclick = () => modalElements.item.style.display = 'none';
 
+        // Kickstart Modal
+        modalElements.kickstart.querySelector('#kickstart-generate').onclick = kickstartProject;
+        modalElements.kickstart.querySelector('#kickstart-cancel').onclick = () => modalElements.kickstart.style.display = 'none';
+
+
         // Confirm Modal
         modalElements.confirm.querySelector('#confirm-ok').onclick = () => {
             if (confirmCallback) confirmCallback();
@@ -1650,6 +1828,77 @@
         row.cells[0].querySelector('.suggestions').style.display = 'none';
 
         updateEstimateRow(row);
+    }
+    
+    // --- AI KICKSTART ---
+    function showKickstartModal() {
+        modalElements.kickstart.style.display = 'flex';
+    }
+
+    async function kickstartProject() {
+        const description = document.getElementById('kickstart-description').value;
+        if (!description) {
+            showAlert("Please enter a project description.", true);
+            return;
+        }
+        
+        modalElements.kickstart.style.display = 'none';
+        showAlert("✨ AI is generating your estimate... this may take a moment.");
+
+        const prompt = `
+            Based on the following project description, please suggest a list of relevant line items for a construction estimate.
+            Project Description: "${description}"
+
+            Here is the list of available items in our database:
+            ${JSON.stringify(databaseItems, null, 2)}
+
+            Please return a JSON array of item objects that match items from the database. Each object should have an "item" property that is an exact match to the "item" name in the database.
+            For example: [{"item": "Framing Lumber 2x4x8"}, {"item": "1/2\" Drywall"}]
+        `;
+
+        try {
+            let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+            const payload = { contents: chatHistory };
+            const apiKey = ""; // Leave empty for automatic handling by the environment
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+            
+            if (result.candidates && result.candidates.length > 0 &&
+                result.candidates[0].content && result.candidates[0].content.parts &&
+                result.candidates[0].content.parts.length > 0) {
+                
+                const text = result.candidates[0].content.parts[0].text;
+                // Clean the response to ensure it is valid JSON
+                const jsonString = text.replace(/```json/g, '').replace(/```/g, '').trim();
+                const suggestedItems = JSON.parse(jsonString);
+
+                if (Array.isArray(suggestedItems)) {
+                    suggestedItems.forEach(suggestedItem => {
+                        const dbItem = databaseItems.find(db => db.item === suggestedItem.item);
+                        if(dbItem) {
+                            const dbIndex = databaseItems.indexOf(dbItem);
+                            addToEstimateFromDb(dbIndex);
+                        }
+                    });
+                    showAlert("✨ AI has kickstarted your project estimate!");
+                } else {
+                    throw new Error("AI response was not a valid array.");
+                }
+            } else {
+                throw new Error("Unexpected response structure from AI.");
+            }
+
+        } catch (error) {
+            console.error("Error with Gemini API:", error);
+            showAlert("There was an error generating the AI estimate. Please try again or add items manually.", true);
+        }
     }
     </script>
 </body>
