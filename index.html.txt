@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Construction Estimator Pro - Professional Edition</title>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <style>
+        /* General Styles */
+        :root {
+            --primary-color: #4a5568;
+            --secondary-color: #2d3748;
+            --accent-color: #667eea;
+            --light-gray: #f7fafc;
+            --medium-gray: #e2e8f0;
+            --dark-gray: #a0aec0;
+            --text-light: #ffffff;
+            --text-dark: #1a202c;
+            --success-color: #48bb78;
+            --danger-color: #f56565;
+            --warning-bg: #fffbeb;
+            --warning-border: #fde68a;
+            --warning-text: #92400e;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header & Auth */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: var(--text-light);
+            box-shadow: var(--shadow);
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .main-header h1 {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+        }
+
+        #auth-status .btn {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        /* API Alert Banner */
+        .api-alert {
+            background-color: var(--warning-bg);
+            color: var(--warning-text);
+            padding: 15px;
+            border: 1px solid var(--warning-border);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        /* Navigation */
+        .nav {
+            display: flex;
+            justify-content: center;
+            background: var(--secondary-color);
+            padding: 10px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            color: var(--text-light);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-btn.active {
+            background: var(--accent-color);
+        }
+
+        /* Main Content */
+        .content {
+            padding: 30px 0;
+        }
+
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* General UI Components */
+        .card {
+            background: var(--text-light);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn:hover:not(:disabled) { background: #5563c1; transform: translateY(-2px); }
+        .btn:disabled {
+            background: var(--medium-gray);
+            color: var(--dark-gray);
+            cursor: not-allowed;
+        }
+        .btn-secondary { background: var(--primary-color); }
+        .btn-secondary:hover:not(:disabled) { background: var(--secondary-color); }
+        .btn-success { background: var(--success-color); }
+        .btn-success:hover:not(:disabled) { background: #38a169; }
+        .btn-danger { background: var(--danger-color); }
+        .btn-danger:hover:not(:disabled) { background: #e53e3e; }
+
+        /* Estimator Accordion */
+        .accordion-item {
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            background: #fdfdff;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .accordion-header:hover { background: var(--light-gray); }
+        .accordion-header .arrow { transition: transform 0.3s ease; }
+        .accordion-header.active .arrow { transform: rotate(90deg); }
+        
+        .accordion-content {
+            padding: 20px;
+            display: none;
+            border-top: 1px solid var(--medium-gray);
+        }
+
+        /* Table */
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .table th, .table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        .table th {
+            background: var(--light-gray);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .table tbody tr:hover { background: #f0f2f5; }
+        .table .form-input, .table .form-select {
+            padding: 8px;
+            font-size: 14px;
+        }
+        .table-actions { display: flex; gap: 5px; }
+
+        /* Totals Table */
+        .totals-table {
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-top: 20px;
+        }
+        .totals-table td {
+            padding: 10px;
+            font-weight: bold;
+        }
+        .totals-table tr td:last-child { text-align: right; }
+        .grand-total-row {
+            background: var(--secondary-color);
+            color: var(--text-light);
+            font-size: 1.2rem;
+        }
+
+        /* Loading Overlay */
+        #loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 10000; color: white; font-size: 1.5rem;
+            flex-direction: column; gap: 20px; display: none;
+        }
+        .loader {
+            border: 8px solid #f3f3f3; border-top: 8px solid var(--accent-color);
+            border-radius: 50%; width: 60px; height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+
+    <div id="loading-overlay">
+        <div class="loader"></div>
+        <p>Processing...</p>
+    </div>
+
+    <header class="main-header">
+        <h1>🏗️ Construction Estimator Pro</h1>
+        <div id="auth-status">
+            <button id="authorize_button" class="btn btn-secondary" onclick="EstimatorApp.handleAuthClick()">Sign in with Google</button>
+            <button id="signout_button" class="btn btn-danger" onclick="EstimatorApp.handleSignoutClick()" style="display: none;">Sign Out</button>
+        </div>
+    </header>
+
+    <nav class="nav">
+        <button class="nav-btn active" onclick="EstimatorApp.showPage('estimate')">📋 Estimator</button>
+        <button class="nav-btn" onclick="EstimatorApp.showPage('database')">📚 Database Viewer</button>
+    </nav>
+    
+    <div class="container">
+        <div id="api-alert" class="api-alert" style="display: none;">
+            <strong>Configuration Needed:</strong> Google Drive features are disabled. To enable saving and loading, you must add your own Google API Key and Client ID in the script section of this file.
+        </div>
+        
+        <div class="content">
+            <!-- Estimator Page -->
+            <div id="estimate" class="page active">
+                <div class="card">
+                    <h2>Project Details</h2>
+                    <div class="form-row" style="margin-top: 20px;">
+                        <div class="form-group">
+                            <label for="project-name">Project Name</label>
+                            <input type="text" id="project-name" class="form-input" placeholder="e.g., Downtown Office Renovation">
+                        </div>
+                        <div class="form-group">
+                            <label for="client-name">Client Name</label>
+                            <input type="text" id="client-name" class="form-input" placeholder="e.g., Acme Corporation">
+                        </div>
+                        <div class="form-group">
+                          <label for="tax-rate">Tax Rate (%)</label>
+                          <input type="number" id="tax-rate" class="form-input" value="6.5" onchange="EstimatorApp.updateTotals()">
+                        </div>
+                        <div class="form-group">
+                          <label for="database-select">Cost Database</label>
+                          <select id="database-select" class="form-select" onchange="EstimatorApp.loadDatabase(this.value)">
+                            <!-- Options will be populated by JS -->
+                          </select>
+                        </div>
+                    </div>
+                     <div class="form-group" style="margin-top: 10px;">
+                        <label for="project-notes">General Project Notes</label>
+                        <textarea id="project-notes" class="form-textarea" placeholder="Add any overall project notes here..."></textarea>
+                    </div>
+                </div>
+
+                <div style="margin: 30px 0; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                    <button class="btn btn-success" onclick="EstimatorApp.saveToDrive()">💾 Save to Google Drive</button>
+                    <button class="btn" onclick="EstimatorApp.loadFromDrive()">📂 Load from Google Drive</button>
+                    <button class="btn btn-danger" onclick="EstimatorApp.clearEstimate()">🗑️ Clear Estimate</button>
+                </div>
+                <div id="drive-file-list" style="margin-bottom: 20px; display: flex; gap: 5px; flex-wrap: wrap;"></div>
+
+
+                <div id="estimator-accordion">
+                    <!-- CSI Divisions will be populated here -->
+                </div>
+
+                <div class="card" style="margin-top: 30px;">
+                    <h2>Cost Summary</h2>
+                    <table class="totals-table">
+                        <tbody>
+                            <tr><td>Subtotal:</td><td id="summary-subtotal">$0.00</td></tr>
+                            <tr><td>Tax:</td><td id="summary-tax">$0.00</td></tr>
+                            <tr class="grand-total-row"><td>Grand Total:</td><td id="summary-grand-total">$0.00</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Database Viewer Page -->
+            <div id="database" class="page">
+                <div class="card">
+                    <h2>Database Viewer</h2>
+                    <p>Browse the items in the currently selected cost database.</p>
+                    <div class="form-row" style="margin-top:20px;">
+                        <div class="form-group">
+                            <label for="db-view-filter">Filter by Division</label>
+                            <select id="db-view-filter" class="form-select" onchange="EstimatorApp.renderDatabaseViewer()">
+                                <!-- Options populated by JS -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="db-view-search">Search</label>
+                            <input type="text" id="db-view-search" class="form-input" placeholder="Search item descriptions..." onkeyup="EstimatorApp.renderDatabaseViewer()">
+                        </div>
+                    </div>
+                </div>
+                <div class="table-wrapper" style="margin-top: 20px;">
+                    <table class="table">
+                        <thead id="db-view-thead"></thead>
+                        <tbody id="db-view-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+<script>
+// --- DATABASE DEFINITIONS ---
+// In a real application, these would be in separate .js files.
+const costDatabases = {
+    'sample_commercial_2025_q3.js': {
+        name: "Sample Commercial Rates (2025 Q3)",
+        divisions: {
+            "01": {
+                name: "General Requirements",
+                items: {
+                    "01001": { description: "Project Management & Coordination", unit: "LS", material: 0, labor: 5000, equipment: 0 },
+                    "01002": { description: "Temporary Fencing", unit: "LF", material: 5, labor: 2, equipment: 1 },
+                    "01003": { description: "Site Office Trailer Rental", unit: "Month", material: 0, labor: 0, equipment: 600 },
+                }
+            },
+            "03": {
+                name: "Concrete",
+                items: {
+                    "03001": { description: "Concrete, 3000 psi", unit: "CY", material: 155, labor: 45, equipment: 20 },
+                    "03002": { description: "Formwork, Wall", unit: "SFCA", material: 3.50, labor: 5.50, equipment: 0.50 },
+                    "03003": { description: "Rebar, Grade 60", unit: "Ton", material: 1200, labor: 600, equipment: 100 },
+                }
+            },
+            "04": {
+                name: "Masonry",
+                items: {
+                    "04001": { description: "CMU Block, 8x8x16, Normal Weight", unit: "Each", material: 2.75, labor: 3.50, equipment: 0.25 },
+                    "04002": { description: "Face Brick, Standard", unit: "M", material: 700, labor: 1200, equipment: 100 },
+                }
+            },
+            "05": {
+                name: "Metals",
+                items: {
+                    "05001": { description: "Structural Steel, Wide Flange", unit: "Ton", material: 2800, labor: 800, equipment: 400 },
+                    "05002": { description: "Steel Decking, 1.5 inch", unit: "SF", material: 2.50, labor: 1.50, equipment: 0.25 },
+                }
+            },
+            "08": {
+                name: "Openings",
+                items: {
+                    "08001": { description: "Hollow Metal Door Frame", unit: "Each", material: 250, labor: 150, equipment: 0 },
+                    "08002": { description: "Solid Core Wood Door", unit: "Each", material: 400, labor: 120, equipment: 0 },
+                    "08003": { description: "Aluminum Storefront Window", unit: "SF", material: 45, labor: 25, equipment: 5 },
+                }
+            },
+            "09": {
+                name: "Finishes",
+                items: {
+                    "09001": { description: "Gypsum Board, 5/8 inch, Taped & Finished", unit: "SF", material: 0.80, labor: 2.20, equipment: 0.20 },
+                    "09002": { description: "Acoustical Ceiling Tile (ACT)", unit: "SF", material: 2.00, labor: 1.75, equipment: 0.15 },
+                    "09003": { description: "Paint, 2 Coats, Latex", unit: "SF", material: 0.40, labor: 0.80, equipment: 0.10 },
+                    "09004": { description: "Carpet Tile, Commercial", unit: "SY", material: 35, labor: 8, equipment: 1 },
+                }
+            },
+            "22": {
+                name: "Plumbing",
+                items: {
+                    "22001": { description: "Commercial Water Closet", unit: "Each", material: 600, labor: 450, equipment: 25 },
+                    "22002": { description: "Copper Pipe, Type L, 1-inch", unit: "LF", material: 8, labor: 12, equipment: 1 },
+                }
+            },
+            "26": {
+                name: "Electrical",
+                items: {
+                    "26001": { description: "Conduit, EMT, 3/4 inch", unit: "LF", material: 1.50, labor: 4.50, equipment: 0.20 },
+                    "26002": { description: "2x4 LED Troffer Light Fixture", unit: "Each", material: 150, labor: 125, equipment: 10 },
+                }
+            },
+        }
+    }
+};
+
+// --- APP ENCAPSULATION ---
+const EstimatorApp = {
+    // --- STATE & CONFIG ---
+    gapiInited: false,
+    gisInited: false,
+    tokenClient: null,
+    activeDb: null,
+    
+    // --- IMPORTANT: CONFIGURE YOUR API KEYS HERE ---
+    // You must get your own API Key and Client ID from the Google Cloud Console
+    // for the Google Drive features to work.
+    // 1. Go to https://console.cloud.google.com/
+    // 2. Create a new project.
+    // 3. Enable the "Google Drive API".
+    // 4. Create an API Key.
+    // 5. Create OAuth 2.0 Client ID (Type: Web Application).
+    //    - Add your domain to "Authorized JavaScript origins".
+    //    - Add your domain to "Authorized redirect URIs".
+    API_KEY: 'PASTE_YOUR_API_KEY_HERE', // <-- PASTE YOUR KEY HERE
+    CLIENT_ID: 'PASTE_YOUR_CLIENT_ID_HERE', // <-- PASTE YOUR CLIENT ID HERE
+    SCOPES: 'https://www.googleapis.com/auth/drive.file',
+
+    init: function() {
+        document.getElementById('authorize_button').style.visibility = 'hidden';
+        document.getElementById('signout_button').style.visibility = 'hidden';
+        
+        this.populateDatabaseSelector();
+        this.loadDatabase(Object.keys(costDatabases)[0]);
+    },
+
+    // --- DATABASE MANAGEMENT ---
+    populateDatabaseSelector: function() {
+        const select = document.getElementById('database-select');
+        select.innerHTML = '';
+        for (const key in costDatabases) {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = costDatabases[key].name;
+            select.appendChild(option);
+        }
+    },
+
+    loadDatabase: function(dbKey) {
+        this.activeDb = costDatabases[dbKey];
+        this.renderEstimatorAccordion();
+        this.renderDatabaseViewer();
+    },
+
+    // --- PAGE NAVIGATION & UI RENDERING ---
+    showPage: function(pageId) {
+        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`.nav-btn[onclick="EstimatorApp.showPage('${pageId}')"]`).classList.add('active');
+    },
+
+    renderEstimatorAccordion: function() {
+        const accordion = document.getElementById('estimator-accordion');
+        accordion.innerHTML = '';
+        if (!this.activeDb) return;
+
+        for (const divNum in this.activeDb.divisions) {
+            const division = this.activeDb.divisions[divNum];
+            const divId = `division-${divNum}`;
+
+            const item = document.createElement('div');
+            item.className = 'accordion-item';
+            item.innerHTML = `
+                <div class="accordion-header" onclick="EstimatorApp.toggleAccordion('${divId}')">
+                    <span>Division ${divNum} - ${division.name}</span>
+                    <span class="arrow">▶</span>
+                </div>
+                <div id="${divId}" class="accordion-content">
+                    <button class="btn btn-success" onclick="EstimatorApp.addEstimateItem('${divNum}')">➕ Add Line Item</button>
+                    <div class="table-wrapper" style="margin-top: 15px;">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th style="width: 100px;">Quantity</th>
+                                    <th style="width: 100px;">Unit</th>
+                                    <th style="width: 120px;">Material Cost</th>
+                                    <th style="width: 120px;">Labor Cost</th>
+                                    <th style="width: 120px;">Equipment Cost</th>
+                                    <th style="width: 120px;">Total Cost</th>
+                                    <th style="width: 200px;">Notes</th>
+                                    <th style="width: 50px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Items will be added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            accordion.appendChild(item);
+        }
+    },
+
+    toggleAccordion: function(contentId) {
+        const content = document.getElementById(contentId);
+        const header = content.previousElementSibling;
+        header.classList.toggle('active');
+        content.style.display = content.style.display === 'block' ? 'none' : 'block';
+    },
+
+    renderDatabaseViewer: function() {
+        const filter = document.getElementById('db-view-filter');
+        const search = document.getElementById('db-view-search').value.toLowerCase();
+        const tbody = document.getElementById('db-view-tbody');
+        const thead = document.getElementById('db-view-thead');
+        
+        thead.innerHTML = `
+            <tr>
+                <th>CSI Code</th><th>Description</th><th>Unit</th><th>Material</th><th>Labor</th><th>Equipment</th>
+            </tr>`;
+
+        if (!this.activeDb) return;
+
+        // Populate filter if empty
+        if(filter.options.length <= 1) {
+            filter.innerHTML = `<option value="all">All Divisions</option>`;
+            for (const divNum in this.activeDb.divisions) {
+                const option = document.createElement('option');
+                option.value = divNum;
+                option.textContent = `Division ${divNum} - ${this.activeDb.divisions[divNum].name}`;
+                filter.appendChild(option);
+            }
+        }
+        
+        tbody.innerHTML = '';
+        const selectedDiv = filter.value;
+
+        for (const divNum in this.activeDb.divisions) {
+            if(selectedDiv !== 'all' && selectedDiv !== divNum) continue;
+
+            const division = this.activeDb.divisions[divNum];
+            for (const itemNum in division.items) {
+                const item = division.items[itemNum];
+                if(search && !item.description.toLowerCase().includes(search)) continue;
+
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${divNum}.${itemNum}</td>
+                    <td>${item.description}</td>
+                    <td>${item.unit}</td>
+                    <td>$${item.material.toFixed(2)}</td>
+                    <td>$${item.labor.toFixed(2)}</td>
+                    <td>$${item.equipment.toFixed(2)}</td>
+                `;
+            }
+        }
+    },
+
+    // --- ESTIMATE LOGIC ---
+    addEstimateItem: function(divNum) {
+        const division = this.activeDb.divisions[divNum];
+        if (!division) return;
+
+        const tableBody = document.querySelector(`#division-${divNum} tbody`);
+        const newRow = tableBody.insertRow();
+        newRow.className = 'estimate-item-row';
+        newRow.dataset.division = divNum;
+
+        let optionsHtml = '<option value="">Select Item...</option>';
+        for (const itemNum in division.items) {
+            const item = division.items[itemNum];
+            optionsHtml += `<option value="${itemNum}">${item.description}</option>`;
+        }
+
+        newRow.innerHTML = `
+            <td><select class="form-select item-select" onchange="EstimatorApp.updateLineItem(this)">${optionsHtml}</select></td>
+            <td><input type="number" class="form-input item-quantity" value="1" min="0" onchange="EstimatorApp.updateLineItem(this)"></td>
+            <td class="item-unit"></td>
+            <td class="item-material-cost">$0.00</td>
+            <td class="item-labor-cost">$0.00</td>
+            <td class="item-equipment-cost">$0.00</td>
+            <td class="item-total-cost">$0.00</td>
+            <td><input type="text" class="form-input item-notes" placeholder="Line item notes..."></td>
+            <td><button class="btn btn-danger" style="padding: 5px 10px;" onclick="EstimatorApp.removeLineItem(this)">✖</button></td>
+        `;
+    },
+
+    updateLineItem: function(element) {
+        const row = element.closest('tr');
+        const divNum = row.dataset.division;
+        const itemNum = row.querySelector('.item-select').value;
+        const quantity = parseFloat(row.querySelector('.item-quantity').value) || 0;
+        
+        const itemData = this.activeDb.divisions[divNum]?.items[itemNum];
+        if (!itemData) {
+            row.querySelector('.item-unit').textContent = '';
+            row.querySelector('.item-material-cost').textContent = '$0.00';
+            row.querySelector('.item-labor-cost').textContent = '$0.00';
+            row.querySelector('.item-equipment-cost').textContent = '$0.00';
+            row.querySelector('.item-total-cost').textContent = '$0.00';
+            this.updateTotals();
+            return;
+        }
+
+        const material = itemData.material * quantity;
+        const labor = itemData.labor * quantity;
+        const equipment = itemData.equipment * quantity;
+        const total = material + labor + equipment;
+
+        row.querySelector('.item-unit').textContent = itemData.unit;
+        row.querySelector('.item-material-cost').textContent = `$${material.toFixed(2)}`;
+        row.querySelector('.item-labor-cost').textContent = `$${labor.toFixed(2)}`;
+        row.querySelector('.item-equipment-cost').textContent = `$${equipment.toFixed(2)}`;
+        row.querySelector('.item-total-cost').textContent = `$${total.toFixed(2)}`;
+        
+        this.updateTotals();
+    },
+
+    removeLineItem: function(button) {
+        const row = button.closest('tr');
+        row.remove();
+        this.updateTotals();
+    },
+
+    updateTotals: function() {
+        let subtotal = 0;
+        document.querySelectorAll('.estimate-item-row').forEach(row => {
+            const totalText = row.querySelector('.item-total-cost').textContent.replace('$', '');
+            subtotal += parseFloat(totalText) || 0;
+        });
+
+        const taxRate = parseFloat(document.getElementById('tax-rate').value) / 100 || 0;
+        const tax = subtotal * taxRate;
+        const grandTotal = subtotal + tax;
+
+        document.getElementById('summary-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+        document.getElementById('summary-tax').textContent = `$${tax.toFixed(2)}`;
+        document.getElementById('summary-grand-total').textContent = `$${grandTotal.toFixed(2)}`;
+    },
+
+    clearEstimate: function() {
+        if (confirm('Are you sure you want to clear the entire estimate? This cannot be undone.')) {
+            document.getElementById('project-name').value = '';
+            document.getElementById('client-name').value = '';
+            document.getElementById('project-notes').value = '';
+            this.renderEstimatorAccordion();
+            this.updateTotals();
+        }
+    },
+
+    // --- GOOGLE DRIVE & AUTH ---
+    gapiLoaded: function() {
+        gapi.load('client', this.initializeGapiClient.bind(this));
+    },
+
+    gisLoaded: function() {
+        this.tokenClient = google.accounts.oauth2.initTokenClient({
+            client_id: this.CLIENT_ID,
+            scope: this.SCOPES,
+            callback: '', // Defined later
+        });
+        this.gisInited = true;
+        this.maybeEnableButtons();
+    },
+
+    initializeGapiClient: async function() {
+        // Handle missing API credentials gracefully
+        if (this.API_KEY.startsWith('PASTE_') || this.CLIENT_ID.startsWith('PASTE_')) {
+            console.warn("API credentials are not set. Google Drive features are disabled. Please add your API_KEY and CLIENT_ID to the EstimatorApp object in the script.");
+            document.getElementById('api-alert').style.display = 'block';
+            document.querySelector('button[onclick="EstimatorApp.saveToDrive()"]').disabled = true;
+            document.querySelector('button[onclick="EstimatorApp.loadFromDrive()"]').disabled = true;
+            return; // Stop further initialization
+        }
+
+        await gapi.client.init({
+            apiKey: this.API_KEY,
+            discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
+        });
+        this.gapiInited = true;
+        this.maybeEnableButtons();
+    },
+
+    maybeEnableButtons: function() {
+        if (this.gapiInited && this.gisInited) {
+            document.getElementById('authorize_button').style.visibility = 'visible';
+        }
+    },
+
+    handleAuthClick: function() {
+        if (!this.tokenClient) return;
+        this.tokenClient.callback = (resp) => {
+            if (resp.error !== undefined) {
+                throw (resp);
+            }
+            document.getElementById('signout_button').style.display = 'inline-flex';
+            document.getElementById('authorize_button').style.display = 'none';
+        };
+        if (gapi.client.getToken() === null) {
+            this.tokenClient.requestAccessToken({ prompt: 'consent' });
+        }
+    },
+
+    handleSignoutClick: function() {
+        const token = gapi.client.getToken();
+        if (token !== null) {
+            google.accounts.oauth2.revoke(token.access_token);
+            gapi.client.setToken('');
+            document.getElementById('signout_button').style.display = 'none';
+            document.getElementById('authorize_button').style.display = 'inline-flex';
+            document.getElementById('drive-file-list').innerHTML = '';
+        }
+    },
+
+    showLoading: function(message = 'Processing...') {
+        document.getElementById('loading-overlay').style.display = 'flex';
+    },
+
+    hideLoading: function() {
+        document.getElementById('loading-overlay').style.display = 'none';
+    },
+
+    saveToDrive: async function() {
+        if (!gapi.client.getToken()) { return alert("Please sign in first."); }
+        const projectName = document.getElementById('project-name').value;
+        if (!projectName) { return alert("Please enter a Project Name."); }
+        
+        this.showLoading('Saving...');
+
+        const estimateData = {
+            version: "2.0",
+            projectName: projectName,
+            clientName: document.getElementById('client-name').value,
+            taxRate: document.getElementById('tax-rate').value,
+            projectNotes: document.getElementById('project-notes').value,
+            database: document.getElementById('database-select').value,
+            divisions: {}
+        };
+
+        document.querySelectorAll('.estimate-item-row').forEach(row => {
+            const divNum = row.dataset.division;
+            if (!estimateData.divisions[divNum]) {
+                estimateData.divisions[divNum] = [];
+            }
+            estimateData.divisions[divNum].push({
+                itemNum: row.querySelector('.item-select').value,
+                quantity: row.querySelector('.item-quantity').value,
+                notes: row.querySelector('.item-notes').value,
+            });
+        });
+
+        const fileContent = JSON.stringify(estimateData, null, 2);
+        const fileName = `${estimateData.projectName}.cep.json`; // .cep for Construction Estimator Pro
+        try {
+          const searchResponse = await gapi.client.drive.files.list({ q: `name='${fileName}' and 'appDataFolder' in parents and trashed=false`, spaces: 'appDataFolder', fields: 'files(id)' });
+          const existingFile = searchResponse.result.files[0];
+          let method = existingFile ? 'PATCH' : 'POST';
+          let path = existingFile ? `/upload/drive/v3/files/${existingFile.id}` : '/upload/drive/v3/files';
+          if(existingFile && !confirm(`Overwrite '${fileName}'?`)) { this.hideLoading(); return; }
+
+          const fileMetadata = { name: fileName, mimeType: 'application/json' };
+          if(method === 'POST') fileMetadata.parents = ['appDataFolder'];
+          
+          const boundary = '-------314159265358979323846';
+          const multipartRequestBody = `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(fileMetadata)}\r\n--${boundary}\r\nContent-Type: application/json\r\n\r\n${fileContent}\r\n--${boundary}--`;
+
+          await gapi.client.request({ path, method, params: {uploadType: 'multipart'}, headers: {'Content-Type': `multipart/related; boundary="${boundary}"`}, body: multipartRequestBody });
+          alert(`Estimate '${fileName}' saved!`);
+        } catch (e) {
+          console.error("Save Error:", e);
+          alert("Error saving file.");
+        } finally {
+          this.hideLoading();
+        }
+    },
+    
+    loadFromDrive: async function() {
+        if (!gapi.client.getToken()) { return alert("Please sign in first."); }
+        this.showLoading('Loading files...');
+        try {
+            const response = await gapi.client.drive.files.list({
+                spaces: 'appDataFolder',
+                q: "name contains '.cep.json'",
+                fields: 'files(id, name)',
+                pageSize: 20
+            });
+            const files = response.result.files;
+            const fileListDiv = document.getElementById('drive-file-list');
+            fileListDiv.innerHTML = '<h3>Load Estimate:</h3>';
+            if (files && files.length > 0) {
+                files.forEach(file => {
+                    const button = document.createElement('button');
+                    button.className = 'btn btn-secondary'; button.style.margin = '5px';
+                    button.innerText = file.name.replace('.cep.json', '');
+                    button.onclick = () => this.loadDriveFileContent(file.id);
+                    fileListDiv.appendChild(button);
+                });
+            } else {
+                fileListDiv.innerHTML = '<p>No saved estimates found.</p>';
+            }
+        } catch (e) { console.error("List Error:", e); alert("Error listing files."); }
+        finally { this.hideLoading(); }
+    },
+
+    loadDriveFileContent: async function(fileId) {
+        this.showLoading('Loading estimate...');
+        try {
+            const response = await gapi.client.drive.files.get({ fileId: fileId, alt: 'media' });
+            const data = response.result;
+
+            // Load project info
+            document.getElementById('project-name').value = data.projectName || '';
+            document.getElementById('client-name').value = data.clientName || '';
+            document.getElementById('tax-rate').value = data.taxRate || '6.5';
+            document.getElementById('project-notes').value = data.projectNotes || '';
+            
+            // Set and load database
+            document.getElementById('database-select').value = data.database;
+            this.loadDatabase(data.database);
+
+            // Populate items
+            for(const divNum in data.divisions) {
+                const divisionData = data.divisions[divNum];
+                const accordionContent = document.getElementById(`division-${divNum}`);
+                if (!accordionContent) continue;
+                
+                // Open accordion if it has items and isn't already open
+                if (divisionData.length > 0 && accordionContent.style.display !== 'block') {
+                    this.toggleAccordion(`division-${divNum}`);
+                }
+
+                divisionData.forEach(itemData => {
+                    this.addEstimateItem(divNum);
+                    const newRow = accordionContent.querySelector('tbody tr:last-child');
+                    if(newRow) {
+                        newRow.querySelector('.item-select').value = itemData.itemNum;
+                        newRow.querySelector('.item-quantity').value = itemData.quantity;
+                        newRow.querySelector('.item-notes').value = itemData.notes;
+                        this.updateLineItem(newRow.querySelector('.item-select'));
+                    }
+                });
+            }
+            this.updateTotals();
+            document.getElementById('drive-file-list').innerHTML = ''; // Clear file list
+            alert(`'${data.projectName}' loaded successfully.`);
+        } catch (e) { console.error("Load Content Error:", e); alert("Error loading file content."); }
+        finally { this.hideLoading(); }
+    },
+
+};
+
+// --- GLOBAL BINDINGS & INITIALIZATION ---
+// Bindings for Google's async script loader
+function gapiLoaded() { EstimatorApp.gapiLoaded(); }
+function gisLoaded() { EstimatorApp.gisLoaded(); }
+
+// Start the app on DOM content loaded
+document.addEventListener('DOMContentLoaded', () => EstimatorApp.init());
+
+</script>
+<script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+<script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+</body>
+</html>
